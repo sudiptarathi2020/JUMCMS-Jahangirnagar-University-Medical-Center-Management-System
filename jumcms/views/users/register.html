@@ -7,60 +7,84 @@
         <form method="post" action="{% url 'users-register' %}">
             {% csrf_token %}
             <div class="form-group">
-                <label class="custom-label"for="name">Full Name</label>
-                <input type="text" name="name" class="form-labels" id="name" placeholder="Enter name">
+                <label class="custom-label" for="id_name">Name:</label>
+                {{ form.name }}       
+
+                {% if form.name.errors %}
+                <div class="error-message">{{ form.name.errors }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
-                <label class="custom-label" for="email">Email Address</label>
-                <input type="email" name="email" class="form-labels" id="email" placeholder="Enter email">
+                <label class="custom-label" for="id_email">Email:</label>
+                {{ form.email }}            
+
+                {% if form.email.errors %}
+                <div class="error-message">{{ form.email.errors }}</div>
+                {% endif %}   
             </div>
 
             <div class="form-group">
-                <label class="custom-label" for="role">Role</label>
-                <select name="role" class="form-labels" id="role">
-                    {% for key, value in form.fields.role.choices %}
-                    <option value="{{ key }}">{{ value }}</option>
-                    {% endfor %}
-                </select>
+                <label class ="custom-label" for="id_role">Role:</label>
+                {{ form.role }}            
+
+                {% if form.role.errors %}
+                <div class="error-message">{{ form.role.errors }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
-                <label class="custom-label" for="id_blood_group">Blood Group</label>
-                <select name="blood_group" class="form-labels" id="blood_group">
-                    {% for key, value in form.fields.blood_group.choices %}
-                    <option value="{{ key }}">{{ value }}</option>
-                    {% endfor %}
-                </select>
+                <label class="custom-label" for="id_blood_group">Blood Group:</label>
+                {{ form.blood_group }}    
+
+                {% if form.blood_group.errors %}
+                <div class="error-message">{{ form.blood_group.errors }}</div>
+                {% endif %}  
             </div>
 
             <div class="form-group">
-                <label class="custom-label" for="date_of_birth">Date of Birth</label>
-                <input type="date" name="date_of_birth" class="form-labels" id="date_of_birth" placeholder="YYYY-MM-DD">
+                <label class="custom-label" for="id_date_of_birth">Date of Birth:</label>
+                {{ form.date_of_birth }}
+
+                {% if form.date_of_birth.errors %}
+                <div class="error-message">{{ form.date_of_birth.errors }}</div>
+                {% endif %}        
+            </div>
+            <div class="form-group">
+                <label class="custom-label" for="id_gender">Gender:</label>
+                {{ form.gender }}   
+
+                {% if form.gender.errors %}
+                <div class="error-message">{{ form.gender.errors }}</div>
+                {% endif %}  
             </div>
 
             <div class="form-group">
-                <label class="custom-label" for="gender">Gender</label>
-                <select name="gender" class="form-labels" id="gender">
-                    {% for key, value in form.fields.gender.choices %}
-                    <option value="{{ key }}">{{ value }}</option>
-                    {% endfor %}
-                </select>
+
+                <label class="custom-label" for="id_phone_number">Phone Number:</label>
+                {{ form.phone_number }}
+
+                {% if form.phone_number.errors %}
+                <div class="error-message">{{ form.phone_number.errors }}</div>
+                {% endif %} 
             </div>
 
             <div class="form-group">
-                <label class="custom-label" for="phone_number">Phone Number</label>
-                <input type="text" name="phone_number" class="form-labels" id="phone_number" placeholder="Enter phone number">
+                <label class="custom-label" for="id_password1">Password:</label>
+                {{ form.password1 }} 
+
+                {% if form.password1.errors %}
+                <div class="error-message">{{ form.password1.errors }}</div>
+                {% endif %}  
             </div>
 
             <div class="form-group">
-                <label class="custom-label" for="password1">Password</label>
-                <input type="password" name="password1" class="form-labels" id="password1" placeholder="Enter password">
-            </div>
+                <label class="custom-label" for="id_password2">Confirm Password:</label>
+                {{ form.password2 }} 
 
-            <div class="form-group">
-                <label class="custom-label" for="password2">Confirm Password</label>
-                <input type="password" name="password2" class="form-labels" id="password2" placeholder="Confirm password">
+                {% if form.password2.errors %}
+                <div class="error-message">{{ form.password2.errors }}</div>
+                {% endif %} 
             </div>
 
             <button type="submit" class="btn btn-primary">Register</button>

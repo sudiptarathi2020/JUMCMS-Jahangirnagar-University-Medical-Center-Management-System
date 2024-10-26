@@ -1,7 +1,7 @@
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-
+from django.contrib import messages
 from .forms import UserRegistrationForm, LoginForm
 from .models import Doctor, Patient, Storekeeper, LabTechnician
 
@@ -16,7 +16,10 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
+            messages.success(request, "Registration successfull! Please wait unitll your account is approved!!")
             return render(request, "users/unapproved.htm")
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
         form = UserRegistrationForm()
     return render(request, "users/register.html", {"form": form})
