@@ -23,13 +23,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-<<<<<<< HEAD
-    # path("", home, name="home"),
-    path("",include("users.urls")),
-=======
     path("", home, name="home"),
     path("users/", include("users.urls")),
->>>>>>> branch-log-in-ss
 ]
 
 if settings.DEBUG:

@@ -35,6 +35,18 @@
     height: 200px;
     width: 600px;
 }
+.container-overlay-register {
+    background-color: rgba(0, 185, 134, 0.60);
+    padding: 20px;
+    border-radius: 8px; 
+    color: white;
+    text-align: center;
+    width: 700px; 
+    margin: 0 auto; 
+    max-height: 600px;
+    overflow-y: auto;
+}
+
 
 .container-overlay-login {
     background-color: rgba(0, 185, 134, 0.60);
@@ -74,5 +86,37 @@
 .form-labels{
     margin-top: 10px;
     margin-bottom: 18px;
+}
+.form-group{
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.custom-label{
+    width: 150px;
+    margin-right: 10px;
+    font-weight: bold;
+    text-align: left;
+}
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="password"],
+
+select {
+    flex: 1;
+    width: 100%;
+    padding: 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px;
+}
+
+.form-group label{
+    flex: 1;
+}
+.form-group input,
+.form-group select{
+    flex: 2;
+    margin-top: 5px;
 }
 

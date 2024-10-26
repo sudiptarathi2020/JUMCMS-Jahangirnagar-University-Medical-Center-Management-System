@@ -14,7 +14,8 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = [
             "name",
-            "email", "role",
+            "email",
+            "role",
             "blood_group",
             "date_of_birth",
             "gender",

@@ -1,9 +1,71 @@
-<!-- templates/users/register.html -->
 {% extends "users/base_home.htm" %}
+{% load static %}
 {% block content %}
-  <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Register</button>
-  </form>
-{% endblock %}
+<div class="d-flex justify-content-center align-items-center bg-cover">
+    <div class="container-overlay-register">
+        <h2>Create Account</h2>
+        <form method="post" action="{% url 'users-register' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="custom-label"for="name">Full Name</label>
+                <input type="text" name="name" class="form-labels" id="name" placeholder="Enter name">
+            </div>
+
+            <div class="form-group">
+                <label class="custom-label" for="email">Email Address</label>
+                <input type="email" name="email" class="form-labels" id="email" placeholder="Enter email">
+            </div>
+
+            <div class="form-group">
+                <label class="custom-label" for="role">Role</label>
+                <select name="role" class="form-labels" id="role">
+                    {% for key, value in form.fields.role.choices %}
+                    <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="custom-label" for="id_blood_group">Blood Group</label>
+                <select name="blood_group" class="form-labels" id="blood_group">
+                    {% for key, value in form.fields.blood_group.choices %}
+                    <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="custom-label" for="date_of_birth">Date of Birth</label>
+                <input type="date" name="date_of_birth" class="form-labels" id="date_of_birth" placeholder="YYYY-MM-DD">
+            </div>
+
+            <div class="form-group">
+                <label class="custom-label" for="gender">Gender</label>
+                <select name="gender" class="form-labels" id="gender">
+                    {% for key, value in form.fields.gender.choices %}
+                    <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="custom-label" for="phone_number">Phone Number</label>
+                <input type="text" name="phone_number" class="form-labels" id="phone_number" placeholder="Enter phone number">
+            </div>
+
+            <div class="form-group">
+                <label class="custom-label" for="password1">Password</label>
+                <input type="password" name="password1" class="form-labels" id="password1" placeholder="Enter password">
+            </div>
+
+            <div class="form-group">
+                <label class="custom-label" for="password2">Confirm Password</label>
+                <input type="password" name="password2" class="form-labels" id="password2" placeholder="Confirm password">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
