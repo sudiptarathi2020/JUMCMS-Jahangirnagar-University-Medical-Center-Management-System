@@ -14,3 +14,4 @@ pep8
 sphinx
 sphinx-pdj-theme
 flake8
+django-crispy-forms

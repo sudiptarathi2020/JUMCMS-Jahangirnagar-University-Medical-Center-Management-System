@@ -1,0 +1,65 @@
+.bg-cover {
+    position: relative;
+    height: 95vh;
+    overflow: hidden; 
+}
+.bg-cover::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("../images/jumc_image.png");
+    background-size: cover;
+    background-position: center;
+    filter: blur(8px); 
+    z-index: -1; 
+}
+
+.custom-navbar{
+    background-color: #b2e6d7;
+}
+.navbar-brand img {
+    max-height: 30px;
+}
+.container-overlay {
+    background-color: rgba(0, 185, 134, 0.60);
+    padding: 40px;
+    border-radius: 8px; 
+    color: white;
+    text-align: center;
+    max-width: 700px; 
+    margin: 0 auto; 
+    height: 200px;
+    width: 600px;
+}
+
+.link-div{
+    margin-top: 20px;
+}
+.link-div a{
+    color:#034432;
+    font-weight: bold;
+}
+.link-div a:hover{
+    color:#d9e2df;
+}
+.container-overlay button{
+    margin-top: 30px;
+    background-color: rgb(3, 70, 51);
+}
+
+.custom-navitem{
+    margin-right: 10px;
+    color: #00B986; 
+    font-weight:bold;
+}
+.custom-navitem:hover{
+    color:#034432; 
+}
+.form-labels{
+    margin-top: 10px;
+    margin-bottom: 18px;
+}
+
