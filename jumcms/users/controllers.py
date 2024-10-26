@@ -8,6 +8,9 @@ from .models import Doctor, Patient, Storekeeper, LabTechnician
 
 # Create your views here.
 
+def home(request):
+    return render(request, "users/home.htm")
+
 def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
