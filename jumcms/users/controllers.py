@@ -19,15 +19,6 @@ def register(request):
             role = form.cleaned_data['role']
             user.save()
 
-            if role == 'Doctor':
-                Doctor.objects.create(user=user)
-            elif role == 'Patient':
-                Patient.objects.create(user=user)
-            elif role == 'Storekeeper':
-                Storekeeper.objects.create(user=user)
-            elif role == 'LabTechnician':
-                LabTechnician.objects.create(user=user)
-
             log_in(request)
             return redirect('home')
     else:

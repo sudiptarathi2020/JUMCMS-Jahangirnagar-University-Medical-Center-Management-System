@@ -35,7 +35,7 @@ class User(AbstractBaseUser):
     profile_picture = models.ImageField(
         upload_to="profilePictures/", default="profilePictures/default.png"
     )
-    is_approved = models.BooleanField(default=True)
+    is_approved = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

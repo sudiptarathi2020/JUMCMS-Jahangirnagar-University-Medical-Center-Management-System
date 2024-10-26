@@ -1,0 +1,9 @@
+<!-- templates/users/register.html -->
+{% extends "users/base_home.htm" %}
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Register</button>
+  </form>
+{% endblock %}
