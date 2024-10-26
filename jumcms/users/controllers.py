@@ -1,4 +1,4 @@
-from django.contrib.auth import logout, login
+from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
@@ -26,19 +26,27 @@ def login(request):
     if request.method == "POST":
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
-            user = form.cleaned_data["user"]
-            login(request, user)
-            # role = user.role
-            # if role == "Doctor":
-            #     Doctor.objects.create(user=user)
-            # elif role == "Patient":
-            #     Patient.objects.create(user=user)
-            # elif role == "Storekeeper":
-            #     Storekeeper.objects.create(user=user)
-            # elif role == "LabTechnician":
-            #     LabTechnician.objects.create(user=user)
+            email = request.POST["email"]
+            password = request.POST["password"]
+            # print(email + ":-- " + password)
+            user = authenticate(request, username=email, password=password)
 
+            if user is not None:
+                login(request, user)
+                if user.is_authenticated == True:
+                    if user.role == "Doctor":
+                        Doctor.objects.create(user=user)
+                    elif user.role == "Patient":
+                        Patient.objects.create(user=user)
+                    elif user.role == "Storekeeper":
+                        Storekeeper.objects.create(user=user)
+                    elif user.role == "LabTechnician":
+                        LabTechnician.objects.create(user=user)
+                else:
+                    return render(request, "users/unapproved.htm")
             return redirect("home")
+        else:
+            form.add_error(None, "Invalid email or password")
     else:
         form = LoginForm()
     return render(request, "users/login.htm", {"form": form})

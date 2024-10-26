@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 from .constants import ROLE_CHOICES, BLOOD_GROUP_CHOICES, GENDER_CHOICES
 from .models import User
+
+
 class UserRegistrationForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirm', widget=forms.PasswordInput)
@@ -21,6 +23,7 @@ class UserRegistrationForm(UserCreationForm):
             "gender",
             "phone_number",
         ]
+
 class LoginForm(AuthenticationForm):
     class Meta:
         model = User
