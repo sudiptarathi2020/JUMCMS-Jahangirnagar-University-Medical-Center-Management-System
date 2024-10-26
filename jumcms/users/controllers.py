@@ -22,18 +22,18 @@ def register(request):
     return render(request, "users/register.html", {"form": form})
 
 
-def login(request):
+def log_in(request):
     if request.method == "POST":
         form = LoginForm(request, data=request.POST)
+
         if form.is_valid():
-            email = request.POST["email"]
+            email = request.POST["username"]
             password = request.POST["password"]
-            # print(email + ":-- " + password)
             user = authenticate(request, username=email, password=password)
 
             if user is not None:
                 login(request, user)
-                if user.is_authenticated == True:
+                if user.is_approved == True:
                     if user.role == "Doctor":
                         Doctor.objects.create(user=user)
                     elif user.role == "Patient":
