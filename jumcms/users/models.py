@@ -2,6 +2,70 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser
 from users.constants import *
+from django.contrib.auth.models import BaseUserManager
+
+
+class UserManager(BaseUserManager):
+    def create_user(
+        self,
+        email,
+        name,
+        role,
+        blood_group,
+        date_of_birth,
+        gender,
+        phone_number,
+        password=None,
+        profile_picture="profile_pictures/default_user.png",
+    ):
+
+        if not email:
+            raise ValueError("Users must have an email address")
+        user = self.model(
+            email=self.normalize_email(email),
+            name=name,
+            role=role,
+            blood_group=blood_group,
+            date_of_birth=date_of_birth,
+            gender=gender,
+            phone_number=phone_number,
+            profile_picture=profile_picture,
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(
+        self,
+        email,
+        name,
+        role,
+        blood_group,
+        date_of_birth,
+        gender,
+        phone_number,
+        password=None,
+        profile_picture="profile_pictures/default_user.png",
+    ):
+        """
+        Creates and saves a superuser with the given email, date of
+        birth and password.
+        """
+        user = self.create_user(
+            email=self.normalize_email(email),
+            name=name,
+            role=role,
+            blood_group=blood_group,
+            date_of_birth=date_of_birth,
+            gender=gender,
+            phone_number=phone_number,
+            password=password,
+            profile_picture=profile_picture,
+        )
+        user.is_admin = True
+        user.is_approved = True
+        user.save(using=self._db)
+        return user
 
 
 class User(AbstractBaseUser):
@@ -33,12 +97,14 @@ class User(AbstractBaseUser):
         validators=[phone_number_validator],
     )
     profile_picture = models.ImageField(
-        upload_to="profilePictures/", default="profilePictures/default.png"
+        upload_to="profile_pictures/", default="profile_pictures/default_user.png"
     )
+    is_active = models.BooleanField(default=True)
     is_approved = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = UserManager()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [
@@ -70,9 +136,9 @@ class User(AbstractBaseUser):
 class Doctor(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     no_of_appointments = models.IntegerField(default=0)
-    qualifications = models.TextField()
-    specialty = models.CharField(max_length=100)
-    experience_years = models.IntegerField()
+    qualifications = models.CharField(max_length=200, default="MBBS")
+    specialty = models.CharField(max_length=100, default="medicine")
+    experience_years = models.IntegerField(default=0)
 
 
 class Patient(models.Model):
