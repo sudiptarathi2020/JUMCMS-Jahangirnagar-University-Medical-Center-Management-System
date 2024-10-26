@@ -1,9 +1,9 @@
 from django.urls import path
 
-from .controllers import register, log_in, logout
+from .controllers import register, login, logout
 
 urlpatterns = [
-    path('register/', register, name='users-register'),
-    path('login/', log_in, name='users-login'),
-    path('logout/', logout, name='users-logout'),
+    path("create-account/", register, name="users-register"),
+    path("login/", login, name="users-login"),
+    path("logout/", logout, name="users-logout"),
 ]

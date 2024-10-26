@@ -18,8 +18,19 @@ from django.contrib import admin
 from django.urls import path, include
 from users.controllers import home
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+<<<<<<< HEAD
     # path("", home, name="home"),
     path("",include("users.urls")),
+=======
+    path("", home, name="home"),
+    path("users/", include("users.urls")),
+>>>>>>> branch-log-in-ss
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
