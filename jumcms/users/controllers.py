@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegistrationForm, LoginForm
 from .models import Doctor, Patient, Storekeeper, LabTechnician
+from django.views import View
 
 
 def home(request):
@@ -16,7 +17,10 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
-            messages.success(request, "Registration successfull! Please wait unitll your account is approved!!")
+            messages.success(
+                request,
+                "Registration successfull! Please wait unitll your account is approved!!",
+            )
             return render(request, "users/unapproved.htm")
         else:
             messages.error(request, "Please correct the errors below.")
@@ -58,4 +62,4 @@ def log_in(request):
 @login_required
 def log_out(request):
     logout(request)
-    return redirect("login")
+    return redirect("home")

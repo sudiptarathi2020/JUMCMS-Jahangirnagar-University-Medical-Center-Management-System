@@ -20,7 +20,7 @@
                         <a class="nav-link custom-navitem" href="#" >Blogs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-navitem {% if is_create_account_page %}disabled{% endif %}" href="" tabindex="{% if is_create_account_page %}-1{% endif %}">Create account</a>
+                        <a class="nav-link custom-navitem {% if is_create_account_page %}disabled{% endif %}" href="{% url 'users-register' %}" tabindex="{% if is_create_account_page %}-1{% endif %}">Create account</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link custom-navitem {% if is_login_page %}disabled{% endif %}" href="{% url 'users-login' %}" tabindex="{% if is_login_page %}-1{% endif %}">Log in</a>
@@ -32,7 +32,7 @@
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}" style="width: 60vw; margin-left: 20vw; position: fixed; z-index: 100; text-align: center">
-                    <p style="color: rgb(220, 230, 220); font-size: medium; display: inline; margin: auto;">{{ message }} <span class="closebtn" style="display: inline; margin-left: auto;" onclick="this.parentElement.parentElement.style.display='none';">&times;</span></p>        
+                    <p style="color: rgb(40, 97, 40); font-size: medium; display: inline; margin: auto;">{{ message }} <span class="closebtn" style="display: inline; margin-left: auto;" onclick="this.parentElement.parentElement.style.display='none';">&times;</span></p>        
                 </div>
             {% endfor %}
         {% endif %}
