@@ -25,6 +25,8 @@ class UserRegistrationForm(UserCreationForm):
             "date_of_birth",
             "gender",
             "phone_number",
+            "password1",
+            "password2",
         ]
 
 

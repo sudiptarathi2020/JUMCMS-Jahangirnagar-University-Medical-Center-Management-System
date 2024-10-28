@@ -39,15 +39,15 @@ class UserViewsTest(TestCase):
                 "date_of_birth": "1995-05-05",
                 "gender": "Female",
                 "phone_number": "+8801987654321",
-                "password": "newpassword123",
-                "password_confirm": "newpassword123",
+                "password1": "newpassword123",
+                "password2": "newpassword123",
             },
         )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(User.objects.filter(email="newuser@example.com").exists())
-        self.assertTemplateUsed(response, "users/unapproved.html")
+        self.assertTemplateUsed(response, "users/unapproved.htm")
         self.assertIn(
-            "Registration successfull! Please wait unitll your account is approved!!",
+            "Registration successful! Please wait until your account is approved!!",
             [m.message for m in messages.get_messages(response.wsgi_request)],
         )
 
@@ -62,8 +62,8 @@ class UserViewsTest(TestCase):
                 "date_of_birth": "1995-05-05",
                 "gender": "Female",
                 "phone_number": "+8801987654321",
-                "password": "newpassword123",
-                "password_confirm": "newpassword123",
+                "password1": "newpassword123",
+                "password2": "newpassword123",
             },
         )
         self.assertEqual(response.status_code, 200)
