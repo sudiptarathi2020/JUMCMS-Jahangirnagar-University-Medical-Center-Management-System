@@ -12,12 +12,12 @@ URLs:
 """
 
 from django.urls import path
-
-from .controllers import register, log_in, log_out, unapproved
+from users.controllers import *
 
 urlpatterns = [
     path("create-account/", register, name="users-register"),
     path("login/", log_in, name="users-login"),
     path("logout/", log_out, name="users-logout"),
     path("unapproved/", unapproved, name="unapproved"),
+    path("doctor_dashboard/", doctor_dashboard, name="doctor_dashboard"),
 ]
