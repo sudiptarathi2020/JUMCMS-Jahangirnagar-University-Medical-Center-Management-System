@@ -1,0 +1,10 @@
+<h2>Prescriptions</h2>
+<ul>
+  {% for prescription in prescriptions %}
+    <li>
+      <a href="{% url 'prescription_details' prescription.id %}">
+        Prescription for {{ prescription.doctor_appointment.patient.user.name }} on {{ prescription.date_issued }}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

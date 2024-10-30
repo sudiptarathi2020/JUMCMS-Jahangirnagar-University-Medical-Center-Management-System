@@ -1,0 +1,17 @@
+<h2>Prescription Details</h2>
+<p><strong>Patient:</strong> {{ prescription.doctor_appointment.patient.user.name }}</p>
+<p><strong>Doctor:</strong> {{ prescription.doctor_appointment.doctor.user.name }}</p>
+<p><strong>Date Issued:</strong> {{ prescription.date_issued }}</p>
+<p><strong>Diagnosis:</strong> {{ prescription.diagnosis }}</p>
+
+<h3>Prescribed Medicines</h3>
+<ul>
+  {% for medicine in prescribed_medicines %}
+    <li>
+      {{ medicine.medicine.name }} - {{ medicine.frequency }}, {{ medicine.duration }} days
+      {% if medicine.instructions %}
+        <p><strong>Instructions:</strong> {{ medicine.instructions }}</p>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
