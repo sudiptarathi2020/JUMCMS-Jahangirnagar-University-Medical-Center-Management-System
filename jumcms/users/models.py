@@ -209,6 +209,12 @@ class Doctor(models.Model):
     no_of_appointments = models.IntegerField(
         default=0, help_text="Number of appointments for the doctor."
     )
+    no_of_patients = models.IntegerField(
+        default=0, help_text="Number of patients consulted with the doctor."
+    )
+    no_of_prescriptions = models.IntegerField(
+        default=0, help_text="Number of prescriptions prepared by the doctor."
+    )
     qualifications = models.CharField(
         max_length=200, default="MBBS", help_text="Qualifications of the doctor."
     )
