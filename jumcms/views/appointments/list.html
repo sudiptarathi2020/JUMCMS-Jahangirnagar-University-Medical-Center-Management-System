@@ -1,0 +1,20 @@
+<!-- appointments/templates/appointments/appointment_list.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointment List</title>
+</head>
+<body>
+    <h1>All Doctor Appointments</h1>
+    <ul>
+        {% for appointment in appointments %}
+            <li>
+                {{ appointment }} - {{ appointment.status }}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'appointments:create_doctor_appointment' %}">Schedule New Appointment</a>
+</body>
+</html>
