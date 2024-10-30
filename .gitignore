@@ -2,5 +2,10 @@
 
 **/migrations/*.py
 **/migrations/*.pyc
+<<<<<<< HEAD
 *.pyc
 db.sqlite3
+=======
+
+db.sqlite3
+>>>>>>> origin/branch-doctor-dashboard-ss
