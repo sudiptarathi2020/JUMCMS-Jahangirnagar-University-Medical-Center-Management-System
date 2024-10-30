@@ -2,5 +2,5 @@
 
 **/migrations/*.py
 **/migrations/*.pyc
-
+*.pyc
 db.sqlite3
