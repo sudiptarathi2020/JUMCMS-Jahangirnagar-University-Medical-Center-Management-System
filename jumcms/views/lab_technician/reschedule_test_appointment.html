@@ -7,8 +7,15 @@
     
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Reschedule Appointment</button>
+        <div class="form-group">
+            <label for="id_appointment_date_time" class="custom-label">Appointment Date & Time:</label>
+            {{ form.appointment_date_time }}
+        </div>
+        <div class="form-group">
+            <label for="id_status" class="custom-label">Status:</label>
+            {{ form.status }}
+        </div>
+        <button type="submit" id="login-button">Save Changes</button>
     </form>
     
 {% endblock content %}

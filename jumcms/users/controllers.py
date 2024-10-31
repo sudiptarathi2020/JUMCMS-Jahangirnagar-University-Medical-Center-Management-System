@@ -132,7 +132,7 @@ def doctor_dashboard(request):
 
 @login_required
 def lab_technician_dashboard(request):
-    lab_technician = get_object_or_404(LabTechnician, user= request.user)
+    lab_technician = LabTechnician.objects.get(user=request.user)
     context = {"lab_technician": lab_technician}
     
     return render(request,"lab_technician/lab_technician_dashboard.htm/", context)

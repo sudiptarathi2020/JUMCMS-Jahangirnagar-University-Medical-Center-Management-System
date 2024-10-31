@@ -17,7 +17,7 @@
             <div class="logo">
                 <img src="{% static 'images/jumcms_logo.png'%}" alt="JUMCMS Logo" style="height: 60px; width: 250px;">
             </div>
-            <a href="#"><i class="sidebar_icon bi bi-house-door"></i> Dashboard</a>
+            <a href="{% url 'appointments:test_appointments_list' %}"><i class="sidebar_icon bi bi-house-door"></i> Dashboard</a>
             <a href="#"><i class="sidebar_icon bi bi-calendar-check"></i> Appointments</a>
             <a href="#"></i> Logout</a>
         </div>

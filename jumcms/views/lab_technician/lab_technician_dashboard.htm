@@ -1,7 +1,7 @@
 {% extends "lab_technician/base_labtechnician.htm" %}
 {% load static %}
 {% block content %}
-<form class="form-group" method="post" action="{% url 'appointments:test_appointments_list' %}">
+<form class="form-control" method="post" action="{% url 'appointments:test_appointments_list' %}">
 {% csrf_token %}
 
 
