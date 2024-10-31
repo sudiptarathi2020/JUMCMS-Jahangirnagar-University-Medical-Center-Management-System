@@ -1,3 +1,6 @@
+{% extends "storekeeper/base_storekeeper.html" %}
+{% load static %}
+{% block content %}
 <h2>Prescriptions</h2>
 <ul>
   {% for prescription in prescriptions %}
@@ -8,3 +11,4 @@
     </li>
   {% endfor %}
 </ul>
+{% endblock %}

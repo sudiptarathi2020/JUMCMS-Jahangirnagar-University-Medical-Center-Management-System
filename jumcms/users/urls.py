@@ -11,7 +11,7 @@ URLs:
 - /unapproved/ : View for handling unapproved users.
 """
 
-from django.urls import path
+from django.urls import path, include
 from users.controllers import *
 
 urlpatterns = [
@@ -20,4 +20,7 @@ urlpatterns = [
     path("logout/", log_out, name="users-logout"),
     path("unapproved/", unapproved, name="unapproved"),
     path("doctor_dashboard/", doctor_dashboard, name="doctor_dashboard"),
+
+    path("store-keeper/", storekeeper_dashboard, name="storekeeper_dashboard"),
+
 ]

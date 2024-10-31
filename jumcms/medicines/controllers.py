@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 
 from .models import Prescription, PrescribedMedicine
 
 
+@login_required
 def search_prescriptions(request):
     """
     Allows lab technicians to search for prescriptions by patient name.
@@ -16,11 +18,12 @@ def search_prescriptions(request):
         context = {
             'prescriptions': prescriptions,
         }
-        return render(request, 'lab_technician/prescription_list.html', context)
+        return render(request, 'storekeeper/prescription_list.html', context)
     else:
-        return render(request, 'lab_technician/prescription_search.html')
+        return render(request, 'storekeeper/prescription_search.html')
 
 
+@login_required
 def prescription_details(request, prescription_id):
     """
     Displays details of a specific prescription, including prescribed medicines.
@@ -31,5 +34,5 @@ def prescription_details(request, prescription_id):
         'prescription': prescription,
         'prescribed_medicines': prescribed_medicines,
     }
-    return render(request, 'lab_technician/prescription_details.html', context)
+    return render(request, 'storekeeper/prescription_details.html', context)
 # Create your views here.

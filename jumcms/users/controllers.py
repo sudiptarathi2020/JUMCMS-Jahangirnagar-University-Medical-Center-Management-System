@@ -2,6 +2,8 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
+from django.urls import reverse
+
 from .forms import UserRegistrationForm, LoginForm
 from .models import Doctor, Patient, Storekeeper, LabTechnician
 
@@ -72,6 +74,7 @@ def log_in(request):
                         Patient.objects.get_or_create(user=user)
                     elif user.role == "Storekeeper":
                         Storekeeper.objects.get_or_create(user=user)
+                        return redirect("storekeeper_dashboard")
                     elif user.role == "LabTechnician":
                         LabTechnician.objects.get_or_create(user=user)
                     return redirect("home")
@@ -115,7 +118,7 @@ def unapproved(request):
     Returns:
         HttpResponse: The rendered unapproved page.
     """
-    return render(request, "users/unapproved.html")
+    return render(request, "users/unapproved.htm")
 
 
 # Doctor part start
@@ -128,3 +131,10 @@ def doctor_dashboard(request):
 
 
 # Doctor part end
+
+
+@login_required
+def storekeeper_dashboard(request):
+    storekeeper = get_object_or_404(Storekeeper, user=request.user)
+    context = {"storekeeper": storekeeper}
+    return render(request, "storekeeper/base_storekeeper.html", context)
