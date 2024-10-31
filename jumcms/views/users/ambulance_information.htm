@@ -57,7 +57,13 @@
             <tr>
                 <td>{{ ambulance.id }}</td>
                 <td>{{ ambulance.name }}</td>
-                <td>{{ ambulance.location }}</td>
+                <td>
+                    {% if ambulance.status == "Available" %}
+                        <a href="https://www.google.com/maps/place/Mowlana+Bhashani+Hall/@23.8803305,90.2617624,17z/data=!4m6!3m5!1s0x3755e99fa3067585:0xfd8a7bb0982e4103!8m2!3d23.8803308!4d90.2638932!16s%2Fg%2F11c2lsgmm5?entry=ttu&g_ep=EgoyMDI0MTAyOS4wIKXMDSoASAFQAw%3D%3D?q={{ ambulance.coordinates }}" target="_blank">{{ ambulance.location }}</a>
+                    {% else %}
+                        {{ ambulance.location }}
+                    {% endif %}
+                </td>
                 <td>{{ ambulance.status }}</td>
             </tr>
             {% endfor %}

@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from .forms import UserRegistrationForm, LoginForm
 from .models import Doctor, Patient, Storekeeper, LabTechnician
+from django.shortcuts import render
 
 
 def home(request):
@@ -142,7 +143,7 @@ def ambulance_info(request):
     {"id": 1, "name": "Ambulance 1", "location": "Station 1", "status": "Available"},
     {"id": 2, "name": "Ambulance 2", "location": "Station 2", "status": "On Duty"},
     {"id": 3, "name": "Ambulance 3", "location": "Station 3", "status": "Maintenance"},
-    {"id": 3, "name": "Ambulance 4", "location": "Station 4", "status": "Maintenance"},
+    {"id": 3, "name": "Ambulance 4", "location": "Station 4", "status": "On Duty"},
 ]
     # Pass the ambulance data to the template
     return render(request, 'users/ambulance_information.htm', {'ambulances': AMBULANCE_DATA})
