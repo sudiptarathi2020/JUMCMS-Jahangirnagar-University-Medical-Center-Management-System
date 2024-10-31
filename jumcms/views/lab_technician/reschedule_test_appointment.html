@@ -1,0 +1,14 @@
+<!-- reschedule_test_appointment.html -->
+{% extends "lab_technician/base_labtechnician.htm" %}
+{% load static %}
+{% block content %}
+
+    <h1>Reschedule Appointment</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Reschedule Appointment</button>
+    </form>
+    
+{% endblock content %}
