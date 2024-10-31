@@ -12,17 +12,16 @@ def test_appointments_list(request):
     """
     View function for displaying a list of test appointments for the logged-in lab technician.
     """
-    try:
-        lab_technician = LabTechnician.objects.get(user=request.user)
-        appointments = TestAppointment.objects.filter(lab_technician=lab_technician)
-    except LabTechnician.DoesNotExist:
-        messages.error(request, "You do not have permission to view test appointments.")
-        return redirect('users:login') 
-
-    return render(request, 'lab_technician/lab_technician_dashboard.htm', {'appointments': appointments,'lab_technician':lab_technician})
-
-def test_appointments_fail(request):
-    return render(request,'appointments/test_appointments_fail.html')
+    if request.method == "POST":
+        try:
+            lab_technician = LabTechnician.objects.get(user=request.user)
+            appointments = TestAppointment.objects.filter(lab_technician=lab_technician)
+        except LabTechnician.DoesNotExist:
+            messages.error(request, "You do not have permission to view test appointments.")
+            return redirect('users:login') 
+        return render(request, 'lab_technician/lab_technician_dashboard_list.htm', {'appointments': appointments,'lab_technician':lab_technician})
+    else:
+        return render(request,'lab_technician/lab_technician_dashboard.htm')
 
 
 @login_required

@@ -1,14 +1,11 @@
 {% extends "lab_technician/base_labtechnician.htm" %}
 {% load static %}
 {% block content %}
-<ul>
-    {% for appointment in appointments %}
-    <li>
-        Appointment on {{ appointment.appointment_date_time }} for {{ appointment.medical_test }}
-        <a href="{% url 'appointments:reschedule_test_appointment' appointment.id %}">Reschedule</a>
-    </li>
-{% empty %}
-        <p>No appointments found.</p>
-    {% endfor %}
-</ul>
-{% endblock content %}
+<form class="form-group" method="post" action="{% url 'appointments:test_appointments_list' %}">
+{% csrf_token %}
+
+
+ <button type="submit">search</button>
+</form>
+
+{% endblock %}
