@@ -35,5 +35,9 @@
                 </tbody>
             </table>
         </div>
+        <form method="POST" action="{% url 'medicines:dispense_medicines' prescription.id %}">
+            {% csrf_token %}
+            <button type="sumbit" class="btn btn-success">Dispense Medicine</button>
+        </form>
     </div>
 {% endblock %}
