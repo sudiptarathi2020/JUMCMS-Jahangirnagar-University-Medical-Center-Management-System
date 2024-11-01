@@ -7,7 +7,7 @@
     <title>Doctor Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/styles_base_doctors.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles_base_storekeeper.css' %}">
 </head>
 <body>
 
@@ -17,7 +17,7 @@
             <div class="logo">
                 <img src="{% static 'images/jumcms_logo.png'%}" alt="JUMCMS Logo" style="height: 60px; width: 250px;">
             </div>
-            <a href="{% url 'medicines:search' %}"><i class="sidebar_icon bi bi-house-door"></i> Dashboard</a>
+            <a href="#"><i class="sidebar_icon bi bi-house-door"></i> Dashboard</a>
             <a href="#"><i class="sidebar_icon bi bi-capsule"></i> Medicines</a>
             <a href="#"><i class="sidebar_icon bi bi-thermometer-half"></i> Seasonal Diseases</a>
             <a href="#"><i class="sidebar_icon bi bi-file-earmark-text"></i> Certification requests</a>
@@ -26,10 +26,10 @@
         </div>
         <div class="col-md-10" id="block-content">
             <div class="d-flex justify-content-between align-items-center mt-3">
-                <h4>Dashboard</h4>
+                <h4 class="mx-auto text-primary fw-bold" style="font-size: 2rem; margin-top: 0;">Dashboard</h4>
                 <div>
-                    <span>Dr. {{ storekeeper.user.name }}</span>
-                    <img src="{{ storekeeper.user.profile_picture.url }}" alt="profile" class="rounded-circle" style="height: 40px; width: 40px;">
+                    <span> {{ user.name }}</span>
+                    <img src="{{ user.profile_picture.url }}" alt="profile" class="rounded-circle" style="height: 40px; width: 40px;">
                 </div>
             </div>
             {% block content %}

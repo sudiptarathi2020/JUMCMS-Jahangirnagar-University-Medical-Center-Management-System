@@ -1,14 +1,29 @@
 {% extends "storekeeper/base_storekeeper.html" %}
 {% load static %}
 {% block content %}
-<h2>Prescriptions</h2>
-<ul>
-  {% for prescription in prescriptions %}
-    <li>
-      <a href="{% url 'prescription_details' prescription.id %}">
-        Prescription for {{ prescription.doctor_appointment.patient.user.name }} on {{ prescription.date_issued }}
-      </a>
-    </li>
-  {% endfor %}
-</ul>
+<div class="container mt-5">
+    <h2 class="text-center fw-bold text-primary mb-4">Prescriptions</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow-sm bg-white">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col" class="text-center">Patient Name</th>
+                    <th scope="col" class="text-center">Date Issued</th>
+                    <th scope="col" class="text-center">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prescription in prescriptions %}
+                    <tr>
+                        <td class="text-center">{{ prescription.doctor_appointment.patient.user.name }}</td>
+                        <td class="text-center">{{ prescription.date_issued }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'medicines:prescription_details' prescription.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

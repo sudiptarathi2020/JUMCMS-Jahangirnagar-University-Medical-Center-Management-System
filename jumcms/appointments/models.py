@@ -38,4 +38,4 @@ class TestAppointment(Appointment):
     )
 
     def __str__(self):
-        return f"Appointment with {self.lab_technician.user.username} on {self.appointment_date_time} for {self.medical_test}"
+        return f"Appointment with {self.lab_technician.user.name} on {self.appointment_date_time} for {self.medical_test}"

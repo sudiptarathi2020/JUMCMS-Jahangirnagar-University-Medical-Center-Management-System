@@ -2,5 +2,8 @@
 
 **/migrations/*.py
 **/migrations/*.pyc
+**/__pycache__/*.pyc
 *.pyc
+*.xml
+**/.idea/
 db.sqlite3

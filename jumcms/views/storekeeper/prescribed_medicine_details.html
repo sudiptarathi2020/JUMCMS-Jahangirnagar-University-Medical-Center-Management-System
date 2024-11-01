@@ -1,0 +1,39 @@
+{% extends "storekeeper/base_storekeeper.html" %}
+{% load static %}
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-center fw-bold text-primary mb-4">Prescription</h2>
+        <div class = "table-responsive">
+            <table class="table table-bordered table-hover shadow-sm bg-white">
+                <thead class="thead-primary">
+                <tr>
+                    <th scope="col" class="text-center">Medicine Name</th>
+                    <th scope="col" class="text-center">Required Quantity</th>
+                    <th scope="col" class="text-center">In Stock</th>
+                    <th scope="col" class="text-center">Status</th>
+                    <th scope="col" class="text-center">Frequency</th>
+                    <th scope="col" class="text-center">Instructions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for info in medicines_info %}
+                    <tr>
+                        <td class="text-center">{{ info.medicine_name }}</td>
+                        <td class="text-center">{{ info.required_quantity }}</td>
+                        <td class="text-center">{{ info.in_stock}}</td>
+                        <td class="text-center">
+                            {% if info.is_stock_sufficient %}
+                                <span class="badge badge-success">Available</span>
+                            {%  else %}
+                                <span class="badge badge-danger">Unavailable</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">{{ info.frequency }}</td>
+                        <td class="text-center">{{ info.instructions }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

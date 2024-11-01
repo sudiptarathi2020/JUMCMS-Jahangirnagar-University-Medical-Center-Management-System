@@ -132,9 +132,11 @@ def doctor_dashboard(request):
 
 # Doctor part end
 
-
+# Storekeeper
 @login_required
 def storekeeper_dashboard(request):
-    storekeeper = get_object_or_404(Storekeeper, user=request.user)
-    context = {"storekeeper": storekeeper}
-    return render(request, "storekeeper/base_storekeeper.html", context)
+    user=request.user
+    context = {"user": user}
+    return render(request, "storekeeper/prescription_search.html", context)
+
+# Storekeeper
