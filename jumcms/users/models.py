@@ -225,7 +225,8 @@ class Doctor(models.Model):
         default=0, help_text="Years of experience of the doctor."
     )
 
-
+    def __str__(self):
+        return self.user.name
 class Patient(models.Model):
     """
     Model representing a Patient, linked to a User.

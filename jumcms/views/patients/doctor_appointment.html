@@ -1,0 +1,13 @@
+{% extends "patients/base_appointment.htm" %}
+{% load static %}
+{% block content %}
+<div>
+    <h1>Book an Appointment</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Schedule Appointment</button>
+    </form>
+    <a href="{% url 'appointment_list' %}">View All Appointments</a>
+</div>
+{% endblock content %}
