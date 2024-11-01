@@ -132,11 +132,11 @@ def doctor_dashboard(request):
 
 # Doctor part end
 
-# Storekeeper
+# Storekeeper Part Start
 @login_required
 def storekeeper_dashboard(request):
     user=request.user
     context = {"user": user}
     return render(request, "storekeeper/prescription_search.html", context)
 
-# Storekeeper
+# Storekeeper Part End

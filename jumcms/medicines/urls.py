@@ -4,8 +4,8 @@ from medicines.controllers import prescription_details, search_prescriptions, al
 app_name = 'medicines'
 urlpatterns = [
     path("", all_prescriptions, name="all_prescriptions"),
-    path('search/', search_prescriptions, name='search_prescriptions'),
+    path('search/', search_prescriptions, name='search-prescriptions'),
 
-    path('prescription_details/<int:prescription_id>/', prescription_details, name='prescription_details'),
-    path('dispense/<int:prescription_id>/', dispense_medicines, name="dispense_medicines"),
+    path('prescription-details/<int:prescription_id>/', prescription_details, name='prescription-details'),
+    path('dispense/<int:prescription_id>/', dispense_medicines, name="dispense-medicines"),
 ]

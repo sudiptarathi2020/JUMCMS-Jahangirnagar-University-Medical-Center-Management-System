@@ -21,6 +21,9 @@ urlpatterns = [
     path("unapproved/", unapproved, name="unapproved"),
     path("doctor_dashboard/", doctor_dashboard, name="doctor_dashboard"),
 
-    path("storekeeper_dashboard/", storekeeper_dashboard, name="storekeeper_dashboard"),
+
+    # StoreKeeper Part Start
+    path("storekeeper-dashboard/", storekeeper_dashboard, name="storekeeper_dashboard"),
+    # StoreKeeper Part End
 
 ]
