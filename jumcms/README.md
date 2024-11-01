@@ -9,14 +9,14 @@ This guide will help you set up and run the project.
 1. Check the existence of Python and pip:
 
     ```sh
-    python --version
-    pip --version
+    python3 --version
+    pip3 --version
     ```
 
 2. Create a virtual environment:
 
     ```sh
-    python -m venv myenv
+    python3 -m venv myenv
     ```
 
 3. Activate the virtual environment:
@@ -36,7 +36,7 @@ This guide will help you set up and run the project.
 4. Install the required packages from `requirements.txt`:
 
     ```sh
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
     ```
 
 ### VSCode Configuration
@@ -55,13 +55,13 @@ This guide will help you set up and run the project.
 1. Create database migrations:
 
     ```sh
-    python manage.py makemigrations
+    python3 manage.py makemigrations
     ```
 
 2. Apply the migrations:
 
     ```sh
-    python manage.py migrate
+    python3 manage.py migrate
     ```
 
 ### Running the Server
@@ -69,7 +69,7 @@ This guide will help you set up and run the project.
 1. Start the Django development server:
 
     ```sh
-    python manage.py runserver
+    python3 manage.py runserver
     ```
 
 ### Creating a New Django Project
