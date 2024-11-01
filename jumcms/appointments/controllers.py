@@ -36,7 +36,7 @@ def reschedule_test_appointment(request, appointment_id):
             form = RescheduleAppointmentForm(request.POST, instance=appointment)
             if form.is_valid():
                 form.save()
-                return redirect('appointments:test_appointments_list')
+                return render(request,"lab_technician/lab_technician_dashboard.htm/", {'lab_technician':lab_technician})
         else:
             form = RescheduleAppointmentForm(instance=appointment)
         
