@@ -4,6 +4,9 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from .forms import UserRegistrationForm, LoginForm
 from .models import Doctor, Patient, Storekeeper, LabTechnician
+from appointments.controllers import get_doctor_appointments
+from django.utils import timezone
+from collections import defaultdict
 
 
 def home(request):
@@ -67,12 +70,12 @@ def log_in(request):
                 if user.is_approved:
                     if user.role == "Doctor":
                         Doctor.objects.get_or_create(user=user)
-                        return redirect("doctor_dashboard")
+                        return redirect("doctor-dashboard")
                     elif user.role == "Patient":
                         Patient.objects.get_or_create(user=user)
                     elif user.role == "Storekeeper":
                         Storekeeper.objects.get_or_create(user=user)
-                    elif user.role == "LabTechnician":
+                    elif user.role == "Lab_technician":
                         LabTechnician.objects.get_or_create(user=user)
                     return redirect("home")
                 else:
@@ -122,8 +125,30 @@ def unapproved(request):
 @login_required
 def doctor_dashboard(request):
     doctor = get_object_or_404(Doctor, user=request.user)
-    context = {"doctor": doctor}
+    appointments_list = get_doctor_appointments(doctor)
+    today = timezone.now().date()
+    appointments_today = [
+        appointment
+        for appointment in appointments_list
+        if appointment.appointment_date_time.date() == today
+    ]
 
+    appointments_per_month = defaultdict(int)
+
+    for appointment in appointments_list:
+        appointment_year = appointment.appointment_date_time.year
+        appointment_month = appointment.appointment_date_time.month
+        if appointment_year == today.year:
+            appointments_per_month[appointment_month] += 1
+
+    appointments_data = [appointments_per_month[i] for i in range(1, 13)]
+    context = {
+        "doctor": doctor,
+        "appointments_list": appointments_list,
+        "today": today,
+        "appointments_today": appointments_today,
+        "appointments_data": appointments_data,
+    }
     return render(request, "doctors/doctor_dashboard.htm", context)
 
 

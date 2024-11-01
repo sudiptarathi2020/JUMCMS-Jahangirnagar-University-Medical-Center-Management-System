@@ -225,6 +225,10 @@ class Doctor(models.Model):
         default=0, help_text="Years of experience of the doctor."
     )
 
+    def __str__(self):
+        """Returns the string representation of the doctor."""
+        return self.user.name
+
 
 class Patient(models.Model):
     """

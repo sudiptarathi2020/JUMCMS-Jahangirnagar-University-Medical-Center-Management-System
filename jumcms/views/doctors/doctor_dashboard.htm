@@ -16,8 +16,8 @@
     </div>
 </div>
 <div class="card appointments-report p-3 bg-light">
-    <h5>Appointments Statistics (2024)</h5>
-    <canvas id="appointmentsChart" height="100"></canvas>
+    <h5>Appointments Statistics ({{ today.year }})</h5>
+    <canvas id="appointmentsChart" height="150"></canvas>
 </div>
 <div class="row">
     <div class="col-md-7">
@@ -27,68 +27,36 @@
                 <div class="col-6" style="text-align: right;" ><button type="button" class="btn btn-sm sort-apnts-btn">Emergency Cases First</button></div>
             </div>
             <div class="scrollable-table">
-            <table class="table table-md table-bordered table-striped patients-list">
+              <table class="table table-md table-bordered table-striped patients-list">
                 <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Patients's name</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Reason</th>
-                    <th colspan="3">Actions</th>
-                  </tr>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Patient's Name</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Reason</th>
+                        <th colspan="3">Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Rahim</td>
-                    <td>10:00 AM</td>
-                    <td>12/09/24</td>
-                    <td>Fever</td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
-                    <td><button type="button" class="btn btn-sm btn-danger">Cancel</button></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Sadia</td>
-                    <td>11:00 AM</td>
-                    <td>12/09/24</td>
-                    <td>Headache</td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
-                    <td><button type="button" class="btn btn-sm btn-danger">Cancel</button></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Bushra</td>
-                    <td>12:00 PM</td>
-                    <td>12/09/24</td>
-                    <td>Headache</td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
-                    <td><button type="button" class="btn btn-sm btn-danger">Cancel</button></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">4</th>
-                    <td>Sharmin</td>
-                    <td>05:00 PM</td>
-                    <td>12/09/24</td>
-                    <td>Runnig Nose, Body pain</td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
-                    <td><button type="button" class="btn btn-sm btn-danger">Cancel</button></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">5</th>
-                    <td>Shabrina</td>
-                    <td>05:00 PM</td>
-                    <td>13/09/24</td>
-                    <td>Probable Dengue</td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
-                    <td><button type="button" class="btn btn-sm btn-danger">Cancel</button></td>
-                  </tr>
+                    {% for appointment in appointments_list %}
+                      <tr data-emergency="{{ appointment.is_emergency }}">
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ appointment.patient.user.name }}</td>
+                        <td>{{ appointment.appointment_date_time|time:"h:i A" }}</td>
+                        <td>{{ appointment.appointment_date_time|date:"d/m/y" }}</td>
+                        <td>{{ appointment.reason }}</td>
+                        <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
+                        <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
+                        <td>
+                          <a href="{% url 'delete-doctor-appointment' appointment.id %}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                      </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">No appointments are scheduled.</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
               </table>
             </div>
@@ -96,46 +64,82 @@
     </div>
     <div class="col-md-5">
         <div class="card appointments p-3 bg-light">
-            <h5>Most Recent Appointments(September 12, 2024)</h5>
+            <h5>Most Recent Appointments({{ today|date:"F d, Y" }})</h5>
             <div class="scrollable-table">
-            <table class="table table-md table-bordered table-striped recent-patient-list">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Patients's name</th>
-                    <th scope="col">Time</th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Rahim</td>
-                    <td>10:00 AM</td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Start Consultation</button></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Sadia</td>
-                    <td>11:00 AM</td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Start Consultation</button></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Bushra</td>
-                    <td>12:00 PM</td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Start Consultation</button></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">4</th>
-                    <td>Sharmin</td>
-                    <td>05:00 PM</td>
-                    <td><button type="button" class="btn btn-sm st-cons-btn">Start Consultation</button></td>
-                  </tr>
-                </tbody>
-              </table>
+                <table class="table table-md table-bordered table-striped recent-patient-list">
+                  <thead>
+                      <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Patient's Name</th>
+                          <th scope="col">Time</th>
+                          <th scope="col">Action</th>
+                      </tr>
+                  </thead>
+                  <tbody>   
+                  {% for appointment in appointments_today %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ appointment.patient.user.name }}</td>
+                        <td>{{ appointment.appointment_date_time|time:"h:i A" }}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm st-cons-btn">Start Consultation</button>
+                        </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="8" class="text-center">No appointments scheduled are today.</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+<!-- Patient Details Modal -->
+<div class="modal fade" id="patientDetailsModal" tabindex="-1" aria-labelledby="patientDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="patientDetailsModalLabel">Patient Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <!-- Patient details will be populated here -->
+              <p id="patientName"></p>
+              <p id="appointmentDate"></p>
+              <p id="appointmentReason"></p>
+              <!-- Add more fields as needed -->
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script>
+  document.querySelector('.sort-apnts-btn').addEventListener('click', function() {
+    const table = document.querySelector('.patients-list tbody');
+    const rows = Array.from(table.querySelectorAll('tr[data-emergency]'));
+    rows.sort((a, b) => {
+        const isEmergencyA = a.getAttribute('data-emergency') === 'True';
+        const isEmergencyB = b.getAttribute('data-emergency') === 'True';
+
+        if (isEmergencyA && !isEmergencyB) {
+            return -1; 
+        }
+        if (!isEmergencyA && isEmergencyB) {
+            return 1;
+        }
+        return 0;
+    });
+    table.innerHTML = '';
+    rows.forEach(row => table.appendChild(row));
+});
+
+
+</script>
 {% endblock content %}
