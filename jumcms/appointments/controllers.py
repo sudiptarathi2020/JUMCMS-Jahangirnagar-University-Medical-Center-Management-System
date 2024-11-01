@@ -81,17 +81,6 @@ def get_patient_information(request, pk):
 
 
 def calculate_detailed_age(date_of_birth):
-    """
-    Calculates the detailed age of a person based on their date of birth.
-
-    This function computes the age in years, months, and days given a date of birth.
-
-    Parameters:
-        date_of_birth (date): The date of birth of the person.
-
-    Returns:
-        str: A string representing the age in the format "X years, Y months, Z days".
-    """
     today = date.today()
 
     years = today.year - date_of_birth.year
@@ -101,8 +90,9 @@ def calculate_detailed_age(date_of_birth):
     months = today.month - date_of_birth.month
     if today.day < date_of_birth.day:
         months -= 1
-    if months < 0:
-        months += 12
+        if months < 0:
+            months += 12
+
     days = today.day - date_of_birth.day
     if days < 0:
         previous_month = today.replace(day=1) - timedelta(days=1)

@@ -1,6 +1,8 @@
 from django.db import models
 from appointments.constants import MEDICAL_TEST_CHOICES
 from users.models import Doctor, Patient, LabTechnician
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 class Appointment(models.Model):
@@ -13,19 +15,29 @@ class Appointment(models.Model):
         status (CharField): Current status of the appointment, limited to either 'scheduled' or 'completed'.
     """
 
+    STATUS_CHOICES = [
+        ("scheduled", "Scheduled"),
+        ("completed", "Completed"),
+        ("canceled", "Canceled"),
+    ]
+
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     appointment_date_time = models.DateTimeField()
     status = models.CharField(
-        max_length=20, choices=[("scheduled", "Scheduled"), ("completed", "Completed")]
+        max_length=20, choices=STATUS_CHOICES, default="scheduled"
     )
     is_emergency = models.BooleanField(
         default=False, help_text="Indicates whether the appointment is emergency."
     )
 
     class Meta:
-        abstract = (
-            True  # This model will not be created as a database table, only subclassed.
-        )
+        abstract = True
+
+    def clean(self):
+        if self.appointment_date_time < timezone.now():
+            raise ValidationError("Appointment date must be in the future.")
+        if self.status not in dict(self.STATUS_CHOICES).keys():
+            raise ValidationError("Invalid status.")
 
     def __str__(self):
         """
@@ -86,4 +98,4 @@ class TestAppointment(Appointment):
         Returns:
             str: A string showing the lab technician’s username, the appointment date and time, and the medical test type.
         """
-        return f"Appointment with {self.lab_technician.user.username} on {self.appointment_date_time} for {self.medical_test}"
+        return f"Appointment with {self.lab_technician.user.name} on {self.appointment_date_time} for {self.medical_test}"
