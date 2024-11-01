@@ -24,11 +24,16 @@ def home(request):
 def register(request):
     """Handle user registration.
 
+    This function processes registration requests, validates the user input,
+    and saves the new user if valid. If the registration is successful,
+    it redirects the user to the unapproved page.
+
     Args:
         request: The HTTP request object.
 
     Returns:
-        HttpResponse: The rendered registration page or a redirect to the unapproved page.
+        HttpResponse: The rendered registration page or a redirect to the
+            unapproved page.
     """
     if request.method == "POST":
         form = UserRegistrationForm(request.POST, request.FILES)
@@ -50,6 +55,10 @@ def register(request):
 
 def log_in(request):
     """Handle user login.
+
+    This function processes login requests and authenticates the user. If
+    the login is successful and the user's account is approved, the user
+    is redirected to their respective dashboard based on their role.
 
     Args:
         request: The HTTP request object.
@@ -112,6 +121,8 @@ def log_out(request):
 def unapproved(request):
     """Render the unapproved account page.
 
+    This page informs users that their accounts are pending approval.
+
     Args:
         request: The HTTP request object.
 
@@ -121,9 +132,20 @@ def unapproved(request):
     return render(request, "users/unapproved.html")
 
 
-# Doctor part start
 @login_required
 def doctor_dashboard(request):
+    """Render the doctor's dashboard.
+
+    This function retrieves the doctor's appointments for the current day
+    and aggregates the appointments per month for display in the dashboard.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered doctor dashboard page with the doctor's
+            information and appointments data.
+    """
     doctor = get_object_or_404(Doctor, user=request.user)
     appointments_list = get_doctor_appointments(doctor)
     today = timezone.now().date()
@@ -150,6 +172,3 @@ def doctor_dashboard(request):
         "appointments_data": appointments_data,
     }
     return render(request, "doctors/doctor_dashboard.htm", context)
-
-
-# Doctor part end

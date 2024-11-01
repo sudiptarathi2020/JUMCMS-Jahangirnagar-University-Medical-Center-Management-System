@@ -237,6 +237,10 @@ class Patient(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        """Returns the string representation of the patient."""
+        return self.user.name
+
 
 class Storekeeper(models.Model):
     """

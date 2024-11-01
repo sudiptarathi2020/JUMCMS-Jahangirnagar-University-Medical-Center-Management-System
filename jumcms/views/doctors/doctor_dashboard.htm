@@ -46,8 +46,12 @@
                         <td>{{ appointment.appointment_date_time|time:"h:i A" }}</td>
                         <td>{{ appointment.appointment_date_time|date:"d/m/y" }}</td>
                         <td>{{ appointment.reason }}</td>
-                        <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
-                        <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
+                        <td>
+                          <a href="{% url 'patient-information' appointment.id %}" class="btn btn-sm st-cons-btn">Patient Details</a>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-sm st-cons-btn">Reschedule</button>
+                        </td>
                         <td>
                           <a href="{% url 'delete-doctor-appointment' appointment.id %}" class="btn btn-sm btn-danger">Delete</a>
                         </td>
@@ -95,29 +99,6 @@
             </div>
         </div>
     </div>
-</div>
-<!-- Patient Details Modal -->
-<div class="modal fade" id="patientDetailsModal" tabindex="-1" aria-labelledby="patientDetailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="patientDetailsModalLabel">Patient Details</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body">
-              <!-- Patient details will be populated here -->
-              <p id="patientName"></p>
-              <p id="appointmentDate"></p>
-              <p id="appointmentReason"></p>
-              <!-- Add more fields as needed -->
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-      </div>
-  </div>
 </div>
 
 <script>

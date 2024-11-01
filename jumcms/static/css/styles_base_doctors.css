@@ -132,3 +132,12 @@ body {
     overflow-x: auto;  
     white-space: nowrap; 
 }
+.patient-info-card{
+    border: 3px solid #428071;
+    padding: 8px;
+    border-radius: 10px;
+    margin-top: 10vh;
+    margin-bottom: 20vh;
+    height: 60vh;
+}
+    

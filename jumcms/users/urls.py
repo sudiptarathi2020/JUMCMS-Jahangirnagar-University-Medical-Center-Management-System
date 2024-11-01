@@ -9,6 +9,7 @@ URLs:
 - /login/ : View for user login.
 - /logout/ : View for user logout.
 - /unapproved/ : View for handling unapproved users.
+- /doctor-dashboard/ : View for Doctor dashboard.
 """
 
 from django.urls import path
