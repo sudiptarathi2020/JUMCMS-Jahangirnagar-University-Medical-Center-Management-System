@@ -4,6 +4,7 @@ ROLE_CHOICES = [
     ("Campus_employee", "Campus_employee"),
     ("Storekeeper", "Storekeeper"),
     ("Lab_technician", "Lab_technician"),
+    ("Admin", "Admin"),
 ]
 
 BLOOD_GROUP_CHOICES = [

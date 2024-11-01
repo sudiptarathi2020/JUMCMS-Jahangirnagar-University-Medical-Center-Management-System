@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from blogs.forms import BlogForm
 from blogs.models import Blog
 
+
 @login_required
 def create_blog_post(request):
     if request.method == 'POST':
