@@ -4,8 +4,17 @@ from appointments.models import DoctorAppointment
 from users.models import User, Doctor, Patient
 from medicines.constants import MEDICINE_FREQUENCY_CHOICES
 
+
 class MedicineModelTest(TestCase):
+    """
+    Medicine model tests
+    """
+
     def test_medicine_str(self):
+        """
+        test_medicine_str
+        :return: Boolean
+        """
         medicine = Medicine.objects.create(
             name="Paracetamol",
             generic_name="Acetaminophen",
@@ -20,6 +29,10 @@ class MedicineModelTest(TestCase):
         self.assertEqual(str(medicine), "Paracetamol (500mg)")
 
     def test_medicine_fields(self):
+        """
+        test_medicine_fields
+        :return: Boolean
+        """
         medicine = Medicine.objects.create(
             name="Paracetamol",
             generic_name="Acetaminophen",
@@ -43,7 +56,15 @@ class MedicineModelTest(TestCase):
 
 
 class PrescriptionModelTest(TestCase):
+    """
+    Prescription model tests
+    """
+
     def setUp(self):
+        """
+        Setup
+        :return: objects
+        """
         self.doctor_user = User.objects.create_user(
             email='doctor@example.com', name='Dr. Sudipta', role='Doctor',
             blood_group='A+', date_of_birth='1980-01-01', gender='Male',
@@ -62,6 +83,10 @@ class PrescriptionModelTest(TestCase):
         )
 
     def test_prescription_str(self):
+        """
+        test_prescription_str
+        :return: Boolean
+        """
         prescription = Prescription.objects.create(
             doctor_appointment=self.appointment,
             diagnosis="Headache",
@@ -71,6 +96,10 @@ class PrescriptionModelTest(TestCase):
         self.assertEqual(str(prescription), expected_str)
 
     def test_prescription_fields(self):
+        """
+        test_prescription_fields
+        :return: Boolean
+        """
         prescription = Prescription.objects.create(
             doctor_appointment=self.appointment,
             diagnosis="Headache",
@@ -80,8 +109,17 @@ class PrescriptionModelTest(TestCase):
         self.assertEqual(prescription.diagnosis, "Headache")
         self.assertEqual(prescription.next_visit_date, "2024-12-22")
 
+
 class PrescribedMedicineModelTest(TestCase):
+    """
+    Prescribed Medicine model tests
+    """
+
     def setUp(self):
+        """
+        Setup of  test
+        :return: objects
+        """
         self.doctor_user = User.objects.create_user(
             email='doctor@example.com', name='Dr. Sudipta', role='Doctor',
             blood_group='A+', date_of_birth='1980-01-01', gender='Male',
@@ -116,6 +154,10 @@ class PrescribedMedicineModelTest(TestCase):
         )
 
     def test_prescribed_medicine_str(self):
+        """
+        test_prescribed medicine
+        :return:
+        """
         prescribed_medicine = PrescribedMedicine.objects.create(
             prescription=self.prescription,
             medicine=self.medicine,
@@ -127,10 +169,14 @@ class PrescribedMedicineModelTest(TestCase):
         self.assertEqual(str(prescribed_medicine), expected_str)
 
     def test_prescribed_medicine_fields(self):
+        """
+        test_prescribed_medicine
+        :return: boolean
+        """
         prescribed_medicine = PrescribedMedicine.objects.create(
             prescription=self.prescription,
             medicine=self.medicine,
-            frequency=MEDICINE_FREQUENCY_CHOICES[0][0], 
+            frequency=MEDICINE_FREQUENCY_CHOICES[0][0],
             duration=5,
             instructions="Take after meal"
         )

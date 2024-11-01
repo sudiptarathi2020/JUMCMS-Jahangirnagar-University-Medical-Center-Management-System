@@ -11,8 +11,15 @@ from users.models import User, Doctor, Patient
 
 
 class StorekeeperControllerTest(TestCase):
+    """
+    StroreKeeperControllerTest
+    """
+
     def setUp(self):
-        # Create users
+        """
+        Setup
+        :return: Object
+        """
         self.storekeeper_user = User.objects.create_user(
             email='storekeeper@example.com', name='Storekeeper', role='Storekeeper',
             blood_group='A+', date_of_birth='1980-01-01', gender='Male',
@@ -59,6 +66,10 @@ class StorekeeperControllerTest(TestCase):
         self.client = Client()
 
     def test_all_prescriptions_view(self):
+        """
+        All Prescriptions
+        :return: Boolean
+        """
         self.client.force_login(self.storekeeper_user)
         response = self.client.get(reverse('medicines:all_prescriptions'))
         self.assertEqual(response.status_code, 200)
@@ -66,12 +77,20 @@ class StorekeeperControllerTest(TestCase):
         self.assertIn('prescribed_medicines', response.context)
 
     def test_search_prescriptions_view_get(self):
+        """
+        test_search_prescriptions_view_get
+        :return: Boolean
+        """
         self.client.force_login(self.storekeeper_user)
         response = self.client.get(reverse('medicines:search-prescriptions'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'storekeeper/prescription_search.html')
 
     def test_search_prescriptions_view_post(self):
+        """
+        Test search_prescriptions_view_post
+        :return:  Boolean
+        """
         self.client.force_login(self.storekeeper_user)
         response = self.client.post(reverse('medicines:search-prescriptions'), {'patient_name': 'John'})
         self.assertEqual(response.status_code, 200)
@@ -80,6 +99,10 @@ class StorekeeperControllerTest(TestCase):
         self.assertEqual(len(response.context['prescriptions']), 1)
 
     def test_prescription_details_view(self):
+        """
+        test_prescription_details_view
+        :return: Boolean
+        """
         self.client.force_login(self.storekeeper_user)
         response = self.client.get(reverse('medicines:prescription-details', args=[self.prescription.id]))
         self.assertEqual(response.status_code, 200)
@@ -89,6 +112,11 @@ class StorekeeperControllerTest(TestCase):
 
     @patch('medicines.controllers.generate_pdf')  # Mock the generate_pdf function
     def test_dispense_medicines_view_success(self, mock_generate_pdf):
+        """
+        Test dispense_medicines_view_success
+        :param mock_generate_pdf:
+        :return:
+        """
         mock_generate_pdf.return_value = HttpResponse()  # Mock the return value
 
         self.client.force_login(self.storekeeper_user)
@@ -102,6 +130,10 @@ class StorekeeperControllerTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_dispense_medicines_view_not_enough_stock(self):
+        """
+        test dispense medicines view_not_enough_stock
+        :return: Boolean
+        """
         self.client.force_login(self.storekeeper_user)
         self.medicine.stock_quantity = 2
         self.medicine.save()

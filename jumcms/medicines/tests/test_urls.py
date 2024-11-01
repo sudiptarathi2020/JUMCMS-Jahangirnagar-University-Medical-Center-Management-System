@@ -1,6 +1,7 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from medicines.controllers import prescription_details, search_prescriptions, all_prescriptions,dispense_medicines
+from medicines.controllers import prescription_details, search_prescriptions, all_prescriptions, dispense_medicines
+
 
 class TestUrls(SimpleTestCase):
 
