@@ -19,5 +19,6 @@ urlpatterns = [
     path("login/", log_in, name="users-login"),
     path("logout/", log_out, name="users-logout"),
     path("unapproved/", unapproved, name="unapproved"),
-    path("doctor_dashboard/", doctor_dashboard, name="doctor_dashboard"),
+    path("doctor-dashboard/", doctor_dashboard, name="doctor-dashboard"),
+    path("patient-dashboard/", patient_dashboard, name="patient-dashboard"),
 ]

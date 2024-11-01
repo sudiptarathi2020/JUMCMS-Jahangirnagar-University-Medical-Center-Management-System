@@ -1,13 +1,6 @@
-<!-- appointments/templates/appointments/appointment_list.html -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Appointment List</title>
-</head>
-<body>
-    <h1>All Doctor Appointments</h1>
+{% extends "patients/base_patient.htm" %}
+{% load static %}
+{% block content %}
     <ul>
         {% for appointment in appointments %}
             <li>
@@ -16,5 +9,7 @@
         {% endfor %}
     </ul>
     <a href="{% url 'create_doctor_appointment' %}">Schedule New Appointment</a>
-</body>
-</html>
+    <script>
+        document.getElementById('page-title').textContent = 'All Doctor appointments';
+    </script>
+{% endblock content %}

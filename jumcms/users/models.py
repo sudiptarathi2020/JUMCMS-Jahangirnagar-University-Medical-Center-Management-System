@@ -227,6 +227,8 @@ class Doctor(models.Model):
 
     def __str__(self):
         return self.user.name
+
+
 class Patient(models.Model):
     """
     Model representing a Patient, linked to a User.
