@@ -1,13 +1,16 @@
-{% extends "patients/base_appointment.htm" %}
+{% extends "patients/base_patient.htm" %}
 {% load static %}
 {% block content %}
 <div>
-    <h1>Book an Appointment</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Schedule Appointment</button>
     </form>
-    <a href="{% url 'appointment_list' %}">View All Appointments</a>
+    <a href="{% url 'doctor-dashboard' %}">View All Appointments</a>
 </div>
+
+<script>
+    document.getElementById('page-title').textContent = 'Book a Doctor Appointment';
+</script>
 {% endblock content %}

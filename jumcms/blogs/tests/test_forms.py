@@ -8,14 +8,24 @@ User = get_user_model()
 
 class BlogFormTests(TestCase):
     def setUp(self):
-        # Create a user to associate with the blog post
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        # Create a user to test the views
+        self.user = User.objects.create_superuser(
+            email='admin@example.com',
+            name='Admin',
+            password='asdf1234@',  # Choose a strong password
+            role='admin',  # Or another appropriate role if 'admin' is not defined
+            blood_group='A+',
+            date_of_birth='1990-01-01',
+            gender='Male',
+            phone_number='+8801712345678',
+        )
+        self.client.login(username='admin@example.com', password='asdf1234@')  # Log in the user
 
     def test_blog_form_valid(self):
         form_data = {
             'title': 'Test Blog Title',
             'content': 'This is a test blog content.',
-            'image': None,  # Assuming you are not uploading an image in this test
+            'image': 'static.images.default_user.png',  # Assuming you are not uploading an image in this test
             'tags': 'test, blog, django'
         }
         form = BlogForm(data=form_data)
@@ -33,7 +43,7 @@ class BlogFormTests(TestCase):
         form_data = {
             'title': '',  # Title is required
             'content': 'This is a test blog content.',
-            'image': None,
+            'image': 'static.images.default_user.png',
             'tags': 'test, blog, django'
         }
         form = BlogForm(data=form_data)
@@ -44,7 +54,7 @@ class BlogFormTests(TestCase):
         form_data = {
             'title': 'Test Blog Title',
             'content': '',  # Content is required
-            'image': None,
+            'image': 'static.images.default_user.png',
             'tags': 'test, blog, django'
         }
         form = BlogForm(data=form_data)

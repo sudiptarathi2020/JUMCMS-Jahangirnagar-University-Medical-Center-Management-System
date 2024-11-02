@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from .forms import UserRegistrationForm, LoginForm
 from .models import Doctor, Patient, Storekeeper, LabTechnician
+from appointments.controllers import get_doctor_appointment_list_for_patient
 
 
 def home(request):
@@ -36,7 +37,7 @@ def register(request):
                 request,
                 "Registration successful! Please wait until your account is approved!!",
             )
-            return render(request, "users/unapproved.htm")
+            return render(request, "users:users/unapproved.htm")
         else:
             messages.error(request, "Please correct the errors below")
     else:
@@ -68,11 +69,15 @@ def log_in(request):
                     if user.role == "Doctor":
                         Doctor.objects.get_or_create(user=user)
                         return redirect("doctor_dashboard")
-                    elif user.role == "Patient":
+                    elif user.role == "Student":
                         Patient.objects.get_or_create(user=user)
+                        return redirect("patient-dashboard")
+                    elif user.role == "Campus_employee":
+                        Patient.objects.get_or_create(user=user)
+                        return redirect("patient-dashboard")
                     elif user.role == "Storekeeper":
                         Storekeeper.objects.get_or_create(user=user)
-                    elif user.role == "LabTechnician":
+                    elif user.role == "Lab_technician":
                         LabTechnician.objects.get_or_create(user=user)
                     return redirect("home")
                 else:
@@ -103,7 +108,7 @@ def log_out(request):
         HttpResponse: A redirect to the home page after logging out.
     """
     logout(request)
-    return redirect("home")
+    return redirect("users:home")
 
 
 def unapproved(request):
@@ -123,8 +128,18 @@ def unapproved(request):
 def doctor_dashboard(request):
     doctor = get_object_or_404(Doctor, user=request.user)
     context = {"doctor": doctor}
-
     return render(request, "doctors/doctor_dashboard.htm", context)
 
 
 # Doctor part end
+
+
+# Patient part start
+@login_required
+def patient_dashboard(request):
+    patient = get_object_or_404(Patient, user=request.user)
+    context = {"patient": patient}
+    return render(request, "patients/patient_dashboard.html", context)
+
+
+# Patient part end

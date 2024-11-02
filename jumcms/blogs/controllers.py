@@ -26,10 +26,10 @@ def create_blog_post(request):
             Blog = form.save(commit=False)
             Blog.author = request.user
             Blog.save()
-            return redirect('blogs/blog_list')  # Redirect to a blog list or success page
+            return redirect('blogs:blog-list')  # Redirect to a blog list or success page
     else:
         form = BlogForm()
-    return render(request, 'blogs/create_blog.html', {'form': form})
+    return render(request, 'admin/create_blog.html', {'form': form})
 
 
 def blog_list(request):
@@ -46,5 +46,5 @@ def blog_list(request):
         HttpResponse: A rendered template displaying the list of blogs.
     """
     blogs = Blog.objects.all().order_by('-created_at')  # Retrieve all blogs ordered by creation date
-    return render(request, 'blogs/blog_list.html', {'blogs': blogs})
+    return render(request, 'admin/blog_list.html', {'blogs': blogs})
 # Blog Part (Hasan)
