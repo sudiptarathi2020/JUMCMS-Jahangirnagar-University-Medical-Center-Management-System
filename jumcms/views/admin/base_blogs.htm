@@ -23,7 +23,8 @@
             <a href="#"><i class="sidebar_icon bi bi-person-badge"></i> Doctors</a>
             <a href="#"><i class="sidebar_icon bi bi-calendar-check"></i> Appointments</a>
             <a href="#"><i class="sidebar_icon bi bi-capsule"></i> Medicines</a>
-            <a href="#"><i class="sidebar_icon bi bi-thermometer-half"></i> Seasonal Diseases</a>
+            <a href="{% url 'blogs:blog-list' %}"><i class="sidebar_icon bi bi-thermometer-half"></i> Seasonal Diseases</a>
+            <a href="{% url 'blogs:create-blog-post' %}"><i class="sidebar_icon bi bi-thermometer-half"></i> Create Blog</a>
             <a href="#"><i class="sidebar_icon bi bi-file-earmark-text"></i> Certification requests</a>
             <a href="#"><i class="sidebar_icon bi bi-gear"></i> Settings</a>
             <a href="{% url 'users:users-logout' %}"><i class="sidebar_icon bi bi-box-arrow-right"></i> Logout</a>

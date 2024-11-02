@@ -37,7 +37,7 @@ def register(request):
                 request,
                 "Registration successful! Please wait until your account is approved!!",
             )
-            return render(request, "users:users/unapproved.htm")
+            return render(request, "users/unapproved.htm")
         else:
             messages.error(request, "Please correct the errors below")
     else:
@@ -63,15 +63,21 @@ def log_in(request):
             password = request.POST.get("password")
             user = authenticate(request, username=email, password=password)
 
+           
+            
             if user is not None:
                 login(request, user)
+                 # Admin Bypass Remove with caution{Hasan}
+                if user.role == 'Admin':
+                    return redirect('blogs:blog-list')
+                # Admin Bypass{Hasan}
                 if user.is_approved:
                     if user.role == "Doctor":
                         Doctor.objects.get_or_create(user=user)
-                        return redirect("doctor_dashboard")
+                        return redirect("users:doctor_dashboard")
                     elif user.role == "Student":
                         Patient.objects.get_or_create(user=user)
-                        return redirect("patient-dashboard")
+                        return redirect("users:patient-dashboard")
                     elif user.role == "Campus_employee":
                         Patient.objects.get_or_create(user=user)
                         return redirect("patient-dashboard")
@@ -79,6 +85,8 @@ def log_in(request):
                         Storekeeper.objects.get_or_create(user=user)
                     elif user.role == "Lab_technician":
                         LabTechnician.objects.get_or_create(user=user)
+
+                    
                     return redirect("home")
                 else:
                     messages.error(request, "Your account is not approved yet")
@@ -108,7 +116,7 @@ def log_out(request):
         HttpResponse: A redirect to the home page after logging out.
     """
     logout(request)
-    return redirect("users:home")
+    return redirect("home")
 
 
 def unapproved(request):

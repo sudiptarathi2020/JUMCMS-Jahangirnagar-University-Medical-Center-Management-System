@@ -1,29 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Blog List</title>
-</head>
-<body>
+{% extends "admin/base_blogs.htm" %}
+{% load static %}
+{% block content %}
+<div>
     <h1>Blog Posts</h1>
 
     {% for blog in blogs %}
-        <div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 20px;">
-            <h2>{{ blog.title }}</h2>
-            <p><strong>Author:</strong> {{ blog.author.username }}</p>
-            <p><strong>Published on:</strong> {{ blog.created_at|date:"F j, Y, g:i a" }}</p>
-            
-            {% if blog.image %}
-                <img src="{{ blog.image.url }}" alt="{{ blog.title }}" style="max-width: 200px; max-height: 200px;">
-            {% endif %}
+    <div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 20px;">
+        <h2>{{ blog.title }}</h2>
+        <p><strong>Author:</strong> {{ blog.author.username }}</p>
+        <p><strong>Published on:</strong> {{ blog.created_at|date:"F j, Y, g:i a" }}</p>
 
-            <p>{{ blog.content|truncatewords:30 }}</p>  <!-- Truncate content to 30 words -->
-            <p><strong>Tags:</strong> {{ blog.tags }}</p>
+        {% if blog.image %}
+        <img src="{{ blog.image.url }}" alt="{{ blog.title }}" style="max-width: 200px; max-height: 200px;">
+        {% endif %}
 
-            <a href="#">Read more</a>  <!-- Link to blog detail page -->
-        </div>
+        <p>{{ blog.content|truncatewords:30 }}</p> <!-- Truncate content to 30 words -->
+        <p><strong>Tags:</strong> {{ blog.tags }}</p>
+
+        <a href="#">Read more</a> <!-- Link to blog detail page -->
+    </div>
     {% empty %}
-        <p>No blog posts found.</p>
+    <p>No blog posts found.</p>
     {% endfor %}
-</body>
-</html>
+</div>
+{% endblock content %}
