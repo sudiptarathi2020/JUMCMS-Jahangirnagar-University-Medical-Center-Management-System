@@ -1,10 +1,12 @@
+from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib import messages
-from .forms import UserRegistrationForm, LoginForm
-from .models import Doctor, Patient, Storekeeper, LabTechnician
+from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
+
+from ambulance.models import Ambulance
+from users.forms import UserRegistrationForm, LoginForm
+from users.models import Doctor, Patient, Storekeeper, LabTechnician
 
 
 def home(request):
@@ -68,10 +70,10 @@ def log_in(request):
                 if user.is_approved:
                     if user.role == "Doctor":
                         Doctor.objects.get_or_create(user=user)
-                        return redirect("doctor_dashboard")
+                        return redirect("users:doctor_dashboard")
                     elif user.role == "Patient":
                         Patient.objects.get_or_create(user=user)
-                    elif user.role == "Storekeeper":
+                    elif user.role == "users:Storekeeper":
                         Storekeeper.objects.get_or_create(user=user)
                     elif user.role == "LabTechnician":
                         LabTechnician.objects.get_or_create(user=user)
@@ -116,7 +118,7 @@ def unapproved(request):
     Returns:
         HttpResponse: The rendered unapproved page.
     """
-    return render(request, "users/unapproved.html")
+    return render(request, "users/unapproved.htm")
 
 
 # Doctor part start
@@ -136,15 +138,11 @@ def doctor_dashboard(request):
 # View ambulance information
 
 
-
+# Ambulance information(Nahian)
 def ambulance_info(request):
-
-    AMBULANCE_DATA = [
-    {"id": 1, "name": "Ambulance 1", "location": "Station 1", "status": "Available"},
-    {"id": 2, "name": "Ambulance 2", "location": "Station 2", "status": "On Duty"},
-    {"id": 3, "name": "Ambulance 3", "location": "Station 3", "status": "Maintenance"},
-    {"id": 3, "name": "Ambulance 4", "location": "Station 4", "status": "On Duty"},
-]
+    user = request.user
+    ambulances = Ambulance.objects.all()
     # Pass the ambulance data to the template
-    return render(request, 'users/ambulance_information.htm', {'ambulances': AMBULANCE_DATA})
+    return render(request, 'users/ambulance_information.htm', {'ambulances': ambulances,'user': user})
 #
+# Ambulance information(Nahian)
