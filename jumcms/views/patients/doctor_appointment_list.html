@@ -8,7 +8,7 @@
             </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'create_doctor_appointment' %}">Schedule New Appointment</a>
+    <a href="{% url 'appointments:create_doctor_appointment' %}">Schedule New Appointment</a>
     <script>
         document.getElementById('page-title').textContent = 'All Doctor appointments';
     </script>

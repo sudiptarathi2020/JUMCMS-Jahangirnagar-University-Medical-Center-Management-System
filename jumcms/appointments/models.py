@@ -22,7 +22,9 @@ class Appointment(models.Model):
     ]
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    appointment_date_time = models.DateTimeField()
+    appointment_date_time = models.DateTimeField(
+        default=timezone.now, editable=True, verbose_name="Date and time of appointment"
+    )
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default="scheduled"
     )

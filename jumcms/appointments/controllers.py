@@ -46,7 +46,7 @@ def create_doctor_appointment(request):
         messages.error(
             request, "You must be a registered patient to make an appointment."
         )
-        return redirect("patient-dashboard")
+        return redirect("users:users-login")
 
     if request.method == "POST":
         form = DoctorAppointmentCreationForm(request.POST)
@@ -70,7 +70,7 @@ def create_doctor_appointment(request):
             doctor.save()
 
             messages.success(request, "Doctor appointment created successfully.")
-            return redirect("doctor-appoinement-list-for-patient")
+            return redirect("appointments:doctor-appointment-list-for-patient")
     else:
         form = DoctorAppointmentCreationForm()
 

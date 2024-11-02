@@ -1,56 +1,81 @@
-# appointments/tests/test_views.py
-
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth import get_user_model
-from users.models import Patient
-from appointments.models import DoctorAppointment
+
 from appointments.forms import DoctorAppointmentCreationForm
+from appointments.models import DoctorAppointment  # Assuming your appointments app is named 'appointments'
+from users.models import Patient, Doctor, User
 
-User = get_user_model()
 
-class AppointmentsViewsTest(TestCase):
+class CreateDoctorAppointmentTestCase(TestCase):
+    def __init__(self, methodName: str = "runTest"):
+        super().__init__(methodName)
+        self.test_appointment = None
+
     def setUp(self):
-        # Create a test user and patient
-        self.user = User.objects.create_user(username='testuser', password='password')
-        self.patient = Patient.objects.create(user=self.user)
-        self.doctor = Doctor.objects.create(user_id=2)  # Replace with appropriate fields
+        self.client = Client()
 
-    def test_create_doctor_appointment_redirects_when_not_logged_in(self):
-        response = self.client.get(reverse('create_doctor_appointment'))
-        self.assertRedirects(response, f'/accounts/login/?next={reverse("create_doctor_appointment")}')
-
-    def test_create_doctor_appointment_success(self):
-        self.client.login(username='testuser', password='password')
-        
-        data = {
-            'doctor': self.doctor.id,
-            'appointment_date_time': '2024-12-01T10:00',  # Use a valid datetime
-            'reason': 'Regular check-up',
-            'is_emergency': False,
-        }
-        response = self.client.post(reverse('create_doctor_appointment'), data)
-        self.assertEqual(response.status_code, 302)  # Check for redirect
-        self.assertTrue(DoctorAppointment.objects.filter(patient=self.patient).exists())
-
-    def test_get_doctor_appointment_list_for_patient_success(self):
-        self.client.login(username='testuser', password='password')
-        
-        appointment = DoctorAppointment.objects.create(
-            patient=self.patient,
-            doctor=self.doctor,
-            appointment_date_time='2024-12-01T10:00',  # Use a valid datetime
-            reason='Regular check-up',
-            is_emergency=False,
+        # Create a Lab Technician user and instance
+        self.lab_technician_user = User.objects.create_user(
+            email='labt@example.com', name='Lab Technician', role='Lab_technician',
+            blood_group='A+', date_of_birth='1980-01-01', gender='Male',
+            phone_number='+8801712345678', password='asdf1234@'
         )
 
-        response = self.client.get(reverse('doctor-appoinement-list-for-patient'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, appointment.reason)
+        # Create a Patient user and instance
+        self.patient_user = User.objects.create_user(
+            email='patient@example.com', name='John Doe', role='Student',
+            blood_group='B+', date_of_birth='1990-05-10', gender='Male',
+            phone_number='+8801987654321', password='asdf1234@'
+        )
+        self.patient_user.is_approved = True
+        self.patient = Patient.objects.create(user=self.patient_user)
 
-    def test_get_doctor_appointment_list_for_patient_no_appointments(self):
-        self.client.login(username='testuser', password='password')
-        
-        response = self.client.get(reverse('doctor-appoinement-list-for-patient'))
+        # Create a Doctor user and instance
+        self.doctor_user = User.objects.create_user(
+            email='doctor@example.com', name='Dr. Example', role='Doctor',
+            blood_group='O+', date_of_birth='1975-08-15', gender='Male',
+            phone_number='+8801812345678', password='asdf1234@'
+        )
+        self.doctor_user.is_approved = True
+        self.doctor = Doctor.objects.create(user=self.doctor_user, no_of_appointments=0)
+
+        # Create a test appointment
+        # Define URLs for test cases
+        self.url = reverse('appointments:create_doctor_appointment')
+
+    def test_patient_required(self):
+        # Create a user who is not a patient
+        self.client.force_login(self.lab_technician_user)
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse('users:users-login'))  # Check redirect URL
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "You must be a registered patient to make an appointment.")
+
+    def test_get_request(self):
+        self.client.login(username='patient@example.com', password='asdf1234@')
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "No appointments found")  # Assuming you have this message in the template
+        self.assertTemplateUsed(response, 'patients/make_doctor_appointment.html')
+        self.assertIn('form', response.context)
+        self.assertIsInstance(response.context['form'], DoctorAppointmentCreationForm)
+
+    def test_post_request_invalid_form(self):
+        self.client.login(username='patient@example.com', password='asdf1234@')
+        # Create invalid form data (e.g., missing required field)
+        invalid_form_data = {
+            'appointment_date_time': '2024-12-25 10:00:00',
+            'reason': 'Regular checkup',
+        }
+        response = self.client.post(self.url, invalid_form_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'patients/make_doctor_appointment.html')
+        self.assertIn('form', response.context)
+        self.assertTrue(response.context['form'].errors)  # Check for form errors
+
+    def test_get_appointments_for_patient(self):
+        self.client.login(username='patient@example.com', password='asdf1234@')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response,
+        'patients/make_doctor_appointment.html')

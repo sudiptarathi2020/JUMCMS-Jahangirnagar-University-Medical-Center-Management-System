@@ -2,7 +2,9 @@
 
 **/migrations/*.py
 **/migrations/*.pyc
-
+*.pyc
+*.xml
+**/.idea/
 db.sqlite3
 *.png
 *.pdf
