@@ -1,7 +1,7 @@
 """
 URL configuration for the appointments app.
 
-This module defines the URL patterns for the appointments app, 
+This module defines the URL patterns for the appointments app,
 specifying the routes and their corresponding views.
 
 The following URL patterns are defined:

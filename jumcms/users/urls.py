@@ -1,7 +1,7 @@
 """
 URL configuration for user authentication views.
 
-This module defines the URL patterns for user-related actions such as 
+This module defines the URL patterns for user-related actions such as
 registration, login, logout, and handling unapproved users.
 
 URLs:
@@ -13,7 +13,7 @@ URLs:
 """
 
 from django.urls import path
-from users.controllers import *
+from users.controllers import register, log_in, log_out, unapproved, doctor_dashboard
 
 urlpatterns = [
     path("create-account/", register, name="users-register"),

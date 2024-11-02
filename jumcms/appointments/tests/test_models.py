@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-from appointments.models import DoctorAppointment, TestAppointment
-from users.models import User, Doctor, Patient, LabTechnician
+from appointments.models import DoctorAppointment
+from users.models import User, Doctor, Patient
 
 
 # Doctor part start

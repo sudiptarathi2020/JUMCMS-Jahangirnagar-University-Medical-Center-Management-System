@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser
-from users.constants import *
+from users.constants import ROLE_CHOICES, BLOOD_GROUP_CHOICES, GENDER_CHOICES
 from django.contrib.auth.models import BaseUserManager
 
 

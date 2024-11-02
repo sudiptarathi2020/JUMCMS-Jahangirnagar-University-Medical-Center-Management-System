@@ -2,9 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from appointments.models import DoctorAppointment
 from users.models import User, Patient, Doctor
-from django.core.exceptions import ValidationError
 from datetime import date, timedelta
-from appointments.controllers import *
+from appointments.controllers import get_doctor_appointments, calculate_detailed_age
 
 
 class DoctorAppointmentControllersTest(TestCase):
