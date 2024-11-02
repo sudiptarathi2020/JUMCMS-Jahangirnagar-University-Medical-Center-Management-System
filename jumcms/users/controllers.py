@@ -74,7 +74,7 @@ def log_in(request):
                         Storekeeper.objects.get_or_create(user=user)
                     elif user.role == "Lab_technician":
                         LabTechnician.objects.get_or_create(user=user)
-                        return redirect("lab_technician_dashboard")
+                        return redirect("users:lab_technician_dashboard")
                     return redirect("home")
                 else:
                     messages.error(request, "Your account is not approved yet")
@@ -130,6 +130,7 @@ def doctor_dashboard(request):
 
 # Doctor part end
 
+# lab tech start
 @login_required
 def lab_technician_dashboard(request):
     lab_technician = LabTechnician.objects.get(user=request.user)
@@ -137,3 +138,5 @@ def lab_technician_dashboard(request):
     
     return render(request,"lab_technician/lab_technician_dashboard.htm/", context)
     
+
+# lab tech end

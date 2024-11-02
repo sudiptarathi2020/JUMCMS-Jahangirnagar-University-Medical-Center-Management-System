@@ -4,7 +4,7 @@
 <div class="d-flex justify-content-center align-items-center bg-cover">
     <div class="container-overlay-register">
         <h2>Create Account</h2>
-        <form method="post" action="{% url 'users-register' %}">
+        <form method="post" action="{% url 'users:users-register' %}">
             {% csrf_token %}
             <div class="form-group">
                 <label class="custom-label" for="id_name">Name:</label>

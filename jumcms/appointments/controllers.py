@@ -12,7 +12,7 @@ def test_appointments_list(request):
     """
     Displays a list of test appointments for the logged-in lab technician.
 
-    Retrieves the test appointments associated with the loggedin lab technician when 
+    Retrieves the test appointments associated with the logged lab technician when
     the request is a POST. If the lab technician does not exist, an error message is 
     displayed, and the user is redirected to the login page.
 
@@ -29,12 +29,14 @@ def test_appointments_list(request):
         If the request method is not POST, renders 'lab_technician_dashboard.htm'.
     """
     if request.method == "POST":
+
         try:
             lab_technician = LabTechnician.objects.get(user=request.user)
-            appointments = TestAppointment.objects.filter(lab_technician=lab_technician)
         except LabTechnician.DoesNotExist:
             messages.error(request, "You do not have permission to view test appointments.")
-            return redirect('users:login')
+            return redirect('users:users-login')
+
+        appointments = TestAppointment.objects.filter(lab_technician=lab_technician)
 
         return render(
             request,
