@@ -1,0 +1,178 @@
+{% extends "doctors/base_doctors.htm" %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="prescription-sections" id="prescription-patient-info">
+            <h5>Patient Information</h2>
+            <img src="default_user.png" alt="profile" class="rounded-circle" style="height: 150px; width: 150px; margin-top: 10px; margin-bottom: 30px;">
+            <div class="row">
+                <div class="col-5">
+                    <h6>Patient ID</h6>
+                    <h6>Name</h6>
+                    <h6>Gender</h6>
+                    <h6>Blood Group</h6>
+                    <h6>Age</h6>
+                    <h6>Problem</h6>
+                    <h6>Phone no.</h6>
+                    <h6>Address</h6>
+                </div>
+                <div class="col-7">
+                    <h6>: 12345756</h6>
+                    <h6>: Hasan Al Mamun</h6>
+                    <h6>: Male</h6>
+                    <h6>: B+</h6>
+                    <h6>: 24 years 3 months 2 days</h6>
+                    <h6>: Severe Headache</h6>
+                    <h6>: +8801766656456</h6>
+                    <h6>: Sheikh Russel Hall, Jahangirnagar University, Savar, Dhaka</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="form-section prescription-sections" id="prescription-form">
+            <form>
+                <div class="mb-3">
+                    <label for="complains" class="form-label">Complains</label>
+                    <textarea id="complains" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="diagnosis" class="form-label">Diagnosis</label>
+                    <textarea id="diagnosis" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="vital-signs" class="form-label">Vital Signs</label>
+                    <textarea id="vital-signs" class="form-control" rows="2"></textarea>
+                </div>
+                
+                <div class="prescription-sub-sections">
+                    <h5>Medical Tests</h5>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="cbc">
+                                <label class="form-check-label" for="cbc">
+                                    Complete Blood Count (CBC)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="dental-crowns">
+                                <label class="form-check-label" for="dental-crowns">
+                                    Urinalysis
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="dental-implants">
+                                <label class="form-check-label" for="dental-implants">
+                                    Blood Pressure Test
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="cbc">
+                                <label class="form-check-label" for="cbc">
+                                    Ultrasound
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="dental-crowns">
+                                <label class="form-check-label" for="dental-crowns">
+                                    Dengue NS1 Antigen Test
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="dental-implants">
+                                <label class="form-check-label" for="dental-implants">
+                                    CT Scan
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="cbc">
+                                <label class="form-check-label" for="cbc">
+                                    MRI (Magnetic Resonance Imaging)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="dental-crowns">
+                                <label class="form-check-label" for="dental-crowns">
+                                    Electrocardiogram (ECG)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="dental-implants">
+                                <label class="form-check-label" for="dental-implants">
+                                    Tuberculosis (TB)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="prescription-sub-sections">
+                    <h5>Medicine</h5>
+                    <div class="scrollable-table-sm">
+                        <table class="table table-sm table-bordered medicine-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Dosage</th>
+                                    <th>Instruction</th>
+                                    <th>Quantity</th>
+                                    <th>Course Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Paracetamol</td>
+                                    <td><input type="text" value="1"></td>
+                                    <td><input type="text" value="After meal"></td>
+                                    <td><input type="text" value="1"></td>
+                                    <td> <input type="number" name="course_time" min="0" step="1" value="1"></td>
+                                    <td><button class="btn btn-danger btn-sm">X</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Amoxicillin</td>
+                                    <td><input type="text" value="2"></td>
+                                    <td><input type="text" value="Once at the morning"></td>
+                                    <td><input type="text" value="2"></td>
+                                    <td> <input type="number" name="course_time" min="0" step="1" value="1"></td>
+                                    <td><button class="btn btn-danger btn-sm">X</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-outline-success btn-sm">+ Add Medicine</button>
+                </div>
+                
+                <div class="prescription-sub-sections">
+                    <div class="attachment-section">
+                        <h5>Attachments</h5>
+                        <div class="attachment-preview">
+                            <img src="https://via.placeholder.com/100" alt="Attachment 1">
+                            <img src="https://via.placeholder.com/100" alt="Attachment 2">
+                            <img src="https://via.placeholder.com/100" alt="Attachment 3">
+                        </div>
+                        <div class="mt-3">
+                            <label for="file-upload" class="form-label">Upload Files</label>
+                            <input type="file" id="file-upload" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <h5>Select date and time:</h5>
+                <input type="date" value="1">
+                <input type="time" value="1">
+                <button type="submit" class="btn btn-md st-cons-btn">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('page-title').textContent = 'Prescribe Patient';
+</script>
+{% endblock content %}
