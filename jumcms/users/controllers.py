@@ -1,9 +1,10 @@
+
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.urls import reverse
-
+from medicines.models import Medicine
 from .forms import UserRegistrationForm, LoginForm
 from .models import Doctor, Patient, Storekeeper, LabTechnician
 
@@ -132,11 +133,12 @@ def doctor_dashboard(request):
 
 # Doctor part end
 
-# Storekeeper Part Start
+# Storekeeper Part Start(Sudipta)
 @login_required
 def storekeeper_dashboard(request):
-    user=request.user
-    context = {"user": user}
-    return render(request, "storekeeper/prescription_search.html", context)
+    user = request.user
+    medicines = Medicine.objects.all()
+    context = {"medicines": medicines, "user": user}
+    return render(request, "storekeeper/storekeeper_dashboard.html", context)
 
-# Storekeeper Part End
+# Storekeeper Part End(Sudipta)

@@ -336,3 +336,6 @@ select {
 #login-button{
     margin-top: 15px;
 }
+.full-width-custom{
+    width: 100%;
+}

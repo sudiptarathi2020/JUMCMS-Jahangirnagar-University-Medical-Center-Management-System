@@ -13,7 +13,7 @@ URLs:
 
 from django.urls import path, include
 from users.controllers import *
-
+app_name = 'users'
 urlpatterns = [
     path("create-account/", register, name="users-register"),
     path("login/", log_in, name="users-login"),

@@ -162,7 +162,7 @@ class StorekeeperControllerTest(TestCase):
                                         'expiry_date':"2025-12-31"
                                     },
                                     )
-        self.assertEqual(response.objects.count(),1)
+        self.assertEqual(Medicine.objects.count(),1)
         self.assertEqual(Medicine.objects.first().name,"Napa")
         self.assertEqual(Medicine.objects.first().generic_name,"Paracetamol")
         self.assertEqual(Medicine.objects.first().manufacturer,"Square")

@@ -9,7 +9,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-
+from medicines.forms import MedicineForm
 from .models import Prescription, PrescribedMedicine
 
 
@@ -192,4 +192,15 @@ def dispense_medicines(request, prescription_id):
     else:
         return redirect('medicines:prescription-details', prescription_id)
 
-# Storekeeper Part End
+
+@login_required
+def add_medicine(request):
+    user = request.user
+    if request.method == 'POST':
+        form = MedicineForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('users:storekeeper_dashboard')  # Replace with your actual success URL
+    else:
+        form = MedicineForm()
+    return render(request, 'storekeeper/add_medicine.html', {'form': form})
