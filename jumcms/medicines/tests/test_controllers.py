@@ -1,3 +1,4 @@
+from os import write
 from unittest.mock import patch
 
 from django.http import HttpResponse
@@ -141,3 +142,33 @@ class StorekeeperControllerTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse('medicines:search-prescriptions'))
+
+    def test_add_medicine_controller(self):
+        """
+        Test add_medicine_controller
+
+        """
+        self.client.force_login(self.storekeeper_user)
+        response = self.client.post(reverse('medicines:add-medicine'),
+                                    {
+                                        'name':"Napa",
+                                        'generic_name':"Paracetamol",
+                                        'manufacturer':"Square",
+                                        'dosage_form':"Tablet",
+                                        'strength':"200mg",
+                                        'description':"Used for fever",
+                                        'price':10.00,
+                                        'stock_quantity':100,
+                                        'expiry_date':"2025-12-31"
+                                    },
+                                    )
+        self.assertEqual(response.objects.count(),1)
+        self.assertEqual(Medicine.objects.first().name,"Napa")
+        self.assertEqual(Medicine.objects.first().generic_name,"Paracetamol")
+        self.assertEqual(Medicine.objects.first().manufacturer,"Square")
+        self.assertEqual(Medicine.objects.first().dosage_form,"Tablet")
+        self.assertEqual(Medicine.objects.first().strength,"200mg")
+        self.assertEqual(Medicine.objects.first().description,"Used for fever")
+        self.assertEqual(Medicine.objects.first().price,"10.00")
+        self.assertEqual(Medicine.objects.first().stock_quantity,"100mg")
+        self.assertEqual(Medicine.objects.first().expiry_date,"2025-12-31")
