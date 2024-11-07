@@ -20,6 +20,7 @@
             <a href="{% url 'appointments:test_appointments_list' %}"><i class="sidebar_icon bi bi-house-door"></i> Dashboard</a>
             <a href="#"><i class="sidebar_icon bi bi-calendar-check"></i> Appointments</a>
             <a href="{% url 'users:users-logout' %}"><i class="sidebar_icon bi bi-box-arrow-right"></i> Logout</a>
+            <a href="{% url 'medical_tests:submit_test_report' %}"><i class="sidebar_icon bi bi-plus fs-4"></i>Add Test Report</a>
         </div>
         <div class="col-md-10" id="block-content">
             <div class="d-flex justify-content-between align-items-center mt-3">
@@ -29,11 +30,11 @@
                     <img src="{{ lab_technician.user.profile_picture.url }}" alt="profile" class="rounded-circle" style="height: 40px; width: 40px;">
                 </div>
             </div>
-            <div class="container-overlay-login">
+            
             {% block content %}
                 
             {% endblock %}
-            </div>
+            
         </div>
     </div>
 </div>
