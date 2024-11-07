@@ -70,12 +70,12 @@ def log_in(request):
                 if user.is_approved:
                     if user.role == "Doctor":
                         Doctor.objects.get_or_create(user=user)
-                        return redirect("doctor_dashboard")
+                        return redirect("users:doctor_dashboard")
                     elif user.role == "Patient":
                         Patient.objects.get_or_create(user=user)
                     elif user.role == "Storekeeper":
                         Storekeeper.objects.get_or_create(user=user)
-                        return redirect("storekeeper_dashboard")
+                        return redirect("users:storekeeper_dashboard")
                     elif user.role == "LabTechnician":
                         LabTechnician.objects.get_or_create(user=user)
                     return redirect("home")

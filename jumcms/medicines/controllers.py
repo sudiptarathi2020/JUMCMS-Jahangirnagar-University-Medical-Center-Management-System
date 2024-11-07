@@ -203,4 +203,4 @@ def add_medicine(request):
             return redirect('users:storekeeper_dashboard')  # Replace with your actual success URL
     else:
         form = MedicineForm()
-    return render(request, 'storekeeper/add_medicine.html', {'form': form})
+    return render(request, 'storekeeper/add_medicine.html', {'form': form, 'user': user})
