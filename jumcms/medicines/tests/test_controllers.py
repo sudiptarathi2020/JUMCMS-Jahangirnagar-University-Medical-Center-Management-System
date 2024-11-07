@@ -1,13 +1,12 @@
-from os import write
 from unittest.mock import patch
 
 from django.http import HttpResponse
 from django.test import TestCase, Client
 from django.urls import reverse
 
+from appointments.models import DoctorAppointment
 from medicines.constants import MEDICINE_FREQUENCY_CHOICES
 from medicines.models import Medicine, Prescription, PrescribedMedicine
-from appointments.models import DoctorAppointment
 from users.models import User, Doctor, Patient
 
 
@@ -21,6 +20,13 @@ class StorekeeperControllerTest(TestCase):
         Setup
         :return: Object
         """
+        Medicine.objects.all().delete()
+        Prescription.objects.all().delete()
+        PrescribedMedicine.objects.all().delete()
+        DoctorAppointment.objects.all().delete()
+        User.objects.all().delete()
+        Doctor.objects.all().delete()
+        Patient.objects.all().delete()
         self.storekeeper_user = User.objects.create_user(
             email='storekeeper@example.com', name='Storekeeper', role='Storekeeper',
             blood_group='A+', date_of_birth='1980-01-01', gender='Male',
@@ -149,26 +155,30 @@ class StorekeeperControllerTest(TestCase):
 
         """
         self.client.force_login(self.storekeeper_user)
+        self.assertEqual(Medicine.objects.count(), 0)
         response = self.client.post(reverse('medicines:add-medicine'),
                                     {
-                                        'name':"Napa",
-                                        'generic_name':"Paracetamol",
-                                        'manufacturer':"Square",
-                                        'dosage_form':"Tablet",
-                                        'strength':"200mg",
-                                        'description':"Used for fever",
-                                        'price':10.00,
-                                        'stock_quantity':100,
-                                        'expiry_date':"2025-12-31"
+                                        'name': "Capa",
+                                        'generic_name': "Maracetamol",
+                                        'manufacturer': "Square",
+                                        'dosage_form': "Tablet",
+                                        'strength': "200mg",
+                                        'description': "Used for fever",
+                                        'price': 10.00,
+                                        'stock_quantity': 100,
+                                        'expiry_date': "2025-12-31"
                                     },
+                                    follow=False
                                     )
+        self.assertRedirects(response,reverse('users:storekeeper_dashboard'))
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(Medicine.objects.count(),1)
-        self.assertEqual(Medicine.objects.first().name,"Napa")
-        self.assertEqual(Medicine.objects.first().generic_name,"Paracetamol")
-        self.assertEqual(Medicine.objects.first().manufacturer,"Square")
-        self.assertEqual(Medicine.objects.first().dosage_form,"Tablet")
-        self.assertEqual(Medicine.objects.first().strength,"200mg")
-        self.assertEqual(Medicine.objects.first().description,"Used for fever")
-        self.assertEqual(Medicine.objects.first().price,"10.00")
-        self.assertEqual(Medicine.objects.first().stock_quantity,"100mg")
-        self.assertEqual(Medicine.objects.first().expiry_date,"2025-12-31")
+        self.assertEqual(Medicine.objects.first().name, "Capa")
+        self.assertEqual(Medicine.objects.first().generic_name, "Maracetamol")
+        self.assertEqual(Medicine.objects.first().manufacturer, "Square")
+        self.assertEqual(Medicine.objects.first().dosage_form, "Tablet")
+        self.assertEqual(Medicine.objects.first().strength, "200mg")
+        self.assertEqual(Medicine.objects.first().description, "Used for fever")
+        self.assertEqual(Medicine.objects.first().price, "10.00")
+        self.assertEqual(Medicine.objects.first().stock_quantity, "100mg")
+        self.assertEqual(Medicine.objects.first().expiry_date, "2025-12-31")
