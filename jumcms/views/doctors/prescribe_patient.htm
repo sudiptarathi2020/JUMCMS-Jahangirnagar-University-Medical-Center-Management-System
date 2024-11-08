@@ -3,30 +3,51 @@
 {% block content %}
 <div class="row">
     <div class="col-md-4">
-        <div class="prescription-sections" id="prescription-patient-info">
-            <h5>Patient Information</h2>
-            <img src="default_user.png" alt="profile" class="rounded-circle" style="height: 150px; width: 150px; margin-top: 10px; margin-bottom: 30px;">
-            <div class="row">
-                <div class="col-5">
-                    <h6>Patient ID</h6>
-                    <h6>Name</h6>
-                    <h6>Gender</h6>
-                    <h6>Blood Group</h6>
-                    <h6>Age</h6>
-                    <h6>Problem</h6>
-                    <h6>Phone no.</h6>
-                    <h6>Address</h6>
+        <div class="shadow-lg mt-4 p-3">
+            <div >
+                <div class="text-center mb-4">
+                    <img src="{{ patient.user.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="height: 100px; width: 100px;">
                 </div>
-                <div class="col-7">
-                    <h6>: 12345756</h6>
-                    <h6>: Hasan Al Mamun</h6>
-                    <h6>: Male</h6>
-                    <h6>: B+</h6>
-                    <h6>: 24 years 3 months 2 days</h6>
-                    <h6>: Severe Headache</h6>
-                    <h6>: +8801766656456</h6>
-                    <h6>: Sheikh Russel Hall, Jahangirnagar University, Savar, Dhaka</h6>
-                </div>
+                <h5 class="card-title text-center">{{ patient.user.name }}</h5>
+                <p class="text-center text-muted">{{ patient.user.role|title }}</p>
+
+                <table class="table table-borderless mt-3" style="width: 40vh; margin-left: auto; margin-right: auto;  ">
+                    <tr>
+                        <th>Email:</th>
+                        <td>{{ patient.user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Phone:</th>
+                        <td>{{ patient.user.phone_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Blood Group:</th>
+                        <td>{{ patient.user.blood_group }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date of Birth:</th>
+                        <td>{{ patient.user.date_of_birth }}</td>
+                    </tr>
+                    <tr>
+                        <th>Age:</th>
+                        <td>{{ age }}</td>
+                    </tr>
+                    <tr>
+                        <th>Gender:</th>
+                        <td>{{ patient.user.gender }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="shadow-lg mt-4 p-3">
+            <div >
+                <h5 class="card-title text-center">Appointment Information</h5>
+                <table class="table table-borderless mt-3" style="width: 40vh; margin-left: auto; margin-right: auto;  ">
+                    <tr>
+                        <th>Problem(s):</th>
+                        <td>{{ appointment.reason }}</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
@@ -45,74 +66,30 @@
                     <label for="vital-signs" class="form-label">Vital Signs</label>
                     <textarea id="vital-signs" class="form-control" rows="2"></textarea>
                 </div>
+                <div class="mb-3">
+                    <label for="vital-signs" class="form-label">Referral</label>
+                    <textarea id="vital-signs" class="form-control" rows="2"></textarea>
+                </div>
                 
                 <div class="prescription-sub-sections">
                     <h5>Medical Tests</h5>
                     <div class="row">
-                        <div class="col-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="cbc">
-                                <label class="form-check-label" for="cbc">
-                                    Complete Blood Count (CBC)
-                                </label>
+                        {% for test in tests %}
+                            {% if forloop.counter0|divisibleby:3 and not forloop.first %}
+                                </div>
+                                <div class="row">
+                            {% endif %}
+                            <div class="col-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="{{ test.id }}">
+                                    <label class="form-check-label" for="{{ test.id }}">
+                                        {{ test.name }}
+                                    </label>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="dental-crowns">
-                                <label class="form-check-label" for="dental-crowns">
-                                    Urinalysis
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="dental-implants">
-                                <label class="form-check-label" for="dental-implants">
-                                    Blood Pressure Test
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="cbc">
-                                <label class="form-check-label" for="cbc">
-                                    Ultrasound
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="dental-crowns">
-                                <label class="form-check-label" for="dental-crowns">
-                                    Dengue NS1 Antigen Test
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="dental-implants">
-                                <label class="form-check-label" for="dental-implants">
-                                    CT Scan
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="cbc">
-                                <label class="form-check-label" for="cbc">
-                                    MRI (Magnetic Resonance Imaging)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="dental-crowns">
-                                <label class="form-check-label" for="dental-crowns">
-                                    Electrocardiogram (ECG)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="dental-implants">
-                                <label class="form-check-label" for="dental-implants">
-                                    Tuberculosis (TB)
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                        {% endfor %}
+                    </div>                    
                 </div>
-                
-
                 <div class="prescription-sub-sections">
                     <h5>Medicine</h5>
                     <div class="scrollable-table-sm">
@@ -123,50 +100,22 @@
                                     <th>Dosage</th>
                                     <th>Instruction</th>
                                     <th>Quantity</th>
-                                    <th>Course Time</th>
+                                    <th>Dosage frequency</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Paracetamol</td>
-                                    <td><input type="text" value="1"></td>
-                                    <td><input type="text" value="After meal"></td>
-                                    <td><input type="text" value="1"></td>
-                                    <td> <input type="number" name="course_time" min="0" step="1" value="1"></td>
-                                    <td><button class="btn btn-danger btn-sm">X</button></td>
-                                </tr>
-                                <tr>
-                                    <td>Amoxicillin</td>
-                                    <td><input type="text" value="2"></td>
-                                    <td><input type="text" value="Once at the morning"></td>
-                                    <td><input type="text" value="2"></td>
-                                    <td> <input type="number" name="course_time" min="0" step="1" value="1"></td>
-                                    <td><button class="btn btn-danger btn-sm">X</button></td>
-                                </tr>
+                            <tbody id="medicines-table-body">
                             </tbody>
                         </table>
                     </div>
-                    <button class="btn btn-outline-success btn-sm">+ Add Medicine</button>
+                    <button class="btn btn-outline-success btn-sm" id="add-medicine-btn">+ Add Medicine</button>
                 </div>
-                
                 <div class="prescription-sub-sections">
                     <div class="attachment-section">
-                        <h5>Attachments</h5>
-                        <div class="attachment-preview">
-                            <img src="https://via.placeholder.com/100" alt="Attachment 1">
-                            <img src="https://via.placeholder.com/100" alt="Attachment 2">
-                            <img src="https://via.placeholder.com/100" alt="Attachment 3">
-                        </div>
-                        <div class="mt-3">
-                            <label for="file-upload" class="form-label">Upload Files</label>
-                            <input type="file" id="file-upload" class="form-control">
-                        </div>
+                        <h5 class="mb-3">Next Checkup</h5>
+                        <input type="date" class="form-control" value="1">
                     </div>
                 </div>
-                <h5>Select date and time:</h5>
-                <input type="date" value="1">
-                <input type="time" value="1">
                 <button type="submit" class="btn btn-md st-cons-btn">Save</button>
             </form>
         </div>
@@ -174,5 +123,42 @@
 </div>
 <script>
     document.getElementById('page-title').textContent = 'Prescribe Patient';
+
+    document.getElementById('add-medicine-btn').addEventListener('click', function() {
+        event.preventDefault();
+        const tableBody = document.getElementById('medicines-table-body');
+        
+        const rowId = 'row-' + new Date().getTime();
+        const newRow = document.createElement('tr');
+        newRow.id = rowId;
+        newRow.innerHTML = `
+            <td>
+                <select class="form-select" style="width: 150px;">
+                    {% for medicine in medicines %}
+                        <option value="{{ medicine }}">{{ medicine }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><input type="text" value="1" style="width: 50px;"></td>
+            <td><input type="text" placeholder="Instruction"></td>
+            <td><input type="text" value="1" style="width: 50px;"></td>
+            <td>
+                <select class="form-select" style="width: 100px;">
+                    {% for frequency in frequencies %}
+                        <option value="{{ frequency }}">{{ frequency }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><button id="delete-btn-${rowId}" class="btn btn-danger btn-sm">X</button></td>
+        `;
+        
+        tableBody.appendChild(newRow);
+        document.getElementById(`delete-btn-${rowId}`).addEventListener('click', function() {
+            // Remove the row by its unique ID
+            const rowToDelete = document.getElementById(rowId);
+            rowToDelete.remove();
+        });
+    });
+    
 </script>
 {% endblock content %}

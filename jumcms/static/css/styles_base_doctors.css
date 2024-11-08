@@ -111,6 +111,15 @@ body {
     width: 100%;
 }
 
+.patient-info-card{
+    border: 3px solid #428071;
+    padding: 8px;
+    border-radius: 10px;
+    margin-top: 10vh;
+    margin-bottom: 20vh;
+    height: 60vh;
+}
+
 .prescription-sections{
     padding: 30px;
     border: 3px solid #428071;
@@ -124,20 +133,9 @@ body {
     border-radius: 10px;
     margin-bottom: 10px;
 }
-#prescription-patient-info{
-    height: 90vh;
-}
 #prescription-form{
     height: 90vh;
     overflow-x: auto;  
     white-space: nowrap; 
-}
-.patient-info-card{
-    border: 3px solid #428071;
-    padding: 8px;
-    border-radius: 10px;
-    margin-top: 10vh;
-    margin-bottom: 20vh;
-    height: 60vh;
 }
     

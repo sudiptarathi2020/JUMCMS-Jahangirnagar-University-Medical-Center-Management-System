@@ -6,6 +6,7 @@ from datetime import date, timedelta
 from appointments.controllers import get_doctor_appointments, calculate_detailed_age
 
 
+# Doctor part start
 class DoctorAppointmentControllersTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -62,3 +63,6 @@ class DoctorAppointmentControllersTest(TestCase):
     def test_age_on_birthday_today(self):
         dob = date.today()
         self.assertEqual(calculate_detailed_age(dob), "0 years, 0 months, 0 days")
+
+
+# Doctor part end

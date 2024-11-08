@@ -86,7 +86,7 @@
                         <td>{{ appointment.patient.user.name }}</td>
                         <td>{{ appointment.appointment_date_time|time:"h:i A" }}</td>
                         <td>
-                            <button type="button" class="btn btn-sm st-cons-btn">Start Consultation</button>
+                            <a href="{% url 'medicines:get-information-for-prescription' appointment.id %}" class="btn btn-sm st-cons-btn">Start Consultation</a>
                         </td>
                     </tr>
                   {% empty %}

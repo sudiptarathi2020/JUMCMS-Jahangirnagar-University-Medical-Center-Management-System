@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Test, PrescribedTest, TestReport
 
-# Register your models here.
+admin.site.register(Test)
+admin.site.register(PrescribedTest)
+admin.site.register(TestReport)
