@@ -1,15 +1,30 @@
 {% extends "patients/base_patient.htm" %}
 {% load static %}
 {% block content %}
-    <ul>
-        {% for appointment in appointments %}
-            <li>
-                {{ appointment }} - {{ appointment.status }}
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'appointments:create_doctor_appointment' %}">Schedule New Appointment</a>
+    <div class="container mt-5">
+        <h2 class="mb-4">All Doctor Appointments</h2>
+        
+        {% if appointments %}
+            <ul class="list-group">
+                {% for appointment in appointments %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{ appointment }}</span>
+                        <span class="badge badge-primary badge-pill">{{ appointment.status }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">No appointments available.</p>
+        {% endif %}
+        
+        <div class="mt-4">
+            <a href="{% url 'appointments:create_doctor_appointment' %}" class="btn btn-primary">
+                Schedule New Appointment
+            </a>
+        </div>
+    </div>
+
     <script>
-        document.getElementById('page-title').textContent = 'All Doctor appointments';
+        document.getElementById('page-title').textContent = 'All Doctor Appointments';
     </script>
 {% endblock content %}

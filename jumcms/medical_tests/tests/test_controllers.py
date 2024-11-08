@@ -54,7 +54,7 @@ class TestReportViewTests(TestCase):
         self.client.logout()
         response = self.client.get(reverse('medical_tests:view-test-report'))
         self.assertEqual(response.status_code, 302)  # Redirect
-        self.assertRedirects(response, reverse('users:user-login'))
+        self.assertRedirects(response, '/accounts/login/?next=/medical_test/view_test_report/')
 
     def test_download_test_report_authenticated(self):
         """Test that authenticated users can download a test report."""
@@ -68,7 +68,7 @@ class TestReportViewTests(TestCase):
         self.client.logout()
         response = self.client.get(reverse('medical_tests:download-test-report', args=[self.test_report.id]))
         self.assertEqual(response.status_code, 302)  # Redirect
-        self.assertRedirects(response, f'/accounts/login/?next=/patients/download_test_report/{self.test_report.id}/')
+        self.assertRedirects(response, f'/accounts/login/?next=/medical_test/Download_test_report/{self.test_report.id}/')
 
     def test_download_test_report_invalid_id(self):
         """Test that accessing an invalid report ID returns a 404."""

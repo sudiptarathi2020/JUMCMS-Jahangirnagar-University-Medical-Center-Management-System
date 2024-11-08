@@ -1,5 +1,5 @@
 from django.db import models
-from appointments.constants import MEDICAL_TEST_CHOICES
+from appointments.constants import STATUS_CHOICES
 from users.models import Doctor, Patient, LabTechnician
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -15,16 +15,8 @@ class Appointment(models.Model):
         status (CharField): Current status of the appointment, limited to either 'scheduled' or 'completed'.
     """
 
-    STATUS_CHOICES = [
-        ("scheduled", "Scheduled"),
-        ("completed", "Completed"),
-        ("canceled", "Canceled"),
-    ]
-
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    appointment_date_time = models.DateTimeField(
-        default=timezone.now, editable=True, verbose_name="Date and time of appointment"
-    )
+    appointment_date_time = models.DateTimeField()
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default="scheduled"
     )
@@ -38,7 +30,7 @@ class Appointment(models.Model):
     def clean(self):
         if self.appointment_date_time < timezone.now():
             raise ValidationError("Appointment date must be in the future.")
-        if self.status not in dict(self.STATUS_CHOICES).keys():
+        if self.status not in dict(STATUS_CHOICES).keys():
             raise ValidationError("Invalid status.")
 
     def __str__(self):
@@ -76,6 +68,8 @@ class DoctorAppointment(Appointment):
 
 
 class TestAppointment(Appointment):
+    from medical_tests.models import Test
+
     """
     Model representing a lab test appointment, inheriting from the abstract Appointment model.
 
@@ -85,12 +79,10 @@ class TestAppointment(Appointment):
     """
 
     lab_technician = models.ForeignKey(
-        LabTechnician, on_delete=models.CASCADE, related_name="test_appointments"
+        LabTechnician, on_delete=models.CASCADE, related_name="test_technician"
     )
-    medical_test = models.CharField(
-        max_length=200,
-        choices=MEDICAL_TEST_CHOICES,
-        default="",
+    medical_test = models.ForeignKey(
+        Test, on_delete=models.CASCADE, related_name="test"
     )
 
     def __str__(self):
