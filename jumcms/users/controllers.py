@@ -1,6 +1,6 @@
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect 
 from django.contrib import messages
 from .forms import UserRegistrationForm, LoginForm
 from .models import Doctor, Patient, Storekeeper, LabTechnician
@@ -68,7 +68,7 @@ def log_in(request):
             if user is not None:
                 login(request, user)
                  # Admin Bypass Remove with caution{Hasan}
-                if user.role == 'Admin':
+                if user.is_admin:
                     return redirect('blogs:blog-list')
                 # Admin Bypass{Hasan}
                 if user.is_approved:
