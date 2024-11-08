@@ -229,6 +229,12 @@ class Patient(models.Model):
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        """Returns the name of the Patient."""
+        return self.user.name
+    
+    
 
 
 class Storekeeper(models.Model):
@@ -237,6 +243,10 @@ class Storekeeper(models.Model):
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        """Returns the name of the Storekeeper"""
+        return self.user.name
 
 
 class LabTechnician(models.Model):
@@ -245,3 +255,9 @@ class LabTechnician(models.Model):
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        """Return the name of the labtechnician"""
+        return self.user.name
+        
+        

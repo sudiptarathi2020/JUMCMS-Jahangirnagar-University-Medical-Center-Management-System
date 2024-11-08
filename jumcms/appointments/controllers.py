@@ -46,6 +46,23 @@ def test_appointments_list(request):
 
     return render(request, 'lab_technician/lab_technician_dashboard.htm')
 
+@login_required
+def labt_dashboard(request):
+    try:
+        lab_technician = LabTechnician.objects.get(user=request.user)
+    except LabTechnician.DoesNotExist:
+        messages.error(request, "You do not have permission to view test appointments.")
+        return redirect('users:users-login')
+
+    appointments = TestAppointment.objects.filter(lab_technician=lab_technician)
+
+    return render(
+        request,
+        'lab_technician/lab_technician_dashboard_list.htm',
+        {'appointments': appointments, 'lab_technician': lab_technician}
+    )
+    
+    
 
 @login_required
 def reschedule_test_appointment(request, appointment_id):

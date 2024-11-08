@@ -2,8 +2,9 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from .forms import UserRegistrationForm, LoginForm
-from .models import Doctor, Patient, Storekeeper, LabTechnician
+from users.forms import UserRegistrationForm, LoginForm
+from users.models import Doctor, Patient, Storekeeper, LabTechnician
+from medical_tests.models import Test, TestReport, PrescribedTest
 
 
 def home(request):
@@ -133,10 +134,8 @@ def doctor_dashboard(request):
 # lab tech start
 @login_required
 def lab_technician_dashboard(request):
-    lab_technician = LabTechnician.objects.get(user=request.user)
-    context = {"lab_technician": lab_technician}
     
-    return render(request,"lab_technician/lab_technician_dashboard.htm/", context)
+    return redirect("appointments:appointment-list")
     
 
 # lab tech end

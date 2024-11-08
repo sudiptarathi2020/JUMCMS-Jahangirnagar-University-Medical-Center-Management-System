@@ -19,10 +19,9 @@ class PrescribedTest(models.Model):
         Prescription, on_delete=models.CASCADE, related_name="prescribed_tests"
     )
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
-    notes = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.test.name} for {self.prescription.patient}"
+        return f"{self.test.name} for {self.prescription.doctor_appointment.patient}"
 
 
 class TestReport(models.Model):
