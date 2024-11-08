@@ -63,12 +63,11 @@ class PrescribedMedicine(models.Model):
         Prescription, on_delete=models.CASCADE, related_name="medicines"
     )
     medicine = models.ForeignKey("Medicine", on_delete=models.CASCADE)
-    dosage_frequency = models.CharField(
-        max_length=200,
-        choices=MEDICINE_FREQUENCY_CHOICES,
-    )
     duration = models.IntegerField(default=0)
     instructions = models.TextField(null=True, blank=True)
+    dosage_frequency = models.CharField(
+        max_length=200, choices=MEDICINE_FREQUENCY_CHOICES, default=""
+    )
 
     def __str__(self):
         """

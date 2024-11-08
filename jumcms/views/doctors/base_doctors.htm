@@ -36,6 +36,14 @@
                     <img src="{{ doctor.user.profile_picture.url }}" alt="profile" class="rounded-circle" style="height: 40px; width: 40px;">
                 </div>
             </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" style="width: 60vw; margin-left: 20vw; position: fixed; z-index: 100; text-align: center">
+                        <p style="color: rgb(40, 97, 40); font-size: medium; display: inline; margin: auto;">{{ message }} <span class="closebtn" style="display: inline; margin-left: auto;" onclick="this.parentElement.parentElement.style.display='none';">&times;</span></p>        
+                    </div>
+                {% endfor %}
+            {% endif %}
             {% block content %}
 
             {% endblock %}

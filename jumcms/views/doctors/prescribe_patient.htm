@@ -53,43 +53,41 @@
     </div>
     <div class="col-md-8">
         <div class="form-section prescription-sections" id="prescription-form">
-            <form>
+            <form method="POST" action="{% url 'medicines:save-prescription' appointment.id %}">
+                {% csrf_token %}
                 <div class="mb-3">
-                    <label for="complains" class="form-label">Complains</label>
-                    <textarea id="complains" class="form-control" rows="2"></textarea>
+                    <label for="complains" class="form-label">Complains of the Patient</label>
+                    <textarea id="complains" name="complains" class="form-control" rows="2" required></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="diagnosis" class="form-label">Diagnosis</label>
-                    <textarea id="diagnosis" class="form-control" rows="2"></textarea>
+                    <textarea id="diagnosis" name="diagnosis" class="form-control" rows="2" required></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="vital-signs" class="form-label">Vital Signs</label>
-                    <textarea id="vital-signs" class="form-control" rows="2"></textarea>
+                    <textarea id="vital-signs" name="vital_signs" class="form-control" rows="2" required></textarea>
                 </div>
                 <div class="mb-3">
-                    <label for="vital-signs" class="form-label">Referral</label>
-                    <textarea id="vital-signs" class="form-control" rows="2"></textarea>
+                    <label for="referral" class="form-label">Referral</label>
+                    <textarea id="referral" name="referral" class="form-control" rows="2"></textarea>
                 </div>
                 
                 <div class="prescription-sub-sections">
                     <h5>Medical Tests</h5>
                     <div class="row">
                         {% for test in tests %}
-                            {% if forloop.counter0|divisibleby:3 and not forloop.first %}
-                                </div>
-                                <div class="row">
-                            {% endif %}
                             <div class="col-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="{{ test.id }}">
+                                    <input class="form-check-input" type="checkbox" id="{{ test.id }}" name="tests" value="{{ test.id }}">
                                     <label class="form-check-label" for="{{ test.id }}">
                                         {{ test.name }}
                                     </label>
                                 </div>
                             </div>
                         {% endfor %}
-                    </div>                    
+                    </div>
                 </div>
+            
                 <div class="prescription-sub-sections">
                     <h5>Medicine</h5>
                     <div class="scrollable-table-sm">
@@ -97,10 +95,9 @@
                             <thead>
                                 <tr>
                                     <th>Item</th>
-                                    <th>Dosage</th>
                                     <th>Instruction</th>
-                                    <th>Quantity</th>
-                                    <th>Dosage frequency</th>
+                                    <th>Duration(in days)</th>
+                                    <th>Dosage Frequency</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -108,12 +105,13 @@
                             </tbody>
                         </table>
                     </div>
-                    <button class="btn btn-outline-success btn-sm" id="add-medicine-btn">+ Add Medicine</button>
+                    <button type="button" class="btn btn-outline-success btn-sm" id="add-medicine-btn">+ Add Medicine</button>
                 </div>
+                
                 <div class="prescription-sub-sections">
                     <div class="attachment-section">
                         <h5 class="mb-3">Next Checkup</h5>
-                        <input type="date" class="form-control" value="1">
+                        <input type="date" class="form-control" name="next_checkup">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-md st-cons-btn">Save</button>
@@ -124,41 +122,43 @@
 <script>
     document.getElementById('page-title').textContent = 'Prescribe Patient';
 
-    document.getElementById('add-medicine-btn').addEventListener('click', function() {
+    document.getElementById('add-medicine-btn').addEventListener('click', function(event) {
         event.preventDefault();
         const tableBody = document.getElementById('medicines-table-body');
         
         const rowId = 'row-' + new Date().getTime();
         const newRow = document.createElement('tr');
         newRow.id = rowId;
+        
         newRow.innerHTML = `
             <td>
-                <select class="form-select" style="width: 150px;">
+                <select class="form-select" name="medicines[]" style="width: 150px;">
                     {% for medicine in medicines %}
-                        <option value="{{ medicine }}">{{ medicine }}</option>
+                        <option value="{{ medicine.id }}">{{ medicine.name }}</option>
                     {% endfor %}
                 </select>
             </td>
-            <td><input type="text" value="1" style="width: 50px;"></td>
-            <td><input type="text" placeholder="Instruction"></td>
-            <td><input type="text" value="1" style="width: 50px;"></td>
+            <td><input type="text" name="instructions[]" placeholder="Instruction" class="form-control" value="Consume regularly"></td>
+            <td><input type="number" name="durations[]" value="1" class="form-control" style="width: 50px;"></td>
             <td>
-                <select class="form-select" style="width: 100px;">
+                <select class="form-select" name="frequencies[]" style="width: 100px;">
                     {% for frequency in frequencies %}
                         <option value="{{ frequency }}">{{ frequency }}</option>
                     {% endfor %}
                 </select>
             </td>
-            <td><button id="delete-btn-${rowId}" class="btn btn-danger btn-sm">X</button></td>
+            <td><button type="button" id="delete-btn-${rowId}" class="btn btn-danger btn-sm">X</button></td>
         `;
         
         tableBody.appendChild(newRow);
+        
+        // Attach delete event to the new button
         document.getElementById(`delete-btn-${rowId}`).addEventListener('click', function() {
-            // Remove the row by its unique ID
             const rowToDelete = document.getElementById(rowId);
             rowToDelete.remove();
         });
     });
+
     
 </script>
 {% endblock content %}
