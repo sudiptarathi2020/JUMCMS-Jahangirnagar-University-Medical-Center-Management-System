@@ -5,7 +5,9 @@ from medical_tests.models import TestReport, PrescribedTest, Test
 from medicines.models import Prescription
 from appointments.models import DoctorAppointment
 class TestReportViewTests(TestCase):
+    """Test suite for views related to viewing and downloading test reports."""
     def setUp(self):
+         """Set up the necessary objects for testing TestReport-related views, including users, patient, doctor, and test report."""
         # Create a user and patient
         self.patient_user = User.objects.create_user(
             email='patient@example.com', name='John Doe', role='Student',
