@@ -3,4 +3,10 @@
 **/migrations/*.py
 **/migrations/*.pyc
 *.pyc
+
+*.pdf
+*.jpeg
+*.png
+*.jpg
+
 db.sqlite3

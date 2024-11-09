@@ -11,19 +11,20 @@ from medical_tests.forms import TestReportForm
 from users.models import LabTechnician
 # Create your views here.
 
-@login_required
+@login_required(login_url='users:users-login')
 def prescribed_test_list(request):
     try:
         lab_technician = LabTechnician.objects.get(user=request.user)
     except LabTechnician.DoesNotExist:
         messages.error(request, "You do not have permission to view test appointments.")
         return redirect('users:users-login')
-    prescribed_tests = PrescribedTest.objects.all()
-    
+    #prescribed_tests = PrescribedTest.objects.all()
+    prescribed_tests = PrescribedTest.objects.filter(test_reports__isnull=True)
+
     return render(request,'lab_technician/list_of_prescribed_test.html',{'prescribed_tests':prescribed_tests,'lab_technician':lab_technician})
 
 
-@login_required
+@login_required(login_url='users:users-login')
 def create_test_report(request, prescribed_test_id):
     """
     View to create a test report for a specific prescribed test.
@@ -42,7 +43,7 @@ def create_test_report(request, prescribed_test_id):
             test_report.prescribed_test = prescribed_test
             test_report.save()
             messages.success(request, "Test report created successfully.")
-            return redirect('medical_tests:list')  # Adjust this to match the correct list view name
+            return redirect('medical_tests:test-list')  # Adjust this to match the correct list view name
         else:
             logging.error("Form is not valid: %s", form.errors)  # Logs errors if form is invalid
     else:
@@ -54,7 +55,7 @@ def create_test_report(request, prescribed_test_id):
         'lab_technician':lab_technician,
     })
 
-@login_required
+@login_required(login_url='users:users-login')
 def see_report_list(request):
     try:
         lab_technician = LabTechnician.objects.get(user=request.user)

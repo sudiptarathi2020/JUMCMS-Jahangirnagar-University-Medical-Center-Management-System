@@ -7,7 +7,7 @@ from appointments.models import TestAppointment
 from appointments.forms import RescheduleAppointmentForm
 
 
-@login_required
+@login_required(login_url='users:users-login')
 def test_appointments_list(request):
     """
     Displays a list of test appointments for the logged-in lab technician.
@@ -46,7 +46,7 @@ def test_appointments_list(request):
 
     return render(request, 'lab_technician/lab_technician_dashboard.htm')
 
-@login_required
+@login_required(login_url='users:users-login')
 def labt_dashboard(request):
     try:
         lab_technician = LabTechnician.objects.get(user=request.user)
@@ -64,7 +64,7 @@ def labt_dashboard(request):
     
     
 
-@login_required
+@login_required(login_url='users:users-login')
 def reschedule_test_appointment(request, appointment_id):
     """
     Reschedules a specific test appointment for the lab technician.

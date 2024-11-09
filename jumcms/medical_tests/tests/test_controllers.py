@@ -58,14 +58,14 @@ class LabTechnicianViewsTest(TestCase):
 
         # Create a test client
         self.client = Client()
-
+        self.client.login(username='labt@example.com', password='asdf1234@')
 
     def test_prescribed_test_list_logged_in(self):
         """
         Test that the prescribed test list view works when logged in.
         """
-        self.client.login(username='labt@example.com', password='asdf1234@')
-        response = self.client.get(reverse('medical_tests:list'))
+        
+        response = self.client.get(reverse('medical_tests:test-list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'lab_technician/list_of_prescribed_test.html')
         self.assertIn('prescribed_tests', response.context)
@@ -76,16 +76,17 @@ class LabTechnicianViewsTest(TestCase):
         """
         Test that the prescribed test list view redirects to login when not logged in.
         """
-        response = self.client.get(reverse('medical_tests:list'))
+        self.client.logout()
+        response = self.client.get(reverse('medical_tests:test-list'))
         self.assertEqual(response.status_code, 302)  # Redirect
-        self.assertRedirects(response, 'user:login')
+        self.assertRedirects(response, '/users/login/?next=/medical_test/test-list/')
 
 
     def test_create_test_report_valid_data(self):
         """
         Test creating a test report with valid data.
         """
-        self.client.login(username='labt@example.com', password='asdf1234@')
+        
 
         # Sample test data
         test_data = {
@@ -100,7 +101,7 @@ class LabTechnicianViewsTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 302)  # Redirect after successful creation
-        self.assertRedirects(response, reverse('medical_tests:list'))  # Check if it redirects to the correct view
+        self.assertRedirects(response, reverse('medical_tests:test-list'))  # Check if it redirects to the correct view
         self.assertEqual(TestReport.objects.count(), 1)  # Check if a TestReport object was created
 
 
@@ -129,10 +130,10 @@ class LabTechnicianViewsTest(TestCase):
         """
         Test that the see report list view works when logged in.
         """
-        self.client.login(username='labt@example.com', password='asdf1234@')
-        response = self.client.get(reverse('medical_tests:list'))
+        
+        response = self.client.get(reverse('medical_tests:see-report-list'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'lab_technician/list_of_prescribed_test.html')
+        self.assertTemplateUsed(response, 'lab_technician/list_of_report.html')
         self.assertIn('test_reports', response.context)
         self.assertIn('lab_technician', response.context)
 
@@ -141,6 +142,7 @@ class LabTechnicianViewsTest(TestCase):
         """
         Test that the see report list view redirects to login when not logged in.
         """
-        response = self.client.get(reverse('medical_tests:list'))
+        self.client.logout()
+        response = self.client.get(reverse('medical_tests:see-report-list'))
         self.assertEqual(response.status_code, 302)  # Redirect
-        self.assertRedirects(response, 'users:login')
+        self.assertRedirects(response, '/users/login/?next=/medical_test/report-list/')
