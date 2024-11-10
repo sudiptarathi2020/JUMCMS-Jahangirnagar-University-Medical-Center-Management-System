@@ -7,45 +7,48 @@ from appointments.models import DoctorAppointment
 class TestReportViewTests(TestCase):
     """Test suite for views related to viewing and downloading test reports."""
     def setUp(self):
-         """Set up the necessary objects for testing TestReport-related views, including users, patient, doctor, and test report."""
+        """Set up the necessary objects for testing TestReport-related views, including users, patient, doctor, and test report."""
         # Create a user and patient
         self.patient_user = User.objects.create_user(
-            email='patient@example.com', name='John Doe', role='Student',
-            blood_group='B+', date_of_birth='1990-05-10', gender='Male',
-            phone_number='+8801987654321', password='asdf1234@'
-        )
+                email='patient@example.com', name='John Doe', role='Student',
+                blood_group='B+', date_of_birth='1990-05-10', gender='Male',
+                phone_number='+8801987654321', password='asdf1234@'
+                )
+        self.patient_user.set_password='asdf1234@'
+        self.patient_user.save()
         self.patient = Patient.objects.create(user=self.patient_user)
         # Create related objects for the test report
 
         self.doctor_user = User.objects.create_user(
-            email='doctor@example.com', name='Doctor', role='Doctor',
-            blood_group='A+', date_of_birth='1999-05-10', gender='Male',
-            phone_number='+8801711111111', password='asdf1234@'
-        )
+                email='doctor@example.com', name='Doctor', role='Doctor',
+                blood_group='A+', date_of_birth='1999-05-10', gender='Male',
+                phone_number='+8801711111111', password='asdf1234@'
+                )
         self.doctor = Doctor.objects.create(user=self.doctor_user)
         self.appointment = DoctorAppointment.objects.create(
-            doctor=self.doctor, patient=self.patient,
-            appointment_date_time='2024-12-15T10:00:00Z', status='scheduled'
-        )
+                doctor=self.doctor, patient=self.patient,
+                appointment_date_time='2024-12-15T10:00:00Z', status='scheduled'
+                )
         self.prescription = Prescription.objects.create(
-            doctor_appointment= self.appointment,
-            complains="Fever",
-            vitals="Very Bad",
-            diagnosis="Good"
-        )
+                doctor_appointment= self.appointment,
+                complains="Fever",
+                vitals="Very Bad",
+                diagnosis="Good"
+                )
         self.test = Test.objects.create(name="Blood Test", description="Complete blood count")
         self.prescribed_test = PrescribedTest.objects.create(prescription=self.prescription, test = self.test)
         self.test_report = TestReport.objects.create(
-            prescribed_test=self.prescribed_test,
-            result="Cancer",
-            notes="Die"
-        )
+                prescribed_test=self.prescribed_test,
+                result="Cancer",
+                notes="Die"
+                )
 
         self.client = Client()
         self.client.login(username='patient@example.com', password='asdf1234@')
 
     def test_view_test_report_authenticated(self):
         """Test that authenticated users can access the view_test_report view."""
+        self.client.login(username='patient@example.com', password='asdf1234@')
         response = self.client.get(reverse('medical_tests:view-test-report'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'patients/view_test_report.html')
@@ -60,6 +63,7 @@ class TestReportViewTests(TestCase):
 
     def test_download_test_report_authenticated(self):
         """Test that authenticated users can download a test report."""
+        self.client.login(username='patient@example.com', password='asdf1234@')
         response = self.client.get(reverse('medical_tests:download-test-report', args=[self.test_report.id]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['content-type'], 'application/pdf')
