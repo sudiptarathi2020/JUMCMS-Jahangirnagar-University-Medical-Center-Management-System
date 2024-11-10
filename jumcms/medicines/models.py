@@ -6,7 +6,18 @@ from medicines.constants import *
 # Create your models here.
 class Medicine(models.Model):
     """
-    Medicine Model
+    Represents a medicine with details such as name, manufacturer, dosage form, and price.
+
+    Fields:
+        - name: The brand name of the medicine.
+        - generic_name: The generic name of the medicine (optional).
+        - manufacturer: The name of the manufacturer.
+        - dosage_form: The form in which the medicine is administered (e.g., tablet, syrup).
+        - strength: The strength of the medicine (e.g., 500mg).
+        - description: Additional details about the medicine (optional).
+        - price: The cost of a single unit of the medicine.
+        - stock_quantity: The available quantity of the medicine in stock.
+        - expiry_date: The expiration date of the medicine.
     """
 
     name = models.CharField(max_length=255)
@@ -19,19 +30,28 @@ class Medicine(models.Model):
     stock_quantity = models.IntegerField()
     expiry_date = models.DateField()
 
-    # prescription_required = models.BooleanField(default=True)
-
     def __str__(self):
         """
-        string representation of medicine
-        :return: String
+        Returns a string representation of the medicine in the format:
+        'Medicine Name (Strength)'.
         """
         return f"{self.name} ({self.strength})"
 
 
 class Prescription(models.Model):
     """
-    Prescription Model
+    Represents a prescription issued during a doctor appointment.
+
+    Fields:
+        - doctor_appointment: The associated doctor appointment.
+        - complains: The patient's complaints.
+        - vitals: The patient's vital signs.
+        - diagnosis: The diagnosis made by the doctor.
+        - referrals: Any referrals for further consultation or treatment (optional).
+        - date_issued: The date the prescription was issued (automatically set).
+        - time_issued: The time the prescription was issued (automatically set).
+        - next_checkup: The suggested date for the next checkup (optional).
+        - is_referred: Indicates if the patient is referred to a specialist.
     """
 
     doctor_appointment = models.ForeignKey(
@@ -48,15 +68,22 @@ class Prescription(models.Model):
 
     def __str__(self):
         """
-        String representation of prescription
-        :return: String
+        Returns a string representation of the prescription in the format:
+        'Prescription for Patient Name by Doctor Name on Date Issued'.
         """
         return f"Prescription for {self.doctor_appointment.patient.user.name} by {self.doctor_appointment.doctor.user.name} on {self.date_issued}"
 
 
 class PrescribedMedicine(models.Model):
     """
-    Prescribed Medicine Model
+    Represents a specific medicine prescribed in a prescription.
+
+    Fields:
+        - prescription: The associated prescription.
+        - medicine: The prescribed medicine.
+        - duration: The number of days the medicine should be taken.
+        - instructions: Any special instructions for taking the medicine (optional).
+        - dosage_frequency: The frequency of dosage (e.g., 'Twice a day').
     """
 
     prescription = models.ForeignKey(
@@ -71,7 +98,7 @@ class PrescribedMedicine(models.Model):
 
     def __str__(self):
         """
-        String representation of prescribed medicine
-        :return: String
+        Returns a string representation of the prescribed medicine in the format:
+        'Medicine Name for Patient Name'.
         """
         return f"{self.medicine.name} for {self.prescription.doctor_appointment.patient.user.name}"
