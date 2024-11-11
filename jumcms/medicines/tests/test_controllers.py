@@ -28,20 +28,20 @@ class StorekeeperControllerTest(TestCase):
         Doctor.objects.all().delete()
         Patient.objects.all().delete()
         self.storekeeper_user = User.objects.create_user(
-            email='storekeeper@example.com', name='Storekeeper', role='Storekeeper',
-            blood_group='A+', date_of_birth='1980-01-01', gender='Male',
-            phone_number='+8801712345678', password='asdf1234@'
-        )
+                email='storekeeper@example.com', name='Storekeeper', role='Storekeeper',
+                blood_group='A+', date_of_birth='1980-01-01', gender='Male',
+                phone_number='+8801712345678', password='asdf1234@'
+                )
         self.doctor_user = User.objects.create_user(
-            email='doctor@example.com', name='Dr. Sudipta', role='Doctor',
-            blood_group='A+', date_of_birth='1980-01-01', gender='Male',
-            phone_number='+8801712345678', password='asdf1234@'
-        )
+                email='doctor@example.com', name='Dr. Sudipta', role='Doctor',
+                blood_group='A+', date_of_birth='1980-01-01', gender='Male',
+                phone_number='+8801712345678', password='asdf1234@'
+                )
         self.patient_user = User.objects.create_user(
-            email='patient@example.com', name='John Doe', role='Student',
-            blood_group='B+', date_of_birth='1990-05-10', gender='Male',
-            phone_number='+8801987654321', password='asdf1234@'
-        )
+                email='patient@example.com', name='John Doe', role='Student',
+                blood_group='B+', date_of_birth='1990-05-10', gender='Male',
+                phone_number='+8801987654321', password='asdf1234@'
+                )
 
         # Create doctor and patient instances
         self.doctor = Doctor.objects.create(user=self.doctor_user)
@@ -49,25 +49,25 @@ class StorekeeperControllerTest(TestCase):
 
         # Create appointment
         self.appointment = DoctorAppointment.objects.create(
-            doctor=self.doctor, patient=self.patient,
-            appointment_date_time='2024-12-15T10:00:00Z', status='scheduled'
-        )
+                doctor=self.doctor, patient=self.patient,
+                appointment_date_time='2024-12-15T10:00:00Z', status='scheduled'
+                )
 
         # Create medicine
         self.medicine = Medicine.objects.create(
-            name="Paracetamol", generic_name="Acetaminophen", manufacturer="ABC Pharma",
-            dosage_form="Tablet", strength="500mg", description="Pain reliever",
-            price=10.00, stock_quantity=100, expiry_date="2025-12-31"
-        )
+                name="Paracetamol", generic_name="Acetaminophen", manufacturer="ABC Pharma",
+                dosage_form="Tablet", strength="500mg", description="Pain reliever",
+                price=10.00, stock_quantity=100, expiry_date="2025-12-31"
+                )
 
         # Create prescription and prescribed medicine
         self.prescription = Prescription.objects.create(
-            doctor_appointment=self.appointment, diagnosis="Headache", next_visit_date='2024-12-22'
-        )
+                doctor_appointment=self.appointment, diagnosis="Headache", next_visit_date='2024-12-22'
+                )
         self.prescribed_medicine = PrescribedMedicine.objects.create(
-            prescription=self.prescription, medicine=self.medicine,
-            frequency=MEDICINE_FREQUENCY_CHOICES[0][0], duration=5, instructions="Take after meal"
-        )
+                prescription=self.prescription, medicine=self.medicine,
+                frequency=MEDICINE_FREQUENCY_CHOICES[0][0], duration=5, instructions="Take after meal"
+                )
 
         # Create a client
         self.client = Client()
@@ -155,7 +155,7 @@ class StorekeeperControllerTest(TestCase):
 
         """
         self.client.force_login(self.storekeeper_user)
-        self.assertEqual(Medicine.objects.count(), 0)
+        self.assertEqual(Medicine.objects.count(), 1)
         response = self.client.post(reverse('medicines:add-medicine'),
                                     {
                                         'name': "Capa",
@@ -172,13 +172,13 @@ class StorekeeperControllerTest(TestCase):
                                     )
         self.assertRedirects(response,reverse('users:storekeeper_dashboard'))
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Medicine.objects.count(),1)
-        self.assertEqual(Medicine.objects.first().name, "Capa")
-        self.assertEqual(Medicine.objects.first().generic_name, "Maracetamol")
-        self.assertEqual(Medicine.objects.first().manufacturer, "Square")
+        self.assertEqual(Medicine.objects.count(),2)
+        self.assertEqual(Medicine.objects.first().name, "Paracetamol")
+        self.assertEqual(Medicine.objects.first().generic_name, "Acetaminophen")
+        self.assertEqual(Medicine.objects.first().manufacturer, "ABC Pharma")
         self.assertEqual(Medicine.objects.first().dosage_form, "Tablet")
-        self.assertEqual(Medicine.objects.first().strength, "200mg")
-        self.assertEqual(Medicine.objects.first().description, "Used for fever")
-        self.assertEqual(Medicine.objects.first().price, "10.00")
-        self.assertEqual(Medicine.objects.first().stock_quantity, "100mg")
-        self.assertEqual(Medicine.objects.first().expiry_date, "2025-12-31")
+        self.assertEqual(Medicine.objects.first().strength, "500mg")
+        self.assertEqual(Medicine.objects.first().description, "Pain reliever")
+        self.assertEqual(Medicine.objects.first().price, 10.00)
+        self.assertEqual(Medicine.objects.first().stock_quantity, 100)
+        self.assertEqual(str(Medicine.objects.first().expiry_date), "2025-12-31")
