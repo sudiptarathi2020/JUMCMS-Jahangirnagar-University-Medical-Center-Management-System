@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - ci-testing-ss
+      - ci-testing-sd
 
 jobs:
   test:
