@@ -155,7 +155,7 @@ class DoctorDashboardControllerTests(TestCase):
         self.assertEqual(len(response.context["appointments_today"]), 1)
 
     def test_doctor_dashboard_access_for_non_doctor_user(self):
-        non_doctor_user = User.objects.create_user(
+        User.objects.create_user(
             email="nondoctoruser@example.com",
             name="Non doctor",
             role="doctor",
@@ -177,7 +177,7 @@ class DoctorDashboardControllerTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         appointments_data = response.context["appointments_data"]
-        expected_appointments_data = [0] * 9 + [1, 2, 0]
+        expected_appointments_data = [0] * 10 + [3, 0]
         self.assertEqual(appointments_data, expected_appointments_data)
 
 

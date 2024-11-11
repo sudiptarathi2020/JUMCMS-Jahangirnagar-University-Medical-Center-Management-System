@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from appointments.models import DoctorAppointment
 from users.models import User, Patient, Doctor
 
@@ -22,7 +23,7 @@ class AppointmentsURLsTest(TestCase):
         self.appointment = DoctorAppointment.objects.create(
             patient=self.patient,
             doctor=self.doctor,
-            appointment_date_time="2024-11-02 10:00:00",
+            appointment_date_time=timezone.now() + timezone.timedelta(days=3),
             status="scheduled",
             reason="Routine checkup",
         )

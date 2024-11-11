@@ -43,7 +43,7 @@ class DoctorDashboardURLsTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_doctor_dashboard_access_invalid_user(self):
-        non_doctor_user = User.objects.create_user(
+        User.objects.create_user(
             email="non_doctor@example.com",
             name="Non-Doctor User",
             role="patient",

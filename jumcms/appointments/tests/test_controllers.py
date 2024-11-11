@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from appointments.models import DoctorAppointment
 from users.models import User, Patient, Doctor
-from datetime import date, timedelta
+from datetime import date
+from django.utils import timezone
 from appointments.controllers import get_doctor_appointments, calculate_detailed_age
 
 
@@ -24,7 +25,7 @@ class DoctorAppointmentControllersTest(TestCase):
         self.appointment = DoctorAppointment.objects.create(
             patient=self.patient,
             doctor=self.doctor,
-            appointment_date_time=date.today() + timedelta(days=1),
+            appointment_date_time=timezone.now() + timezone.timedelta(days=1),
             status="scheduled",
             reason="Routine checkup",
         )
@@ -57,12 +58,16 @@ class DoctorAppointmentControllersTest(TestCase):
 
     def test_calculate_detailed_age(self):
         dob = date(1998, 11, 2)
-        expected_age = "25 years, 11 months, 30 days"
-        self.assertEqual(calculate_detailed_age(dob), expected_age)
+        date_today = date(2024, 11, 11)
+        expected_age = "26 years, 0 months, 9 days"
+        self.assertEqual(calculate_detailed_age(dob, date_today), expected_age)
 
     def test_age_on_birthday_today(self):
-        dob = date.today()
-        self.assertEqual(calculate_detailed_age(dob), "0 years, 0 months, 0 days")
+        dob = timezone.now().date()
+        self.assertEqual(
+            calculate_detailed_age(dob, timezone.now().date()),
+            "0 years, 0 months, 0 days",
+        )
 
 
 # Doctor part end

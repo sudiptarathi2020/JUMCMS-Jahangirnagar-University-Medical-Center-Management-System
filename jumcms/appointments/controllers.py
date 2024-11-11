@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import DoctorAppointment
 from django.contrib import messages
 from users.models import Patient, Doctor
-from datetime import date, timedelta
+from datetime import timedelta
+from django.utils import timezone
 
 # Doctor part start
 
@@ -70,7 +71,7 @@ def get_patient_information(request, pk):
     appointment = get_object_or_404(DoctorAppointment, pk=pk)
     patient = get_object_or_404(Patient, pk=appointment.patient.id)
     doctor = get_object_or_404(Doctor, pk=appointment.doctor.id)
-    age = calculate_detailed_age(patient.user.date_of_birth)
+    age = calculate_detailed_age(patient.user.date_of_birth, timezone.now().date())
     context = {
         "doctor": doctor,
         "patient": patient,
@@ -79,8 +80,8 @@ def get_patient_information(request, pk):
     return render(request, "doctors/patient_information.htm", context)
 
 
-def calculate_detailed_age(date_of_birth):
-    today = date.today()
+def calculate_detailed_age(date_of_birth, date_today):
+    today = date_today
 
     years = today.year - date_of_birth.year
     if (today.month, today.day) < (date_of_birth.month, date_of_birth.day):

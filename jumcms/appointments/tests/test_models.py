@@ -65,46 +65,46 @@ class DoctorAppointmentModelTest(TestCase):
         self.assertEqual(appointment.reason, "Routine checkup")
         self.assertEqual(appointment.status, "scheduled")
 
-        def test_doctor_appointment_str(self):
-            """Test the string representation of DoctorAppointment."""
-            appointment_date = timezone.now() + timezone.timedelta(days=1)
-            appointment = DoctorAppointment.objects.create(
-                patient=self.patient,
-                appointment_date_time=appointment_date,
-                status="scheduled",
-                doctor=self.doctor,
-                reason="Routine checkup",
-            )
-            self.assertEqual(
-                str(appointment),
-                f"Appointment with Dr. {self.doctor.user.name} on {appointment_date}",
-            )
+    def test_doctor_appointment_str(self):
+        """Test the string representation of DoctorAppointment."""
+        appointment_date = timezone.now() + timezone.timedelta(days=1)
+        appointment = DoctorAppointment.objects.create(
+            patient=self.patient,
+            appointment_date_time=appointment_date,
+            status="scheduled",
+            doctor=self.doctor,
+            reason="Routine checkup",
+        )
+        self.assertEqual(
+            str(appointment),
+            f"Appointment with Dr. {self.doctor.user.name} on {appointment_date}",
+        )
 
-        def test_invalid_appointment_status(self):
-            """Test creating a DoctorAppointment with an invalid status."""
-            appointment_date = timezone.now() + timezone.timedelta(days=1)
-            appointment = DoctorAppointment(
-                patient=self.patient,
-                appointment_date_time=appointment_date,
-                status="invalid_status",
-                doctor=self.doctor,
-                reason="Routine checkup",
-            )
-            with self.assertRaises(ValidationError):
-                appointment.full_clean()
+    def test_invalid_appointment_status(self):
+        """Test creating a DoctorAppointment with an invalid status."""
+        appointment_date = timezone.now() + timezone.timedelta(days=1)
+        appointment = DoctorAppointment(
+            patient=self.patient,
+            appointment_date_time=appointment_date,
+            status="invalid_status",
+            doctor=self.doctor,
+            reason="Routine checkup",
+        )
+        with self.assertRaises(ValidationError):
+            appointment.full_clean()
 
-        def test_appointment_date_in_past(self):
-            """Test creating a DoctorAppointment with a past date."""
-            appointment_date = timezone.now() - timezone.timedelta(days=1)
-            appointment = DoctorAppointment(
-                patient=self.patient,
-                appointment_date_time=appointment_date,
-                status="scheduled",
-                doctor=self.doctor,
-                reason="Routine checkup",
-            )
-            with self.assertRaises(ValidationError):
-                appointment.full_clean()
+    def test_appointment_date_in_past(self):
+        """Test creating a DoctorAppointment with a past date."""
+        appointment_date = timezone.now() - timezone.timedelta(days=1)
+        appointment = DoctorAppointment(
+            patient=self.patient,
+            appointment_date_time=appointment_date,
+            status="scheduled",
+            doctor=self.doctor,
+            reason="Routine checkup",
+        )
+        with self.assertRaises(ValidationError):
+            appointment.full_clean()
 
 
 # Doctor part end

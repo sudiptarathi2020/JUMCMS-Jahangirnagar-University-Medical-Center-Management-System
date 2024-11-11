@@ -1,6 +1,6 @@
 from django.db import models
 from appointments.models import DoctorAppointment
-from medicines.constants import *
+from medicines.constants import MEDICINE_FREQUENCY_CHOICES
 
 
 # Create your models here.

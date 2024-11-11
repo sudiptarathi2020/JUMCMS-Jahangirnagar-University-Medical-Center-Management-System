@@ -1,8 +1,8 @@
 """
 Admin module for managing models in the Django admin interface.
 
-This module registers the models `Medicine`, `Prescription`, and 
-`PrescribedMedicine` with the Django admin site, allowing them to 
+This module registers the models `Medicine`, `Prescription`, and
+`PrescribedMedicine` with the Django admin site, allowing them to
 be managed through the admin interface.
 
 Classes:
@@ -26,7 +26,7 @@ admin.site.register(Medicine)
 """
 Registers the `Medicine` model with the Django admin site.
 
-This allows the admin user to add, view, edit, and delete `Medicine` records 
+This allows the admin user to add, view, edit, and delete `Medicine` records
 through the Django admin interface.
 """
 

@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from medicines.models import Prescription, PrescribedMedicine, Medicine
 from medical_tests.models import PrescribedTest
@@ -10,6 +10,7 @@ from medical_tests.models import Test
 from appointments.controllers import calculate_detailed_age
 from medicines.constants import MEDICINE_FREQUENCY_CHOICES
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 # Doctor part start
 
@@ -36,7 +37,7 @@ def get_information_for_prescription(request, appointment_id):
     doctor = get_object_or_404(Doctor, pk=appointment.doctor.id)
 
     # Calculate the patient's detailed age
-    age = calculate_detailed_age(patient.user.date_of_birth)
+    age = calculate_detailed_age(patient.user.date_of_birth, timezone.now().date())
 
     # Fetch all available tests, medicines, and frequency choices
     tests = Test.objects.all()

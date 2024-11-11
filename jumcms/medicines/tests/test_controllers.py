@@ -4,9 +4,9 @@ from users.models import Patient, Doctor, User
 from appointments.models import DoctorAppointment
 from medicines.models import Medicine, Prescription, PrescribedMedicine
 from medical_tests.models import Test, PrescribedTest
-from datetime import date, timedelta
 from medicines.constants import MEDICINE_FREQUENCY_CHOICES
-from datetime import datetime, timedelta
+from datetime import timedelta, date
+from django.utils import timezone
 from django.contrib import messages
 
 
@@ -39,7 +39,7 @@ class GetInformationForPrescriptionTests(TestCase):
         self.appointment = DoctorAppointment.objects.create(
             patient=self.patient,
             doctor=self.doctor,
-            appointment_date_time=date.today() + timedelta(days=1),
+            appointment_date_time=timezone.now() + timedelta(days=1),
             status="scheduled",
             reason="Routine checkup",
         )
@@ -155,7 +155,7 @@ class SavePrescriptionTests(TestCase):
         self.appointment = DoctorAppointment.objects.create(
             patient=self.patient,
             doctor=self.doctor,
-            appointment_date_time=date.today() + timedelta(days=1),
+            appointment_date_time=timezone.now() + timedelta(days=1),
             status="scheduled",
             reason="Routine checkup",
         )
@@ -218,7 +218,7 @@ class SavePrescriptionTests(TestCase):
         self.assertRedirects(response, reverse("doctor-dashboard"))
         self.assertEqual(response.status_code, 302)
         self.assertIn(
-            "Prescription of Patient User is successfully saved.",
+            "Prescription for Patient User saved successfully.",
             [m.message for m in messages.get_messages(response.wsgi_request)],
         )
 
