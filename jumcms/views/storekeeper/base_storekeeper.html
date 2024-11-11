@@ -17,8 +17,10 @@
             <div class="logo">
                 <img src="{% static 'images/jumcms_logo.png'%}" alt="JUMCMS Logo" style="height: 60px; width: 250px;">
             </div>
+            <a href="{% url 'users:storekeeper_dashboard' %}"><i class="sidebar_icon bi bi-house-door"></i> Medicine List</a>
             <a href="{% url 'medicines:search-prescriptions' %}"><i class="sidebar_icon bi bi-house-door"></i> Dashboard</a>
-            <a href="#"><i class="sidebar_icon bi bi-capsule"></i> Medicines</a>
+            <a href="{% url 'medicines:add-medicine' %}"><i class="sidebar_icon bi bi-capsule"></i> Add Medicines</a>
+            <a href="{% url 'medicines:all_prescriptions' %}"><i class="sidebar_icon bi bi-capsule"></i> All prescriptions</a>
             <a href="#"><i class="sidebar_icon bi bi-gear"></i> Settings</a>
             <a href="{% url 'users:users-logout' %}"><i class="sidebar_icon bi bi-box-arrow-right"></i> Logout</a>
         </div>

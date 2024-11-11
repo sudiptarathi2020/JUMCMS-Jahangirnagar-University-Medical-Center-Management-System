@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from appointments.models import TestAppointment
+from medical_tests.models import Test
 from users.models import LabTechnician, Patient, Doctor, User
 
 
@@ -40,13 +41,16 @@ class TestAppointmentsViews(TestCase):
         self.doctor_user.is_approved = True
         self.doctor = Doctor.objects.create(user=self.doctor_user, no_of_appointments=0)
 
+        self.temporary_test = Test.objects.create(
+            name="blood_test"
+        )
         # Create a test appointment
         self.appointment = TestAppointment.objects.create(
             lab_technician=self.lab_technician,
             patient=self.patient,
             appointment_date_time='2024-12-15T10:00:00Z',
             status='scheduled',
-            medical_test='blood_test'
+            medical_test=self.temporary_test
         )
 
         # Define URLs for test cases

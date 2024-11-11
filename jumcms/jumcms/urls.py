@@ -19,7 +19,7 @@ from users.controllers import home
 
 from django.conf import settings
 from django.conf.urls.static import static
-
+from users.controllers import log_in
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", home, name="home"),
@@ -27,6 +27,7 @@ urlpatterns = [
     path('medicines/', include('medicines.urls','medicines')),  # Example with namespace
     path("appointments/", include('appointments.urls')),
     path("medical_test/", include("medical_tests.urls")),
+    path("accounts/login/", log_in, name="default-log-in" ),
 ]
 
 if settings.DEBUG:

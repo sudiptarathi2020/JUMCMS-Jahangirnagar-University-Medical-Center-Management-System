@@ -98,7 +98,7 @@ def log_in(request):
                         Patient.objects.get_or_create(user=user)
                     elif user.role == "Storekeeper":
                         Storekeeper.objects.get_or_create(user=user)
-                        redirect("users:storekeeper_dashboard")
+                        return redirect("users:storekeeper_dashboard")
                     elif user.role == "Lab_technician":
                         LabTechnician.objects.get_or_create(user=user)
                         return redirect("users:lab_technician_dashboard")

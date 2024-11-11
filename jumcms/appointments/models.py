@@ -31,7 +31,7 @@ class Appointment(models.Model):
     def clean(self):
         if self.appointment_date_time < timezone.now():
             raise ValidationError("Appointment date must be in the future.")
-        if self.status not in dict(self.STATUS_CHOICES).keys():
+        if self.status not in dict(STATUS_CHOICES).keys():
             raise ValidationError("Invalid status.")
 
     def __str__(self):
