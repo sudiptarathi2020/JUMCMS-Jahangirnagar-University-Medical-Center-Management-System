@@ -1,12 +1,35 @@
-
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from django.urls import reverse
+from users.forms import UserRegistrationForm, LoginForm
+from users.models import Doctor, Patient, Storekeeper, LabTechnician
 from medicines.models import Medicine
-from .forms import UserRegistrationForm, LoginForm
-from .models import Doctor, Patient, Storekeeper, LabTechnician
+
+@login_required
+def log_out(request):
+    """Log the user out and redirect to the home page.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: A redirect to the home page after logging out.
+    """
+    logout(request)
+    return redirect("home")
+
+
+def unapproved(request):
+    """Render the unapproved account page.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered unapproved page.
+    """
+    return render(request, "users/unapproved.htm")
 
 
 def home(request):
@@ -75,9 +98,10 @@ def log_in(request):
                         Patient.objects.get_or_create(user=user)
                     elif user.role == "Storekeeper":
                         Storekeeper.objects.get_or_create(user=user)
-                        return redirect("users:storekeeper_dashboard")
-                    elif user.role == "LabTechnician":
+                        redirect("users:storekeeper_dashboard")
+                    elif user.role == "Lab_technician":
                         LabTechnician.objects.get_or_create(user=user)
+                        return redirect("users:lab_technician_dashboard")
                     return redirect("home")
                 else:
                     messages.error(request, "Your account is not approved yet")
@@ -96,31 +120,6 @@ def log_in(request):
     return render(request, "users/login.htm", {"form": form})
 
 
-@login_required
-def log_out(request):
-    """Log the user out and redirect to the home page.
-
-    Args:
-        request: The HTTP request object.
-
-    Returns:
-        HttpResponse: A redirect to the home page after logging out.
-    """
-    logout(request)
-    return redirect("home")
-
-
-def unapproved(request):
-    """Render the unapproved account page.
-
-    Args:
-        request: The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered unapproved page.
-    """
-    return render(request, "users/unapproved.htm")
-
 
 # Doctor part start
 @login_required
@@ -133,7 +132,14 @@ def doctor_dashboard(request):
 
 # Doctor part end
 
-# Storekeeper Part Start(Sudipta)
+# lab tech start
+@login_required
+def lab_technician_dashboard(request):
+
+    return redirect("appointments:appointment-list")
+
+# lab tech end
+
 @login_required
 def storekeeper_dashboard(request):
     user = request.user

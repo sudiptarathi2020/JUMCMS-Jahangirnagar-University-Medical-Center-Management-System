@@ -4,6 +4,12 @@
 **/migrations/*.pyc
 **/__pycache__/*.pyc
 *.pyc
+
+*.pdf
+*.jpeg
+*.png
+*.jpg
+
 *.xml
 **/.idea/
 db.sqlite3

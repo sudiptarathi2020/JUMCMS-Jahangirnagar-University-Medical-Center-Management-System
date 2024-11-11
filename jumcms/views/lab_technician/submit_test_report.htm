@@ -1,0 +1,67 @@
+{% extends "lab_technician/base_labtechnician.htm" %}
+{% load static %}
+{% block content %}
+<style>
+    .col-form-label {
+        
+        color: #212529; /* Standard Bootstrap text color */
+        font-weight: 500; /* Adds emphasis */
+    }
+</style>
+<div class=" mt-5">
+    <h2 class="text-center mb-4">Submit Test Report</h2>
+    <form action="{% url 'medical_tests:submit_test_report' %}" method="post" enctype="multipart/form-data" class="bg-light p-4 rounded shadow-sm">
+        {% csrf_token %}
+        
+        <!-- Prescribed Test Dropdown -->
+        <div class="form-group row mb-3 d-flex align-items-center">
+            <label for="prescribed_test" class="col-sm-3 col-form-label text-center">Test Name</label>
+            <div class="col-sm-9">
+                <select id="prescribed_test" name="prescribed_test" class="form-control" required>
+                    {% for test in prescribed_tests %}
+                        <option value="{{ test.id }}">{{ test.test.name }} for {{ test.prescription.patient }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Report Date -->
+        <div class="form-group row mb-3 d-flex align-items-center">
+            <label for="report_date" class="col-sm-3 col-form-label text-center">Report Date</label>
+            <div class="col-sm-9">
+                <input type="text" id="report_date" name="report_date" class="form-control" value="{{ today_date }}" readonly>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div class="form-group row mb-3 d-flex align-items-center">
+            <label for="result" class="col-sm-3 col-form-label text-center">Result</label>
+            <div class="col-sm-9">
+                <textarea id="result" name="result" class="form-control" rows="5" required></textarea>
+            </div>
+        </div>
+
+        <!-- Attach File -->
+        <div class="form-group row mb-3 d-flex align-items-center">
+            <label for="attached_file" class="col-sm-3 col-form-label text-center">Attach File</label>
+            <div class="col-sm-9">
+                <input type="file" id="attached_file" name="attached_file" class="form-control-file">
+            </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group row mb-3 d-flex align-items-center">
+            <label for="notes" class="col-sm-3 col-form-label text-center">Notes</label>
+            <div class="col-sm-9">
+                <textarea id="notes" name="notes" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary mt-3">Submit Report</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

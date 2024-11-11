@@ -78,7 +78,6 @@ class TestAppointment(Appointment):
         lab_technician (ForeignKey): A reference to the LabTechnician model, indicating the technician handling the test.
         medical_test (ForeignKey): A reference to the Test model, indicating the type of medical test.
     """
-
     lab_technician = models.ForeignKey(
         LabTechnician, on_delete=models.CASCADE, related_name="test_technician"
     )

@@ -20,10 +20,6 @@ urlpatterns = [
     path("logout/", log_out, name="users-logout"),
     path("unapproved/", unapproved, name="unapproved"),
     path("doctor_dashboard/", doctor_dashboard, name="doctor_dashboard"),
-
-
-    # StoreKeeper Part Start
     path("storekeeper-dashboard/", storekeeper_dashboard, name="storekeeper_dashboard"),
-    # StoreKeeper Part End
-
+    path("lab_technician_dashboard/", lab_technician_dashboard, name="lab_technician_dashboard"),
 ]
