@@ -4,6 +4,7 @@
 **/migrations/*.pyc
 **/__pycache__/*.pyc
 *.pyc
+!**/migrations/*.py
 
 *.pdf
 *.jpeg
