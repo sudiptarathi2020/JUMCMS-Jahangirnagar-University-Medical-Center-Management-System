@@ -30,7 +30,7 @@ class UserViewsTest(TestCase):
 
     def test_register_view_valid(self):
         response = self.client.post(
-            reverse("users-register"),
+            reverse("users:users-register"),
             {
                 "email": "newuser@example.com",
                 "name": "New User",
@@ -53,7 +53,7 @@ class UserViewsTest(TestCase):
 
     def test_register_view_invalid(self):
         response = self.client.post(
-            reverse("users-register"),
+            reverse("users:users-register"),
             {
                 "email": "",
                 "name": "New User",
@@ -71,7 +71,7 @@ class UserViewsTest(TestCase):
 
     def test_log_in_view_valid(self):
         response = self.client.post(
-            reverse("users-login"),
+            reverse("users:users-login"),
             {"username": "testuser@example.com", "password": "testpassword123"},
         )
         self.assertEqual(response.status_code, 302)  # Should redirect
@@ -80,7 +80,7 @@ class UserViewsTest(TestCase):
 
     def test_log_in_view_invalid(self):
         response = self.client.post(
-            reverse("users-login"),
+            reverse("users:users-login"),
             {"username": "testuser@example.com", "password": "wrongpassword"},
         )
         self.assertEqual(response.status_code, 200)
@@ -92,7 +92,7 @@ class UserViewsTest(TestCase):
 
     def test_log_out_view(self):
         self.client.login(username="testuser@example.com", password="testpassword123")
-        response = self.client.get(reverse("users-logout"))
+        response = self.client.get(reverse("users:users-logout"))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("home"))
         self.assertFalse(response.wsgi_request.user.is_authenticated)
