@@ -22,4 +22,5 @@ urlpatterns = [
     path("doctor_dashboard/", doctor_dashboard, name="doctor_dashboard"),
     path("storekeeper-dashboard/", storekeeper_dashboard, name="storekeeper_dashboard"),
     path("lab_technician_dashboard/", lab_technician_dashboard, name="lab_technician_dashboard"),
+    path('ambulance-info/', ambulance_info, name='ambulance_info'),
 ]

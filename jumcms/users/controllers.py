@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
@@ -5,6 +6,7 @@ from django.contrib import messages
 from users.forms import UserRegistrationForm, LoginForm
 from users.models import Doctor, Patient, Storekeeper, LabTechnician
 from medicines.models import Medicine
+from ambulance.models import Ambulance
 
 @login_required
 def log_out(request):
@@ -30,7 +32,6 @@ def unapproved(request):
         HttpResponse: The rendered unapproved page.
     """
     return render(request, "users/unapproved.htm")
-
 
 def home(request):
     """Render the home page.
@@ -120,7 +121,6 @@ def log_in(request):
     return render(request, "users/login.htm", {"form": form})
 
 
-
 # Doctor part start
 @login_required
 def doctor_dashboard(request):
@@ -128,7 +128,6 @@ def doctor_dashboard(request):
     context = {"doctor": doctor}
 
     return render(request, "doctors/doctor_dashboard.htm", context)
-
 
 # Doctor part end
 
@@ -140,6 +139,7 @@ def lab_technician_dashboard(request):
 
 # lab tech end
 
+# Storekeeper Part Start(Sudipta)
 @login_required
 def storekeeper_dashboard(request):
     user = request.user
@@ -148,3 +148,12 @@ def storekeeper_dashboard(request):
     return render(request, "storekeeper/storekeeper_dashboard.html", context)
 
 # Storekeeper Part End(Sudipta)
+
+# Ambulance information(Nahian)
+def ambulance_info(request):
+    user = request.user
+    ambulances = Ambulance.objects.all()
+    # Pass the ambulance data to the template
+    return render(request, 'users/ambulance_information.htm', {'ambulances': ambulances,'user': user})
+#
+# Ambulance information(Nahian)

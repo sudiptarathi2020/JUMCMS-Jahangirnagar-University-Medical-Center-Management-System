@@ -1,0 +1,33 @@
+{% extends "users/base_home.htm" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">See Details About Seasonal Diseases</h1>
+
+    <div class="row">
+        {% for blog in blogs %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if blog.image %}
+                <img src="{{ blog.image.url }}" class="card-img-top" alt="{{ blog.title }}" style="max-height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ blog.title }}</h5>
+                    <p class="card-text text-muted"><strong>Author:</strong> {{ blog.author.name }}</p>
+                    <p class="card-text text-muted"><strong>Published on:</strong> {{ blog.created_at|date:"F j, Y, g:i a" }}</p>
+                    <p class="card-text">{{ blog.content|truncatewords:30 }}</p>
+                    <p class="mt-auto"><strong>Tags:</strong> {{ blog.tags }}</p>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'blogs:blog_detail' blog.id %}" class="btn btn-primary btn-sm">Read more</a> <!-- Link to blog detail page -->
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">No blog posts found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

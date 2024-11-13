@@ -1,0 +1,72 @@
+<!-- ambulance_app/templates/ambulance_info.html -->
+
+{% extends "users/base_home.htm" %}
+{% load static %}
+{% block content %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 16px;
+        text-align: left;
+    }
+
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    tbody td {
+        color: #333;
+    }
+
+    table td:first-child {
+        font-weight: bold;
+    }
+</style>
+    <div class="d-flex justify-content-center align-items-center bg-cover">
+        <div class="container-overlay-login">
+    <h1 style="text-align: center;">Ambulance Information</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Registration No</th>
+                <th>Driver Name</th>
+                <th>Contact Number</th>
+                <th>Current Location</th>
+                <th>Is Available</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ambulance in ambulances %}
+            <tr>
+                <td>{{ ambulance.registration_number }}</td>
+                <td>{{ ambulance.driver_name }}</td>
+                <td>{{ ambulance.contact_number }}</td>
+                <td>{{ ambulance.current_location }}</td>
+                <td>{{ ambulance.is_available }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    </div>
+    </div>
+
+    {% endblock content %}
