@@ -65,7 +65,7 @@ def create_test_report(request, prescribed_test_id):
             test_report.prescribed_test = prescribed_test
             test_report.save()
             messages.success(request, "Test report created successfully.")
-            return redirect('medical_tests:list')  # Adjust this to match the correct list view name
+            return redirect('medical_tests:"see-report-list')  # Adjust this to match the correct list view name
         else:
             logging.error("Form is not valid: %s", form.errors)
     else:
