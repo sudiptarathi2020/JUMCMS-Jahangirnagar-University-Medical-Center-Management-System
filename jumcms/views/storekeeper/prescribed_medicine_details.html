@@ -23,9 +23,9 @@
                         <td class="text-center">{{ info.in_stock}}</td>
                         <td class="text-center">
                             {% if info.is_stock_sufficient %}
-                                <span class="badge badge-success">Available</span>
+                                <span class="badge bg-success text-white px-3 py-2 rounded-pill">Available</span>
                             {%  else %}
-                                <span class="badge badge-danger">Unavailable</span>
+                                 <span class="badge bg-danger text-white px-3 py-2 rounded-pill">Unavailable</span>
                             {% endif %}
                         </td>
                         <td class="text-center">{{ info.frequency }}</td>

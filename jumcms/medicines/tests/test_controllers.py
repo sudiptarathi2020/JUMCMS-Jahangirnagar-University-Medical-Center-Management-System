@@ -81,7 +81,7 @@ class StorekeeperControllerTest(TestCase):
         response = self.client.get(reverse('medicines:all_prescriptions'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'storekeeper/prescription_list.html')
-        self.assertIn('prescribed_medicines', response.context)
+        self.assertIn('prescriptions', response.context)
 
     def test_search_prescriptions_view_get(self):
         """

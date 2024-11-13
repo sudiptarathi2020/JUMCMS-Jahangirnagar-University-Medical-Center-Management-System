@@ -21,9 +21,9 @@ def all_prescriptions(request):
     :param request:
     :return: list of all prescriptions
     """
-    prescribed_medicines = PrescribedMedicine.objects.all()
+    prescriptions = Prescription.objects.all()
     context = {
-        'prescribed_medicines': prescribed_medicines,
+        'prescriptions': prescriptions,
     }
     return render(request, 'storekeeper/prescription_list.html', context)
 
@@ -77,6 +77,9 @@ def prescription_details(request, prescription_id):
             'frequency': prescribed_medicine.frequency,
             'instructions': prescribed_medicine.instructions,
         })
+        if medicine.stock_quantity == 0:
+            medicine.delete()
+
 
     context = {
         'prescription': prescription,

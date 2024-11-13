@@ -3,7 +3,7 @@ from django.urls import reverse
 from blogs.models import Blog
 from users.models import User
 from django.utils import timezone
-
+from datetime import timedelta
 class BlogListViewTests(TestCase):
     
     def setUp(self):
@@ -26,7 +26,7 @@ class BlogListViewTests(TestCase):
             title='Blog 1', 
             author=self.author_user,
             content='Content of blog 1',
-            created_at=timezone.now()
+            created_at=timezone.now() - timedelta(minutes=5)
         )
         self.blog2 = Blog.objects.create(
             title='Blog 2', 
@@ -59,8 +59,8 @@ class BlogListViewTests(TestCase):
         response = self.client.get(url)
         blogs = response.context['blogs']
         self.assertEqual(len(blogs), 2)  # Check that 2 blog posts are passed to the context
-        self.assertEqual(blogs[0].title, 'Blog 1')  # Ensure correct order
-        self.assertEqual(blogs[1].title, 'Blog 2')
+        self.assertEqual(blogs[0].title, 'Blog 2')  # Ensure correct order
+        self.assertEqual(blogs[1].title, 'Blog 1')
     
     def test_blog_detail_view_status_code(self):
         """
