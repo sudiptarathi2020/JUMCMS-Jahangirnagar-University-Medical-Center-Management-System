@@ -1,0 +1,50 @@
+{% extends "doctors/base_doctors.htm" %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 patient-info-card ">
+        <div class="shadow-sm mt-4">
+            <div >
+                <div class="text-center mb-4">
+                    <img src="{{ patient.user.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="height: 100px; width: 100px;">
+                </div>
+                <h5 class="card-title text-center">{{ patient.user.name }}</h5>
+                <p class="text-center text-muted">{{ patient.user.role|title }}</p>
+
+                <table class="table table-borderless mt-3" style="width: 40vh; margin-left: auto; margin-right: auto;  ">
+                    <tr>
+                        <th>Email:</th>
+                        <td>{{ patient.user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Phone:</th>
+                        <td>{{ patient.user.phone_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Blood Group:</th>
+                        <td>{{ patient.user.blood_group }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date of Birth:</th>
+                        <td>{{ patient.user.date_of_birth }}</td>
+                    </tr>
+                    <tr>
+                        <th>Age:</th>
+                        <td>{{ age }}</td>
+                    </tr>
+                    <tr>
+                        <th>Gender:</th>
+                        <td>{{ patient.user.gender }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+<script>
+    document.getElementById('page-title').textContent = 'Patient Information';
+</script>
+{% endblock content %}

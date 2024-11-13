@@ -1,0 +1,11 @@
+{% extends "users/base_home.htm" %}
+{% load static %}
+{% block content %}
+    <div class="d-flex justify-content-center align-items-center bg-cover">
+        <div class="container-overlay">
+            <h3>Your account is not approved yet!!!</h3>
+            <h4>Please try after some time..</h4>
+            <a href="{% url 'users-logout' %}" class="btn btn-danger">Log out</a>
+        </div>
+    </div>
+{% endblock content %}
