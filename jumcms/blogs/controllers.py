@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from blogs.models import Blog
 
 # Create your views here.
@@ -22,5 +22,10 @@ def blog_list(request):
     return render(request, 'users/visit_seasonal_diseases.html', {'blogs': blogs})
 
 def blog_detail(request, id):
-    blog = Blog.objects.get(id=id)
+    try:
+        blog = Blog.objects.get(id=id)
+    except Blog.DoesNotExist:
+        # If blog does not exist, redirect to blog list page
+        return redirect('blogs:blog-list')
+
     return render(request, 'users/blog_detail.html', {'blog': blog})
