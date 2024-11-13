@@ -1,0 +1,26 @@
+{% extends "lab_technician/base_labtechnician.htm" %}
+{% load static %}
+{% block content %}
+<style>
+    .btn-search {
+        font-size: 1.5rem; /* Large text */
+        font-weight: bold; /* Bold text */
+        background-color: rgba(0, 185, 134, 0.60); /* Custom blue background */
+        color: white;
+        padding: 0.75rem 1.5rem; /* Increase padding */
+        border: none;
+        border-radius: 8px;
+        width: 100%; /* Full-width button */
+    }
+    .btn-search:hover {
+        background-color: #357ABD; /* Darker shade on hover */
+    }
+</style>
+
+<div class="container mt-5">
+    <form class="form-control" method="post" action="{% url 'appointments:test_appointments_list' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-search mt-3">Reschedule Test Appointment</button>
+    </form>
+</div>
+{% endblock %}

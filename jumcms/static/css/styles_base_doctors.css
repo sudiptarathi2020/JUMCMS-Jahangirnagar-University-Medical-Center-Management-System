@@ -1,0 +1,260 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, sans-serif;
+    border: 3px solid #428071;
+    min-height: 100vh;
+}
+#sidebar {
+    background-color: #f8f9fa;
+    padding: 20px;
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.2); 
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    height: 100vh; 
+    overflow-y: auto; 
+}
+.sidebar_icon{
+    color: #428071;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-left: 3px;
+}
+#sidebar a {
+    color: #333;
+    text-decoration: none;
+    margin: 10px 0;
+    display: block;
+    padding: 10px;
+    font-weight: 500;
+}
+#sidebar a:hover {
+    background-color: #a5cec5;
+    border-radius: 5px;
+    padding-left: 10px;
+}
+.dashboard-stats {
+    display: flex;
+    justify-content: space-between;
+}
+
+#block-content{
+    background-color: #f8f9fa;
+    position: fixed;
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.2); 
+    top: 0; 
+    right: 0; 
+    height: 100vh;  
+}
+.dashboard-stats .card {
+    text-align: center;
+    padding: 20px;
+    margin: 10px;
+    flex: 1;
+}
+.appointments-report {
+    margin: 20px 0;
+}
+.appointments .time-label {
+    color: #428071;
+}
+
+.recent-patient-list, .patients-list {
+    list-style: none;
+    text-align: center;
+    margin-top: 20px;
+    padding: 0;
+}
+.recent-patient-list{
+    margin-top: 20px;
+}
+.recent-patient-list li, .patients-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.recent-patient-list th, .patients-list th {
+    color: #428071;
+}
+.recent-patient-list tbody tr:nth-of-type(odd), .patients-list tbody tr:nth-of-type(odd) {
+    background-color: #f0f8ff; 
+}
+  
+.recent-patient-list tbody tr:nth-of-type(even), .patients-list tbody tr:nth-of-type(even) {
+    background-color: #b9dbd3;
+}
+
+.st-cons-btn{
+    background-color: #428071;
+    color:white;
+}
+.sort-apnts-btn{
+    background-color: #396b6d;
+    color:white;
+    width: 190px;
+    font-weight: bold;
+}
+.scrollable-table {
+    height: 300px; 
+    overflow-y: auto;  
+    overflow-x: auto;  
+    white-space: nowrap; 
+}
+.scrollable-table table {
+    width: 100%;
+}
+.scrollable-table-sm {
+    height: 150px; 
+    overflow-y: auto;  
+    overflow-x: auto;  
+    white-space: nowrap; 
+}
+.scrollable-table-sm table {
+    width: 100%;
+}
+
+.prescription-sections{
+    padding: 30px;
+    border: 3px solid #428071;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.prescription-sub-sections{
+    border: 2px solid #5bb19b;
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+#prescription-patient-info{
+    height: 90vh;
+}
+#prescription-form{
+    height: 90vh;
+    overflow-x: auto;  
+    white-space: nowrap; 
+}
+
+.bg-cover {
+    position: relative;
+    height: 95vh;
+    overflow: hidden; 
+}
+.bg-cover::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("../images/jumc_image.png");
+    background-size: cover;
+    background-position: center;
+    filter: blur(8px); 
+    z-index: -1; 
+}
+
+.custom-navbar{
+    background-color: #b2e6d7;
+}
+.navbar-brand img {
+    max-height: 30px;
+}
+
+.container-overlay {
+    background-color: rgba(0, 185, 134, 0.60);
+    padding: 40px;
+    border-radius: 8px; 
+    color: white;
+    text-align: center;
+    max-width: 700px; 
+    margin: 0 auto; 
+    height: 200px;
+    width: 600px;
+}
+.container-overlay-register {
+    background-color: rgba(0, 185, 134, 0.60);
+    padding: 20px;
+    border-radius: 8px; 
+    color: white;
+    text-align: center;
+    width: 700px; 
+    margin: 0 auto; 
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+
+.container-overlay-login {
+    background-color: rgba(0, 185, 134, 0.60);
+    padding: 40px;
+    border-radius: 8px; 
+    color: white;
+    text-align: center;
+    max-width: 700px; 
+    margin: 0 auto; 
+    height: 500px;
+    width: 600px;
+}
+
+.link-div{
+    margin-top: 15px;
+}
+.link-div a{
+    color:#034432;
+    font-weight: bold;
+}
+.link-div a:hover{
+    color:#d9e2df;
+}
+.container-overlay button{
+    margin-top: 30px;
+    background-color: rgb(3, 70, 51);
+}
+
+.custom-navitem{
+    margin-right: 10px;
+    color: #00B986; 
+    font-weight:bold;
+}
+.custom-navitem:hover{
+    color:#034432; 
+}
+.form-labels{
+    margin-top: 10px;
+    margin-bottom: 18px;
+}
+.form-group{
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.custom-label{
+    width: 150px;
+    margin-right: 10px;
+    font-weight: bold;
+    text-align: left;
+}
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="password"],
+
+select {
+    flex: 1;
+    width: 100%;
+    padding: 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px;
+}
+
+.form-group label{
+    flex: 1;
+}
+.form-group input,
+.form-group select{
+    flex: 2;
+    margin-top: 5px;
+}
+
+#login-button{
+    margin-top: 15px;
+}

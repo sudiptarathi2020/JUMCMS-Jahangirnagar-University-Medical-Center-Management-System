@@ -1,0 +1,39 @@
+{% extends "lab_technician/base_labtechnician.htm" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Test Reports</h1>
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Patient</th>
+                <th scope="col">Test Name</th>
+                <th scope="col">Report Date</th>
+                <th scope="col">Result</th>
+                <th scope="col">Notes</th>
+                <th scope="col">File</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in test_reports %}
+                <tr>
+                    <td>{{ report.prescribed_test.prescription.doctor_appointment.patient.user.name }}</td>
+                    <td>{{ report.prescribed_test.test.name }}</td>
+                    <td>{{ report.report_date }}</td>
+                    <td>{{ report.result }}</td>
+                    <td>{{ report.notes }}</td>
+                    <td>
+                        {% if report.attached_file %}
+                            <a href="{{ report.attached_file.url }}" class="btn btn-sm btn-primary" download>Download Report</a>
+                        {% else %}
+                            <span class="text-muted">No file attached</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
