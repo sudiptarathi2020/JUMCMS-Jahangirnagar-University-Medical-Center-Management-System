@@ -9,7 +9,7 @@
 *.jpeg
 *.png
 *.jpg
+**/.idea/
 
 *.xml
-**/.idea/
 db.sqlite3

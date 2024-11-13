@@ -65,15 +65,15 @@ class TestAppointmentsViews(TestCase):
         self.client.login(username='labt@example.com', password='asdf1234@')
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code,
-        200)
+                         200)
         self.assertTemplateUsed(response,
-        'lab_technician/lab_technician_dashboard.htm')
+                                'lab_technician/lab_technician_dashboard.htm')
 
     def test_post_request_valid_user(self):
         self.client.login(username='labt@example.com', password='asdf1234@')
         response = self.client.post(self.dashboard_url)
         self.assertEqual(response.status_code,
-        200)
+                         200)
         self.assertTemplateUsed(response, 'lab_technician/lab_technician_dashboard_list.htm')
         self.assertIn('appointments', response.context)
         self.assertIn('lab_technician', response.context)
