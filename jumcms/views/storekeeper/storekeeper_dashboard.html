@@ -1,0 +1,37 @@
+{% extends "storekeeper/base_storekeeper.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center fw-bold text-primary mb-4">Medicines List</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover shadow-sm bg-white">
+      <thead class="thead-primary">
+        <tr>
+          <th scope="col" class="text-center">Medicine Name</th>
+          <th scope="col" class="text-center">Strength</th>
+          <th scope="col" class="text-center">In Stock</th>
+          <th scope="col" class="text-center">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for medicine in medicines %}
+        <tr>
+          <td class="text-center">{{ medicine.name }}</td>
+          <td class="text-center">{{ medicine.strength }}</td>
+          <td class="text-center">{{ medicine.stock_quantity }}</td>
+          <td class="text-center">
+            <a href="#" class="btn btn-success">Details</a>
+          </td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td colspan="4" class="text-center">
+            <a class="btn btn-success full-width-custom" href="{% url 'medicines:add-medicine' %}">ADD</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

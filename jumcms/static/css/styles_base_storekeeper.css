@@ -6,12 +6,12 @@ body {
 #sidebar {
     background-color: #f8f9fa;
     padding: 20px;
-    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.2); 
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.2);
     position: fixed;
-    top: 0; 
-    left: 0; 
-    height: 100vh; 
-    overflow-y: auto; 
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
 }
 .sidebar_icon{
     color: #428071;
@@ -40,10 +40,10 @@ body {
 #block-content{
     background-color: #f8f9fa;
     position: fixed;
-    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.2); 
-    top: 0; 
-    right: 0; 
-    height: 100vh;  
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.2);
+    top: 0;
+    right: 0;
+    height: 100vh;
 }
 .dashboard-stats .card {
     text-align: center;
@@ -75,9 +75,9 @@ body {
     color: #428071;
 }
 .recent-patient-list tbody tr:nth-of-type(odd), .patients-list tbody tr:nth-of-type(odd) {
-    background-color: #f0f8ff; 
+    background-color: #f0f8ff;
 }
-  
+
 .recent-patient-list tbody tr:nth-of-type(even), .patients-list tbody tr:nth-of-type(even) {
     background-color: #b9dbd3;
 }
@@ -93,19 +93,19 @@ body {
     font-weight: bold;
 }
 .scrollable-table {
-    height: 300px; 
-    overflow-y: auto;  
-    overflow-x: auto;  
-    white-space: nowrap; 
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 .scrollable-table table {
     width: 100%;
 }
 .scrollable-table-sm {
-    height: 150px; 
-    overflow-y: auto;  
-    overflow-x: auto;  
-    white-space: nowrap; 
+    height: 150px;
+    overflow-y: auto;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 .scrollable-table-sm table {
     width: 100%;
@@ -129,8 +129,86 @@ body {
 }
 #prescription-form{
     height: 90vh;
-    overflow-x: auto;  
-    white-space: nowrap; 
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* CSS for Prescription Table Container */
+.prescription-table-container {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Prescription Table Styling */
+.prescription-table {
+  width: 90%;
+  max-width: 800px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.prescription-table thead {
+  background-color: #007BFF;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.prescription-table th, .prescription-table td {
+  padding: 1rem;
+  text-align: left;
+}
+
+.prescription-table th {
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.prescription-table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.prescription-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.prescription-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.prescription-table tbody tr:hover {
+  background-color: #e7f3ff;
+}
+
+.prescription-table td {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.prescription-table td:nth-child(4) {
+  font-style: italic;
+  color: #555;
+}
+
+.container-overlay {
+    padding: 40px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 0 auto;
+}
+h4{
+    font-size: 2rem;
+    font-weight: bold;
+    color: #007BFF;
+    margin-top: 0;
+    padding: 1rem 0;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
 }
 
 .bg-cover {
@@ -257,4 +335,7 @@ select {
 
 #login-button{
     margin-top: 15px;
+}
+.full-width-custom{
+    width: 100%;
 }

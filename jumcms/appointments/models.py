@@ -13,6 +13,7 @@ class Appointment(models.Model):
         patient (ForeignKey): A reference to the Patient model, representing the patient for this appointment.
         appointment_date_time (DateTimeField): Date and time of the appointment.
         status (CharField): Current status of the appointment, limited to either 'scheduled' or 'completed'.
+        is_emergency (BooleanField): Indicates whether the appointment is an emergency.
     """
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
@@ -75,9 +76,8 @@ class TestAppointment(Appointment):
 
     Attributes:
         lab_technician (ForeignKey): A reference to the LabTechnician model, indicating the technician handling the test.
-        medical_test (CharField): The type of medical test, with choices defined in MEDICAL_TEST_CHOICES.
+        medical_test (ForeignKey): A reference to the Test model, indicating the type of medical test.
     """
-
     lab_technician = models.ForeignKey(
         LabTechnician, on_delete=models.CASCADE, related_name="test_technician"
     )
