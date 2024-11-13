@@ -26,13 +26,13 @@ class UserControllersTest(TestCase):
         self.user.save()
 
     def test_home_view(self):
-        response = self.client.get(reverse("home"))
+        response = self.client.get(reverse("users:home"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "users/home.htm")
 
     def test_register_view_valid(self):
         response = self.client.post(
-            reverse("users-register"),
+            reverse("users:users-register"),
             {
                 "email": "newuser@example.com",
                 "name": "New User",
@@ -55,7 +55,7 @@ class UserControllersTest(TestCase):
 
     def test_register_view_invalid(self):
         response = self.client.post(
-            reverse("users-register"),
+            reverse("users:users-register"),
             {
                 "email": "",
                 "name": "New User",
@@ -73,16 +73,16 @@ class UserControllersTest(TestCase):
 
     def test_log_in_view_valid(self):
         response = self.client.post(
-            reverse("users-login"),
+            reverse("users:users-login"),
             {"username": "testuser@example.com", "password": "testpassword123"},
         )
         self.assertEqual(response.status_code, 302)  # Should redirect
-        self.assertRedirects(response, reverse("home"))
+        self.assertRedirects(response, reverse("users:home"))
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
     def test_log_in_view_invalid(self):
         response = self.client.post(
-            reverse("users-login"),
+            reverse("users:users-login"),
             {"username": "testuser@example.com", "password": "wrongpassword"},
         )
         self.assertEqual(response.status_code, 200)
@@ -94,9 +94,9 @@ class UserControllersTest(TestCase):
 
     def test_log_out_view(self):
         self.client.login(username="testuser@example.com", password="testpassword123")
-        response = self.client.get(reverse("users-logout"))
+        response = self.client.get(reverse("users:users-logout"))
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse("home"))
+        self.assertRedirects(response, reverse("users:home"))
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
 
@@ -145,7 +145,7 @@ class DoctorDashboardControllerTests(TestCase):
     def test_doctor_dashboard_access_logged_in(self):
         self.client.login(email="doctoruser@example.com", password="password123")
 
-        response = self.client.get(reverse("doctor-dashboard"))
+        response = self.client.get(reverse("users:doctor-dashboard"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "doctors/doctor_dashboard.htm")
 
@@ -167,13 +167,13 @@ class DoctorDashboardControllerTests(TestCase):
         )
         self.client.login(email="nondoctoruser@example.com", password="password123")
 
-        response = self.client.get(reverse("doctor-dashboard"))
+        response = self.client.get(reverse("users:doctor-dashboard"))
         self.assertEqual(response.status_code, 404)
 
     def test_doctor_dashboard_context_data(self):
         self.client.login(email="doctoruser@example.com", password="password123")
 
-        response = self.client.get(reverse("doctor-dashboard"))
+        response = self.client.get(reverse("users:doctor-dashboard"))
         self.assertEqual(response.status_code, 200)
 
         appointments_data = response.context["appointments_data"]

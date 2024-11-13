@@ -1,6 +1,9 @@
 name: Django CI/CD Pipeline
 
 on:
+  push:
+    branches:
+      - ci-testing-ss
   pull_request:
     branches:
       - ci-testing-ss

@@ -6,17 +6,17 @@ from users.models import User, Doctor
 
 class UserTestUrls(SimpleTestCase):
     def test_register_url_is_resolved(self):
-        url = reverse("users-register")
+        url = reverse("users:users-register")
         resolved = resolve(url)
         self.assertEqual(resolved.func, register)
 
     def test_login_url_is_resolved(self):
-        url = reverse("users-login")
+        url = reverse("users:users-login")
         resolved = resolve(url)
         self.assertEqual(resolved.func, log_in)
 
     def test_logout_url_is_resolved(self):
-        url = reverse("users-logout")
+        url = reverse("users:users-logout")
         resolved = resolve(url)
         self.assertEqual(resolved.func, log_out)
 
@@ -38,7 +38,7 @@ class DoctorDashboardURLsTest(TestCase):
 
     def test_doctor_dashboard_url(self):
         self.client.login(email="doctoruser@example.com", password="password123")
-        url = reverse("doctor-dashboard")
+        url = reverse("users:doctor-dashboard")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
@@ -54,7 +54,7 @@ class DoctorDashboardURLsTest(TestCase):
             password="password123",
         )
         self.client.login(email="non_doctor@example.com", password="password123")
-        url = reverse("doctor-dashboard")
+        url = reverse("users:doctor-dashboard")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
