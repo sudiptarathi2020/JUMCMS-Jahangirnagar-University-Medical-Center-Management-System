@@ -1,5 +1,4 @@
 **/__pycache__/
-
 **/migrations/*.py
 **/migrations/*.pyc
 **/__pycache__/*.pyc
@@ -10,6 +9,5 @@
 *.png
 *.jpg
 **/.idea/
-
-*.xml
 db.sqlite3
+*.xml
