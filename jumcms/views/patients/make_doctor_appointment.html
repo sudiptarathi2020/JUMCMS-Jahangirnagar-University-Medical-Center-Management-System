@@ -7,7 +7,7 @@
         {{ form.as_p }}
         <button type="submit">Schedule Appointment</button>
     </form>
-    <a href="{% url 'doctor-dashboard' %}">View All Appointments</a>
+    <a href="{% url 'appointments:doctor-appointment-list-for-patient' %}">View All Appointments</a>
 </div>
 
 <script>

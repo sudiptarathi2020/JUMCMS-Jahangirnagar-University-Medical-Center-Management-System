@@ -1,0 +1,40 @@
+{% extends "patients/base_patient.htm" %}
+{% load static %}
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="mb-4">Your Test Reports</h2>
+
+    {% if reports %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Test Name</th>
+              <th scope="col">Report Date</th>
+              <th scope="col">Result</th>
+              <th scope="col">Notes</th>
+              <th scope="col">Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for report in reports %}
+              <tr>
+                <td>{{ report.prescribed_test.test.name }}</td>
+                <td>{{ report.report_date }}</td>
+                <td>{{ report.result }}</td>
+                <td>{{ report.notes }}</td>
+                <td>
+                  <a href="{% url 'medical_tests:download-test-report' report.id %}" class="btn btn-primary btn-sm">
+                    Download
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted">No test reports available.</p>
+    {% endif %}
+  </div>
+{% endblock content %}

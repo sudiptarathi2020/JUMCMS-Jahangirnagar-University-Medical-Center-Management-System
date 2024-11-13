@@ -1,8 +1,12 @@
-from django.test import TestCase
-from django.urls import reverse
+from django.test import TestCase, SimpleTestCase
+from django.urls import reverse, resolve
 from django.utils import timezone
 from appointments.models import DoctorAppointment
 from users.models import User, Patient, Doctor
+from appointments.controllers import (
+    create_doctor_appointment,
+    get_doctor_appointment_list_for_patient,
+)
 
 
 class AppointmentsURLsTest(TestCase):
@@ -29,22 +33,36 @@ class AppointmentsURLsTest(TestCase):
         )
 
     def test_delete_doctor_appointment_url(self):
-        url = reverse("delete-doctor-appointment", args=[self.appointment.pk])
+        url = reverse(
+            "appointments:delete-doctor-appointment", args=[self.appointment.pk]
+        )
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 302)  # Check if redirect after deletion
 
     def test_patient_information_url(self):
-        url = reverse("patient-information", args=[self.appointment.pk])
+        url = reverse("appointments:patient-information", args=[self.appointment.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.patient.user.name)
 
     def test_invalid_delete_url(self):
-        url = reverse("delete-doctor-appointment", args=[9999])
+        url = reverse("appointments:delete-doctor-appointment", args=[9999])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 404)
 
     def test_invalid_patient_information_url(self):
-        url = reverse("patient-information", args=[9999])
+        url = reverse("appointments:patient-information", args=[9999])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+
+
+class AppointmentsUrlsTest(SimpleTestCase):
+    def test_create_doctor_appointment_url(self):
+        url = reverse("appointments:create_doctor_appointment")
+        self.assertEqual(url, "/appointments/create/")
+        self.assertEqual(resolve(url).func, create_doctor_appointment)
+
+    def test_doctor_appointment_list_for_patient_url(self):
+        url = reverse("appointments:doctor-appointment-list-for-patient")
+        self.assertEqual(url, "/appointments/doctor-appointment-list-for-patient/")
+        self.assertEqual(resolve(url).func, get_doctor_appointment_list_for_patient)

@@ -47,13 +47,13 @@
                         <td>{{ appointment.appointment_date_time|date:"d/m/y" }}</td>
                         <td>{{ appointment.reason }}</td>
                         <td>
-                          <a href="{% url 'patient-information' appointment.id %}" class="btn btn-sm st-cons-btn">Patient Details</a>
+                          <a href="{% url 'appointments:patient-information' appointment.id %}" class="btn btn-sm st-cons-btn">Patient Details</a>
                         </td>
                         <td>
                           <button type="button" class="btn btn-sm st-cons-btn">Reschedule</button>
                         </td>
                         <td>
-                          <a href="{% url 'delete-doctor-appointment' appointment.id %}" class="btn btn-sm btn-danger">Delete</a>
+                          <a href="{% url 'appointments:delete-doctor-appointment' appointment.id %}" class="btn btn-sm btn-danger">Delete</a>
                         </td>
                       </tr>
                     {% empty %}

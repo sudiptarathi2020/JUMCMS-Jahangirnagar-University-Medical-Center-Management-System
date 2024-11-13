@@ -29,6 +29,8 @@ class Appointment(models.Model):
         abstract = True
 
     def clean(self):
+        if not self.appointment_date_time:
+            raise ValidationError("Appointment date and time is required.")
         if self.appointment_date_time < timezone.now():
             raise ValidationError("Appointment date must be in the future.")
         if self.status not in dict(STATUS_CHOICES).keys():

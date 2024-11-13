@@ -31,6 +31,7 @@ urlpatterns = [
     path("accounts/login/", log_in, name="default-log-in"),
     path("blogs/", include("blogs.urls")),
     path("certifications/", include("certifications.urls")),
+    path("medical_test/", include("medical_tests.urls")),
 ]
 
 if settings.DEBUG:
