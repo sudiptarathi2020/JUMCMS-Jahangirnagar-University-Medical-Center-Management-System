@@ -4,6 +4,7 @@ from django.urls import reverse
 from appointments.models import TestAppointment
 from medical_tests.models import Test
 from users.models import LabTechnician, Patient, Doctor, User
+from medical_tests.models import Test
 
 
 class TestAppointmentsViews(TestCase):
@@ -16,32 +17,33 @@ class TestAppointmentsViews(TestCase):
 
         # Create a Lab Technician user and instance
         self.lab_technician_user = User.objects.create_user(
-            email='labt@example.com', name='Lab Technician', role='Lab_technician',
-            blood_group='A+', date_of_birth='1980-01-01', gender='Male',
-            phone_number='+8801712345678', password='asdf1234@'
-        )
+                email='labt@example.com', name='Lab Technician', role='Lab_technician',
+                blood_group='A+', date_of_birth='1980-01-01', gender='Male',
+                phone_number='+8801712345678', password='asdf1234@'
+                )
         self.lab_technician_user.is_approved = True
         self.lab_technician = LabTechnician.objects.create(user=self.lab_technician_user)
 
         # Create a Patient user and instance
         self.patient_user = User.objects.create_user(
-            email='patient@example.com', name='John Doe', role='Student',
-            blood_group='B+', date_of_birth='1990-05-10', gender='Male',
-            phone_number='+8801987654321', password='asdf1234@'
-        )
+                email='patient@example.com', name='John Doe', role='Student',
+                blood_group='B+', date_of_birth='1990-05-10', gender='Male',
+                phone_number='+8801987654321', password='asdf1234@'
+                )
         self.patient_user.is_approved = True
         self.patient = Patient.objects.create(user=self.patient_user)
 
         # Create a Doctor user and instance
         self.doctor_user = User.objects.create_user(
-            email='doctor@example.com', name='Dr. Example', role='Doctor',
-            blood_group='O+', date_of_birth='1975-08-15', gender='Male',
-            phone_number='+8801812345678', password='asdf1234@'
-        )
+                email='doctor@example.com', name='Dr. Example', role='Doctor',
+                blood_group='O+', date_of_birth='1975-08-15', gender='Male',
+                phone_number='+8801812345678', password='asdf1234@'
+                )
         self.doctor_user.is_approved = True
         self.doctor = Doctor.objects.create(user=self.doctor_user, no_of_appointments=0)
 
         self.temporary_test = Test.objects.create(
+
             name="blood_test"
         )
         # Create a test appointment
@@ -52,6 +54,7 @@ class TestAppointmentsViews(TestCase):
             status='scheduled',
             medical_test=self.temporary_test
         )
+
 
         # Define URLs for test cases
         self.login_url = reverse('users:users-login')
