@@ -29,6 +29,8 @@ urlpatterns = [
     path("appointments/", include("appointments.urls")),
     path("medicines/", include("medicines.urls", "medicines")),
     path("accounts/login/", log_in, name="default-log-in"),
+    path("blogs/", include("blogs.urls")),
+    path("certifications/", include("certifications.urls")),
 ]
 
 if settings.DEBUG:

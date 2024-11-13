@@ -12,13 +12,16 @@ URLs:
 - /doctor-dashboard/ : View for Doctor dashboard.
 """
 
-from django.urls import path
 from users.controllers import register, log_in, log_out, unapproved, doctor_dashboard
+from django.urls import path
+from users.controllers import *
 
+app_name = "users"
 urlpatterns = [
     path("create-account/", register, name="users-register"),
     path("login/", log_in, name="users-login"),
     path("logout/", log_out, name="users-logout"),
     path("unapproved/", unapproved, name="unapproved"),
     path("doctor-dashboard/", doctor_dashboard, name="doctor-dashboard"),
+    path("patient-dashboard/", patient_dashboard, name="patient-dashboard"),
 ]

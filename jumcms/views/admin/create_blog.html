@@ -1,0 +1,12 @@
+{% extends "admin/base_blogs.htm" %}
+{% load static %}
+{% block content %}
+<div>
+    <h1>Create Blog Post</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+</div>
+{% endblock content %}

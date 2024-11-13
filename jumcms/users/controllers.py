@@ -76,14 +76,20 @@ def log_in(request):
 
             if user is not None:
                 login(request, user)
+                # Admin Bypass Remove with caution{Hasan}
+                if user.is_admin:
+                    return redirect("blogs:blog-list")
+                # Admin Bypass{Hasan}
                 if user.is_approved:
                     if user.role == "Doctor":
                         Doctor.objects.get_or_create(user=user)
-                        return redirect("doctor-dashboard")
+                        return redirect("users:doctor-dashboard")
                     elif user.role == "Student":
                         Patient.objects.get_or_create(user=user)
+                        return redirect("users:patient-dashboard")
                     elif user.role == "Campus_employee":
                         Patient.objects.get_or_create(user=user)
+                        return redirect("users:patient-dashboard")
                     elif user.role == "Storekeeper":
                         Storekeeper.objects.get_or_create(user=user)
                     elif user.role == "Lab_technician":
@@ -134,6 +140,7 @@ def unapproved(request):
     return render(request, "users/unapproved.html")
 
 
+# Doctor part start
 @login_required
 def doctor_dashboard(request):
     """Render the doctor's dashboard.
@@ -174,3 +181,17 @@ def doctor_dashboard(request):
         "appointments_data": appointments_data,
     }
     return render(request, "doctors/doctor_dashboard.htm", context)
+
+
+# Doctor part end
+
+
+# Patient part start
+@login_required
+def patient_dashboard(request):
+    patient = get_object_or_404(Patient, user=request.user)
+    context = {"patient": patient}
+    return render(request, "patients/patient_dashboard.html", context)
+
+
+# Patient part end
