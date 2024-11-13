@@ -50,7 +50,7 @@ def delete_doctor_appointment(request, pk):
         doctor.no_of_appointments -= 1
         doctor.save()
     messages.success(request, "Appointment deleted successfully.")
-    return redirect("doctor-dashboard")
+    return redirect("users:doctor-dashboard")
 
 
 def get_patient_information(request, pk):

@@ -26,7 +26,7 @@ class UserControllersTest(TestCase):
         self.user.save()
 
     def test_home_view(self):
-        response = self.client.get(reverse("users:home"))
+        response = self.client.get(reverse("home"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "users/home.htm")
 
@@ -77,7 +77,7 @@ class UserControllersTest(TestCase):
             {"username": "testuser@example.com", "password": "testpassword123"},
         )
         self.assertEqual(response.status_code, 302)  # Should redirect
-        self.assertRedirects(response, reverse("users:home"))
+        self.assertRedirects(response, reverse("home"))
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
     def test_log_in_view_invalid(self):
@@ -96,7 +96,7 @@ class UserControllersTest(TestCase):
         self.client.login(username="testuser@example.com", password="testpassword123")
         response = self.client.get(reverse("users:users-logout"))
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse("users:home"))
+        self.assertRedirects(response, reverse("home"))
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
 

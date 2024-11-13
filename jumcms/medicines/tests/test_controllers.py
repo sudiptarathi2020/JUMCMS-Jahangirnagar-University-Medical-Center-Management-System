@@ -192,7 +192,7 @@ class SavePrescriptionTests(TestCase):
         response = self.client.post(
             reverse("medicines:save-prescription", args=[9999]), {}
         )
-        self.assertRedirects(response, reverse("doctor-dashboard"))
+        self.assertRedirects(response, reverse("users:doctor-dashboard"))
         self.assertIn(
             "Invalid appointment",
             [m.message for m in messages.get_messages(response.wsgi_request)],
@@ -215,7 +215,7 @@ class SavePrescriptionTests(TestCase):
                 "frequencies": ["Morning + Noon"],
             },
         )
-        self.assertRedirects(response, reverse("doctor-dashboard"))
+        self.assertRedirects(response, reverse("users:doctor-dashboard"))
         self.assertEqual(response.status_code, 302)
         self.assertIn(
             "Prescription for Patient User saved successfully.",

@@ -78,7 +78,7 @@ def save_prescription(request, appointment_id):
         appointment = DoctorAppointment.objects.get(pk=appointment_id)
     except DoctorAppointment.DoesNotExist:
         messages.error(request, "Invalid appointment")
-        return redirect("doctor-dashboard")
+        return redirect("users:doctor-dashboard")
 
     # Collect form data
     complains = request.POST.get("complains")
@@ -153,7 +153,7 @@ def save_prescription(request, appointment_id):
     messages.success(
         request, f"Prescription for {appointment.patient.user.name} saved successfully."
     )
-    return redirect("doctor-dashboard")
+    return redirect("users:doctor-dashboard")
 
 
 # Doctor part end
