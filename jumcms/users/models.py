@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser
-from users.constants import *
+from users.constants import ROLE_CHOICES, BLOOD_GROUP_CHOICES, GENDER_CHOICES
 from django.contrib.auth.models import BaseUserManager
 
 
@@ -225,6 +225,10 @@ class Doctor(models.Model):
         default=0, help_text="Years of experience of the doctor."
     )
 
+    def __str__(self):
+        """Returns the string representation of the doctor."""
+        return self.user.name
+
 
 class Patient(models.Model):
     """
@@ -234,10 +238,8 @@ class Patient(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        """Returns the name of the Patient."""
+        """Returns the string representation of the patient."""
         return self.user.name
-
-
 
 
 class Storekeeper(models.Model):
@@ -262,5 +264,3 @@ class LabTechnician(models.Model):
     def __str__(self):
         """Return the name of the labtechnician"""
         return self.user.name
-
-

@@ -1,6 +1,11 @@
 name: Django CI/CD Pipeline
 
 on:
+  push:
+    branches:
+      - main
+      - ci-testing-ss
+      - ci-testing-sd
   pull_request:
     branches:
       - main
@@ -40,5 +45,4 @@ jobs:
 
       - name: Run tests
         run: |
-          python jumcms/manage.py test ambulance appointments blogs certifications medical_tests medicines users
-
+          python jumcms/manage.py test ambulance.tests appointments.tests blogs.tests certifications.tests medical_tests.tests medicines.tests users.tests

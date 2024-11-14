@@ -1,0 +1,66 @@
+{% extends "admin/base_certifications.htm" %}
+{% load static %}
+{% block content %}
+<link href="{% static 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' %}" rel="stylesheet">
+<div class="container mt-4">
+    <h2 class="mb-4">Fundraising Requests</h2>
+    
+    <table class="table table-bordered table-striped" style="background-color: #d3f1ff;">
+        <thead class="thead-dark">
+            <tr>
+                <th>Patient</th>
+                <th>Disease Name</th>
+                <th>Amount Needed</th>
+                <th>Details</th>
+                <th>Attachments</th>
+                <th>Approval Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in fundraising_requests %}
+                <tr>
+                    <td>{{ request.patient.user.name }}</td>
+                    <td>{{ request.disease_name }}</td>
+                    <td>{{ request.amount_needed }}</td>
+                    <td>{{ request.details }}</td>
+                    <td>
+                        {% if request.attachments %}
+                            <a href="{{ request.attachments.url }}" class="btn btn-sm btn-primary" download>Download</a>
+                        {% else %}
+                            <span class="text-muted">No Attachments</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                            
+                            {% if request.is_approved == True %}
+                                <span style="color: white; padding: 5px 10px; border-radius: 5px" ><a href="#" class="btn btn-success">Approved</a></span>
+                            {% else %}
+                                <span style="color: red; padding: 5px 10px; border-radius: 5px"><a href="#" class="btn btn-danger">Not Approved</a></span>
+                            {% endif %}
+                        
+                    </td>
+                    <td>
+                            
+                        {% if request.is_approved == True %}
+                            <span style="color: white; padding: 5px 10px; border-radius: 5px" ><a href="{% url 'certifications:approve' request.id %}" class="btn btn-danger">Cancel Approval</a></span>
+                        {% else %}
+                            <span style="color: red; padding: 5px 10px; border-radius: 5px"><a href="{% url 'certifications:approve' request.id %}" class="btn btn-success">Approve</a></span>
+                        {% endif %}
+                    
+                </td>
+                    
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No fundraising requests found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock content %}

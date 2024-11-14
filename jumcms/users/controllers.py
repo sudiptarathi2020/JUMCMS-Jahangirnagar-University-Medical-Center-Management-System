@@ -7,6 +7,9 @@ from users.forms import UserRegistrationForm, LoginForm
 from users.models import Doctor, Patient, Storekeeper, LabTechnician
 from medicines.models import Medicine
 from ambulance.models import Ambulance
+from appointments.controllers import get_doctor_appointments
+from django.utils import timezone
+from collections import defaultdict
 
 
 def home(request):
@@ -20,14 +23,20 @@ def home(request):
     """
     return render(request, "users/home.htm")
 
+
 def register(request):
     """Handle user registration.
+
+    This function processes registration requests, validates the user input,
+    and saves the new user if valid. If the registration is successful,
+    it redirects the user to the unapproved page.
 
     Args:
         request: The HTTP request object.
 
     Returns:
-        HttpResponse: The rendered registration page or a redirect to the unapproved page.
+        HttpResponse: The rendered registration page or a redirect to the
+            unapproved page.
     """
     if request.method == "POST":
         form = UserRegistrationForm(request.POST, request.FILES)
@@ -46,8 +55,13 @@ def register(request):
 
     return render(request, "users/register.html", {"form": form})
 
+
 def log_in(request):
     """Handle user login.
+
+    This function processes login requests and authenticates the user. If
+    the login is successful and the user's account is approved, the user
+    is redirected to their respective dashboard based on their role.
 
     Args:
         request: The HTTP request object.
@@ -65,12 +79,20 @@ def log_in(request):
 
             if user is not None:
                 login(request, user)
+                # Admin Bypass Remove with caution{Hasan}
+                if user.is_admin:
+                    return redirect("blogs:blog-list-for-admin")
+                # Admin Bypass{Hasan}
                 if user.is_approved:
                     if user.role == "Doctor":
                         Doctor.objects.get_or_create(user=user)
-                        return redirect("users:doctor_dashboard")
-                    elif user.role == "Patient":
+                        return redirect("users:doctor-dashboard")
+                    elif user.role == "Student":
                         Patient.objects.get_or_create(user=user)
+                        return redirect("users:patient-dashboard")
+                    elif user.role == "Campus_employee":
+                        Patient.objects.get_or_create(user=user)
+                        return redirect("users:patient-dashboard")
                     elif user.role == "Storekeeper":
                         Storekeeper.objects.get_or_create(user=user)
                         return redirect("users:storekeeper_dashboard")
@@ -112,6 +134,8 @@ def log_out(request):
 def unapproved(request):
     """Render the unapproved account page.
 
+    This page informs users that their accounts are pending approval.
+
     Args:
         request: The HTTP request object.
 
@@ -121,17 +145,51 @@ def unapproved(request):
     return render(request, "users/unapproved.htm")
 
 
-
-
 # Doctor part start
 @login_required
 def doctor_dashboard(request):
-    doctor = get_object_or_404(Doctor, user=request.user)
-    context = {"doctor": doctor}
+    """Render the doctor's dashboard.
 
+    This function retrieves the doctor's appointments for the current day
+    and aggregates the appointments per month for display in the dashboard.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered doctor dashboard page with the doctor's
+            information and appointments data.
+    """
+    doctor = get_object_or_404(Doctor, user=request.user)
+    appointments_list = get_doctor_appointments(doctor)
+    today = timezone.now().date()
+    appointments_today = [
+        appointment
+        for appointment in appointments_list
+        if appointment.appointment_date_time.date() == today
+    ]
+
+    appointments_per_month = defaultdict(int)
+
+    for appointment in appointments_list:
+        appointment_year = appointment.appointment_date_time.year
+        appointment_month = appointment.appointment_date_time.month
+        if appointment_year == today.year:
+            appointments_per_month[appointment_month] += 1
+
+    appointments_data = [appointments_per_month[i] for i in range(1, 13)]
+    context = {
+        "doctor": doctor,
+        "appointments_list": appointments_list,
+        "today": today,
+        "appointments_today": appointments_today,
+        "appointments_data": appointments_data,
+    }
     return render(request, "doctors/doctor_dashboard.htm", context)
 
+
 # Doctor part end
+
 
 # lab tech start
 @login_required
@@ -139,7 +197,9 @@ def lab_technician_dashboard(request):
 
     return redirect("appointments:appointment-list")
 
+
 # lab tech end
+
 
 # Storekeeper Part Start(Sudipta)
 @login_required
@@ -149,13 +209,32 @@ def storekeeper_dashboard(request):
     context = {"medicines": medicines, "user": user}
     return render(request, "storekeeper/storekeeper_dashboard.html", context)
 
+
 # Storekeeper Part End(Sudipta)
+
 
 # Ambulance information(Nahian)
 def ambulance_info(request):
     user = request.user
     ambulances = Ambulance.objects.all()
     # Pass the ambulance data to the template
-    return render(request, 'users/ambulance_information.htm', {'ambulances': ambulances,'user': user})
+    return render(
+        request,
+        "users/ambulance_information.htm",
+        {"ambulances": ambulances, "user": user},
+    )
+
+
 #
 # Ambulance information(Nahian)
+
+
+# Patient part start
+@login_required
+def patient_dashboard(request):
+    patient = get_object_or_404(Patient, user=request.user)
+    context = {"patient": patient}
+    return render(request, "patients/patient_dashboard.html", context)
+
+
+# Patient part end

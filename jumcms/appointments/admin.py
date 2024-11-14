@@ -1,7 +1,5 @@
 from django.contrib import admin
+from .models import DoctorAppointment, TestAppointment
 
-# Register your models here.
-from appointments.models import Appointment, TestAppointment, DoctorAppointment
-admin.site.register(TestAppointment)
 admin.site.register(DoctorAppointment)
-
+admin.site.register(TestAppointment)

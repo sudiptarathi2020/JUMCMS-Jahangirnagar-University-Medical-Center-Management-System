@@ -15,3 +15,4 @@ sphinx
 sphinx-pdj-theme
 flake8
 reportlab
+xhtml2pdf

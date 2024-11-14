@@ -24,7 +24,7 @@ class MedicineModelTest(TestCase):
             description="Pain reliever",
             price=10.00,
             stock_quantity=100,
-            expiry_date="2025-12-31"
+            expiry_date="2025-12-31",
         )
         self.assertEqual(str(medicine), "Paracetamol (500mg)")
 
@@ -42,7 +42,7 @@ class MedicineModelTest(TestCase):
             description="Pain reliever",
             price=10.00,
             stock_quantity=100,
-            expiry_date="2025-12-31"
+            expiry_date="2025-12-31",
         )
         self.assertEqual(medicine.name, "Paracetamol")
         self.assertEqual(medicine.generic_name, "Acetaminophen")
@@ -66,20 +66,32 @@ class PrescriptionModelTest(TestCase):
         :return: objects
         """
         self.doctor_user = User.objects.create_user(
-            email='doctor@example.com', name='Dr. Sudipta', role='Doctor',
-            blood_group='A+', date_of_birth='1980-01-01', gender='Male',
-            phone_number='+8801712345678', password='asdf1234@'
+            email="doctor@example.com",
+            name="Dr. Sudipta",
+            role="Doctor",
+            blood_group="A+",
+            date_of_birth="1980-01-01",
+            gender="Male",
+            phone_number="+8801712345678",
+            password="asdf1234@",
         )
         self.doctor = Doctor.objects.create(user=self.doctor_user)
         self.patient_user = User.objects.create_user(
-            email='patient@example.com', name='John Doe', role='Student',
-            blood_group='B+', date_of_birth='1990-05-10', gender='Male',
-            phone_number='+8801987654321', password='asdf1234@'
+            email="patient@example.com",
+            name="John Doe",
+            role="Student",
+            blood_group="B+",
+            date_of_birth="1990-05-10",
+            gender="Male",
+            phone_number="+8801987654321",
+            password="asdf1234@",
         )
         self.patient = Patient.objects.create(user=self.patient_user)
         self.appointment = DoctorAppointment.objects.create(
-            doctor=self.doctor, patient=self.patient, appointment_date_time='2024-12-15T10:00:00Z',
-            status='completed'
+            doctor=self.doctor,
+            patient=self.patient,
+            appointment_date_time="2024-12-15T10:00:00Z",
+            status="completed",
         )
 
     def test_prescription_str(self):
@@ -90,7 +102,7 @@ class PrescriptionModelTest(TestCase):
         prescription = Prescription.objects.create(
             doctor_appointment=self.appointment,
             diagnosis="Headache",
-            next_visit_date='2024-12-22',
+            next_checkup="2024-12-22",
         )
         expected_str = f"Prescription for {self.patient_user.name} by {self.doctor_user.name} on {prescription.date_issued}"
         self.assertEqual(str(prescription), expected_str)
@@ -103,11 +115,11 @@ class PrescriptionModelTest(TestCase):
         prescription = Prescription.objects.create(
             doctor_appointment=self.appointment,
             diagnosis="Headache",
-            next_visit_date='2024-12-22',
+            next_checkup="2024-12-22",
         )
         self.assertEqual(prescription.doctor_appointment, self.appointment)
         self.assertEqual(prescription.diagnosis, "Headache")
-        self.assertEqual(prescription.next_visit_date, "2024-12-22")
+        self.assertEqual(prescription.next_checkup, "2024-12-22")
 
 
 class PrescribedMedicineModelTest(TestCase):
@@ -121,20 +133,32 @@ class PrescribedMedicineModelTest(TestCase):
         :return: objects
         """
         self.doctor_user = User.objects.create_user(
-            email='doctor@example.com', name='Dr. Sudipta', role='Doctor',
-            blood_group='A+', date_of_birth='1980-01-01', gender='Male',
-            phone_number='+8801712345678', password='asdf1234@'
+            email="doctor@example.com",
+            name="Dr. Sudipta",
+            role="Doctor",
+            blood_group="A+",
+            date_of_birth="1980-01-01",
+            gender="Male",
+            phone_number="+8801712345678",
+            password="asdf1234@",
         )
         self.doctor = Doctor.objects.create(user=self.doctor_user)
         self.patient_user = User.objects.create_user(
-            email='patient@example.com', name='John Doe', role='Student',
-            blood_group='B+', date_of_birth='1990-05-10', gender='Male',
-            phone_number='+8801987654321', password='asdf1234@'
+            email="patient@example.com",
+            name="John Doe",
+            role="Student",
+            blood_group="B+",
+            date_of_birth="1990-05-10",
+            gender="Male",
+            phone_number="+8801987654321",
+            password="asdf1234@",
         )
         self.patient = Patient.objects.create(user=self.patient_user)
         self.appointment = DoctorAppointment.objects.create(
-            doctor=self.doctor, patient=self.patient, appointment_date_time='2024-12-15T10:00:00Z',
-            status='scheduled'
+            doctor=self.doctor,
+            patient=self.patient,
+            appointment_date_time="2024-12-15T10:00:00Z",
+            status="scheduled",
         )
         self.medicine = Medicine.objects.create(
             name="Paracetamol",
@@ -145,12 +169,12 @@ class PrescribedMedicineModelTest(TestCase):
             description="Pain reliever",
             price=10.00,
             stock_quantity=100,
-            expiry_date="2025-12-31"
+            expiry_date="2025-12-31",
         )
         self.prescription = Prescription.objects.create(
             doctor_appointment=self.appointment,  # Use the appointment from setUp
             diagnosis="Headache",
-            next_visit_date='2024-12-22',
+            next_checkup="2024-12-22",
         )
 
     def test_prescribed_medicine_str(self):
@@ -161,9 +185,11 @@ class PrescribedMedicineModelTest(TestCase):
         prescribed_medicine = PrescribedMedicine.objects.create(
             prescription=self.prescription,
             medicine=self.medicine,
-            frequency=MEDICINE_FREQUENCY_CHOICES[0][0],  # Choose a frequency from your choices
+            dosage_frequency=MEDICINE_FREQUENCY_CHOICES[0][
+                0
+            ],  # Choose a frequency from your choices
             duration=5,
-            instructions="Take after meal"
+            instructions="Take after meal",
         )
         expected_str = f"{self.medicine.name} for {self.patient_user.name}"
         self.assertEqual(str(prescribed_medicine), expected_str)
@@ -176,12 +202,14 @@ class PrescribedMedicineModelTest(TestCase):
         prescribed_medicine = PrescribedMedicine.objects.create(
             prescription=self.prescription,
             medicine=self.medicine,
-            frequency=MEDICINE_FREQUENCY_CHOICES[0][0],
+            dosage_frequency=MEDICINE_FREQUENCY_CHOICES[0][0],
             duration=5,
-            instructions="Take after meal"
+            instructions="Take after meal",
         )
         self.assertEqual(prescribed_medicine.prescription, self.prescription)
         self.assertEqual(prescribed_medicine.medicine, self.medicine)
-        self.assertEqual(prescribed_medicine.frequency, MEDICINE_FREQUENCY_CHOICES[0][0])
+        self.assertEqual(
+            prescribed_medicine.dosage_frequency, MEDICINE_FREQUENCY_CHOICES[0][0]
+        )
         self.assertEqual(prescribed_medicine.duration, 5)
         self.assertEqual(prescribed_medicine.instructions, "Take after meal")

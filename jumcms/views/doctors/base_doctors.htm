@@ -17,7 +17,7 @@
             <div class="logo">
                 <img src="{% static 'images/jumcms_logo.png'%}" alt="JUMCMS Logo" style="height: 60px; width: 250px;">
             </div>
-            <a href="#"><i class="sidebar_icon bi bi-house-door"></i> Dashboard</a>
+            <a href="{% url 'users:doctor-dashboard' %}"><i class="sidebar_icon bi bi-house-door"></i> Dashboard</a>
             <a href="#"><i class="sidebar_icon bi bi-people"></i> Patients</a>
             <a href="#"><i class="sidebar_icon bi bi-reception-4"></i> Receptions</a>
             <a href="#"><i class="sidebar_icon bi bi-person-badge"></i> Doctors</a>
@@ -26,16 +26,24 @@
             <a href="#"><i class="sidebar_icon bi bi-thermometer-half"></i> Seasonal Diseases</a>
             <a href="#"><i class="sidebar_icon bi bi-file-earmark-text"></i> Certification requests</a>
             <a href="#"><i class="sidebar_icon bi bi-gear"></i> Settings</a>
-            <a href="{% url 'users-logout' %}"><i class="sidebar_icon bi bi-box-arrow-right"></i> Logout</a>
+            <a href="{% url 'users:users-logout' %}"><i class="sidebar_icon bi bi-box-arrow-right"></i> Logout</a>
         </div>
         <div class="col-md-10" id="block-content">
             <div class="d-flex justify-content-between align-items-center mt-3">
-                <h4>Dashboard</h4>
+                <h4 id="page-title">Dashboard</h4>
                 <div>
                     <span>Dr. {{ doctor.user.name }}</span>
                     <img src="{{ doctor.user.profile_picture.url }}" alt="profile" class="rounded-circle" style="height: 40px; width: 40px;">
                 </div>
             </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" style="width: 60vw; margin-left: 20vw; position: fixed; z-index: 100; text-align: center">
+                        <p style="color: rgb(40, 97, 40); font-size: medium; display: inline; margin: auto;">{{ message }} <span class="closebtn" style="display: inline; margin-left: auto;" onclick="this.parentElement.parentElement.style.display='none';">&times;</span></p>        
+                    </div>
+                {% endfor %}
+            {% endif %}
             {% block content %}
 
             {% endblock %}
@@ -48,13 +56,15 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx = document.getElementById('appointmentsChart').getContext('2d');
+    const appointmentsData = {{ appointments_data|safe }}; 
+
     const myChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [{
                 label: 'Appointments',
-                data: [2, 9, 3, 5, 20, 30, 45, 60, 80, 75, 90, 100],
+                data: appointmentsData,
                 borderColor: '#37ad90',
                 fill: false,
                 tension: 0.1

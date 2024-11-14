@@ -1,54 +1,57 @@
 """
-URL configuration for the appointments app.
+URL configuration for the `appointments` app.
 
-This module contains the URL patterns for the appointments app, mapping 
-URL paths to the corresponding view functions.
+This module defines URL patterns for managing appointments in the system,
+including doctor and test appointments.
 
-View Functions
---------------
-- `test_appointments_list`: View function to display a list of test appointments.
-- `reschedule_test_appointment`: View function to reschedule a specific test appointment.
+Routes:
+    - **delete-doctor-appointment/<int:pk>/**: Deletes a specific doctor appointment.
+    - **patient-information/<int:pk>/**: Retrieves patient information by patient ID.
+    - **create/**: Creates a new doctor appointment.
+    - **doctor-appointment-list-for-patient/**: Lists doctor appointments for a specific patient.
+    - **test_appointment/reschedule/<int:appointment_id>/**: Reschedules a test appointment.
+    - **test_appointments/**: Lists all test appointments.
+    - **list/**: Displays the lab technician dashboard.
 
-URL Patterns
-------------
-- `test_appointment/reschedule/<int:appointment_id>/`: URL for rescheduling a test appointment.
-- `test_appointments/`: URL for displaying the list of test appointments.
-
-Namespaces
-----------
-The `app_name` variable is used to define the namespace for this URL configuration.
-
-Examples
---------
-- To access the appointment rescheduling page, use the URL:
-  `/test_appointment/reschedule/1/` where `1` is the appointment ID.
-
-- To access the list of test appointments, use the URL:
-  `/test_appointments/`.
+Attributes:
+    urlpatterns (list): A list of URL patterns for the `appointments` app.
 """
 
 from django.urls import path
+from appointments.controllers import (
+    test_appointments_list,
+    reschedule_test_appointment,
+    labt_dashboard,
+    delete_doctor_appointment,
+    get_patient_information,
+    create_doctor_appointment,
+    get_doctor_appointment_list_for_patient,
+)
 
-from appointments.controllers import test_appointments_list,reschedule_test_appointment, labt_dashboard
-
-
-app_name = 'appointments'  # Ensure this matches your app namespace
+app_name = "appointments"
 
 urlpatterns = [
     path(
-        'test_appointment/reschedule/<int:appointment_id>/',
+        "delete-doctor-appointment/<int:pk>/",
+        delete_doctor_appointment,
+        name="delete-doctor-appointment",
+    ),
+    path(
+        "patient-information/<int:pk>/",
+        get_patient_information,
+        name="patient-information",
+    ),
+    path("create/", create_doctor_appointment, name="create_doctor_appointment"),
+    path(
+        "doctor-appointment-list-for-patient/",
+        get_doctor_appointment_list_for_patient,
+        name="doctor-appointment-list-for-patient",
+    ),
+    path(
+        "test_appointment/reschedule/<int:appointment_id>/",
         reschedule_test_appointment,
-        name='reschedule_test_appointment'
+        name="reschedule_test_appointment",
     ),
-    path(
-        'test_appointments/',
-        test_appointments_list,
-        name='test_appointments_list'
-    ),
-    path(
-      'list/',
-      labt_dashboard,
-      name="appointment-list"
-      
-    )
+    path("test_appointments/", test_appointments_list, name="test_appointments_list"),
+    path("list/", labt_dashboard, name="appointment-list"),
 ]
