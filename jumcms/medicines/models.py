@@ -5,6 +5,9 @@ from medicines.constants import *
 
 # Create your models here.
 class Medicine(models.Model):
+    """
+    Medicine Model
+    """
     name = models.CharField(max_length=255)
     generic_name = models.CharField(max_length=255, null=True, blank=True)
     manufacturer = models.CharField(max_length=255)
@@ -14,13 +17,21 @@ class Medicine(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock_quantity = models.IntegerField()
     expiry_date = models.DateField()
+
     # prescription_required = models.BooleanField(default=True)
 
     def __str__(self):
+        """
+        string representation of medicine
+        :return: String
+        """
         return f"{self.name} ({self.strength})"
 
 
 class Prescription(models.Model):
+    """
+    Prescription Model
+    """
     doctor_appointment = models.ForeignKey(
         DoctorAppointment, on_delete=models.CASCADE, related_name="doctor_appointments"
     )
@@ -31,22 +42,31 @@ class Prescription(models.Model):
     notes = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"Prescription for {self.doctor_appointment.patient.name} by {self.doctor_appointment.doctor.name} on {self.date_issued}"
+        """
+        String representation of prescription
+        :return: String
+        """
+        return f"Prescription for {self.doctor_appointment.patient.user.name} by {self.doctor_appointment.doctor.user.name} on {self.date_issued}"
 
 
 class PrescribedMedicine(models.Model):
+    """
+    Prescribed Medicine Model
+    """
     prescription = models.ForeignKey(
         Prescription, on_delete=models.CASCADE, related_name="medicines"
     )
     medicine = models.ForeignKey("Medicine", on_delete=models.CASCADE)
-    frequency = (
-        models.CharField(
-            max_length=200,
-            choices=MEDICINE_FREQUENCY_CHOICES,
-        ),
+    frequency = models.CharField(
+        max_length=200,
+        choices=MEDICINE_FREQUENCY_CHOICES,
     )
     duration = models.IntegerField(default=0)
     instructions = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.medicine.name} for {self.prescription.patient}"
+        """
+        String representation of prescribed medicine
+        :return: String
+        """
+        return f"{self.medicine.name} for {self.prescription.doctor_appointment.patient.user.name}"

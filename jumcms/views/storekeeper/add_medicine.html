@@ -1,0 +1,10 @@
+{% extends "storekeeper/base_storekeeper.html" %}
+{% load static %}
+{% block content %}
+<h1>Add Medicine</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Medicine</button>
+</form>
+{% endblock %}

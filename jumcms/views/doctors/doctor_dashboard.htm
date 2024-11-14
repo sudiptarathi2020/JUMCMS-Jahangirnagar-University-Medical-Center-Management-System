@@ -1,0 +1,141 @@
+{% extends "doctors/base_doctors.htm" %}
+{% load static %}
+{% block content %}
+<div class="dashboard-stats mt-3">
+    <div class="card bg-light">
+        <h5>Total Patients</h5>
+        <h3>{{ doctor.no_of_patients }}</h3>
+    </div>
+    <div class="card bg-light">
+        <h5>Appointments</h5>
+        <h3>{{ doctor.no_of_appointments }}</h3>
+    </div>
+    <div class="card bg-light">
+        <h5>Prescriptions</h5>
+        <h3>{{ doctor.no_of_prescriptions }}</h3>
+    </div>
+</div>
+<div class="card appointments-report p-3 bg-light">
+    <h5>Appointments Statistics (2024)</h5>
+    <canvas id="appointmentsChart" height="100"></canvas>
+</div>
+<div class="row">
+    <div class="col-md-7">
+        <div class="card p-3 bg-light">
+            <div class="row">
+                <div class="col-6"><h5>Waiting Patients</h5></div>
+                <div class="col-6" style="text-align: right;" ><button type="button" class="btn btn-sm sort-apnts-btn">Emergency Cases First</button></div>
+            </div>
+            <div class="scrollable-table">
+            <table class="table table-md table-bordered table-striped patients-list">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Patients's name</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Reason</th>
+                    <th colspan="3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Rahim</td>
+                    <td>10:00 AM</td>
+                    <td>12/09/24</td>
+                    <td>Fever</td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
+                    <td><button type="button" class="btn btn-sm btn-danger">Cancel</button></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Sadia</td>
+                    <td>11:00 AM</td>
+                    <td>12/09/24</td>
+                    <td>Headache</td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
+                    <td><button type="button" class="btn btn-sm btn-danger">Cancel</button></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Bushra</td>
+                    <td>12:00 PM</td>
+                    <td>12/09/24</td>
+                    <td>Headache</td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
+                    <td><button type="button" class="btn btn-sm btn-danger">Cancel</button></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">4</th>
+                    <td>Sharmin</td>
+                    <td>05:00 PM</td>
+                    <td>12/09/24</td>
+                    <td>Runnig Nose, Body pain</td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
+                    <td><button type="button" class="btn btn-sm btn-danger">Cancel</button></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">5</th>
+                    <td>Shabrina</td>
+                    <td>05:00 PM</td>
+                    <td>13/09/24</td>
+                    <td>Probable Dengue</td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Patient Details</button></td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Reschedule</button></td>
+                    <td><button type="button" class="btn btn-sm btn-danger">Cancel</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card appointments p-3 bg-light">
+            <h5>Most Recent Appointments(September 12, 2024)</h5>
+            <div class="scrollable-table">
+            <table class="table table-md table-bordered table-striped recent-patient-list">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Patients's name</th>
+                    <th scope="col">Time</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Rahim</td>
+                    <td>10:00 AM</td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Start Consultation</button></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Sadia</td>
+                    <td>11:00 AM</td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Start Consultation</button></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Bushra</td>
+                    <td>12:00 PM</td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Start Consultation</button></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">4</th>
+                    <td>Sharmin</td>
+                    <td>05:00 PM</td>
+                    <td><button type="button" class="btn btn-sm st-cons-btn">Start Consultation</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
