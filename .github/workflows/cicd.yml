@@ -40,4 +40,4 @@ jobs:
 
       - name: Run tests
         run: |
-          python jumcms/manage.py test 
+          python jumcms/manage.py test ambulance appointments blogs certifications medical_tests medicines users
