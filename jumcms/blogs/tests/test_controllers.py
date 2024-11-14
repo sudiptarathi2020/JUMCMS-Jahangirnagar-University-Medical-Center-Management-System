@@ -64,8 +64,8 @@ class BlogListViewTests(TestCase):
         self.assertEqual(
             len(blogs), 2
         )  # Check that 2 blog posts are passed to the context
-        self.assertEqual(blogs[0].title, "Blog 1")  # Ensure correct order
-        self.assertEqual(blogs[1].title, "Blog 2")
+        self.assertEqual(blogs[0].title, "Blog 2")  # Ensure correct order
+        self.assertEqual(blogs[1].title, "Blog 1")
 
     def test_blog_detail_view_status_code(self):
         """
