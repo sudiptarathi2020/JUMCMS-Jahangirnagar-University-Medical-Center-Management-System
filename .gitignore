@@ -10,6 +10,6 @@
 *.jpg
 **/.idea/
 db.sqlite3
-
+*.txt
 *.xml
 
