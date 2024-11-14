@@ -1,12 +1,12 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, Client
-from users.models import LabTechnician
+from django.urls import reverse
+from django.utils import timezone
+
+from appointments.models import DoctorAppointment
 from medical_tests.models import PrescribedTest, TestReport, Test
 from medicines.models import Prescription
 from users.models import Patient, User, Doctor, LabTechnician
-from appointments.models import DoctorAppointment
-from django.urls import reverse
-from django.utils import timezone
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class LabTechnicianControllersTest(TestCase):
@@ -132,17 +132,29 @@ class LabTechnicianControllersTest(TestCase):
         invalid_test_data = {
             "notes": "No issues found.",
         }
+        with self.assertLogs('root', level='ERROR') as log_capture:
+            response = self.client.post(
+                reverse('medical_tests:create-test-report', args=[self.prescribed_test.id]),
+                data=invalid_test_data
+            )
 
-        response = self.client.post(
-            reverse("medical_tests:create-test-report", args=[self.prescribed_test.id]),
-            data=invalid_test_data,
-        )
+            # Check response status code
+            self.assertEqual(response.status_code, 200)
 
-        self.assertEqual(response.status_code, 200)  # Should stay on the same page
-        self.assertTemplateUsed(response, "lab_technician/create_test_report.html")
-        self.assertEqual(
-            TestReport.objects.count(), 0
-        )  # No TestReport object should be created
+            # Check the template used
+            self.assertTemplateUsed(response, 'lab_technician/create_test_report.html')
+
+            # Verify form error for missing required field
+            self.assertFormError(response, 'form', 'result', 'This field is required.')
+
+            # Check that an error log was created for the invalid form
+            self.assertTrue(
+                any("Form is not valid" in message for message in log_capture.output),
+                "Expected error log message not found."
+            )
+            self.assertEqual(
+                TestReport.objects.count(), 0
+            )  # No TestReport object should be created
 
     def test_see_report_list_logged_in(self):
         """
