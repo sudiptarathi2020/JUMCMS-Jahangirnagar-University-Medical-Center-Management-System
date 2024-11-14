@@ -8,30 +8,6 @@ from users.models import Doctor, Patient, Storekeeper, LabTechnician
 from medicines.models import Medicine
 from ambulance.models import Ambulance
 
-@login_required
-def log_out(request):
-    """Log the user out and redirect to the home page.
-
-    Args:
-        request: The HTTP request object.
-
-    Returns:
-        HttpResponse: A redirect to the home page after logging out.
-    """
-    logout(request)
-    return redirect("home")
-
-
-def unapproved(request):
-    """Render the unapproved account page.
-
-    Args:
-        request: The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered unapproved page.
-    """
-    return render(request, "users/unapproved.htm")
 
 def home(request):
     """Render the home page.
@@ -43,7 +19,6 @@ def home(request):
         HttpResponse: The rendered home page.
     """
     return render(request, "users/home.htm")
-
 
 def register(request):
     """Handle user registration.
@@ -70,7 +45,6 @@ def register(request):
         form = UserRegistrationForm()
 
     return render(request, "users/register.html", {"form": form})
-
 
 def log_in(request):
     """Handle user login.
@@ -119,6 +93,34 @@ def log_in(request):
         form = LoginForm()
 
     return render(request, "users/login.htm", {"form": form})
+
+
+@login_required
+def log_out(request):
+    """Log the user out and redirect to the home page.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: A redirect to the home page after logging out.
+    """
+    logout(request)
+    return redirect("home")
+
+
+def unapproved(request):
+    """Render the unapproved account page.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered unapproved page.
+    """
+    return render(request, "users/unapproved.htm")
+
+
 
 
 # Doctor part start

@@ -207,3 +207,5 @@ def add_medicine(request):
     else:
         form = MedicineForm()
     return render(request, 'storekeeper/add_medicine.html', {'form': form, 'user': user})
+
+# Storekeeper Part end
