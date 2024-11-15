@@ -1,16 +1,17 @@
+from datetime import timedelta, date
 from unittest.mock import patch
+
+from django.contrib import messages
 from django.http import HttpResponse
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.utils import timezone
+
 from appointments.models import DoctorAppointment
+from medical_tests.models import Test, PrescribedTest
 from medicines.constants import MEDICINE_FREQUENCY_CHOICES
 from medicines.models import Medicine, Prescription, PrescribedMedicine
 from users.models import Patient, Doctor, User
-from medical_tests.models import Test, PrescribedTest
-from medicines.constants import MEDICINE_FREQUENCY_CHOICES
-from datetime import timedelta, date
-from django.utils import timezone
-from django.contrib import messages
 
 
 class StorekeeperControllerTest(TestCase):
@@ -103,7 +104,7 @@ class StorekeeperControllerTest(TestCase):
         # Create a client
         self.client = Client()
 
-    def test_all_prescriptions_view(self):
+    def test_all_prescriptions_controllers(self):
         """
         All Prescriptions
         :return: Boolean
