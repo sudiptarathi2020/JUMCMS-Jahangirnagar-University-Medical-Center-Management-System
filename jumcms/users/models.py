@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
         :param gender: Gender of the user.
         :param phone_number: User's phone number.
         :param password: User's password.
-        :param role_id: User's roll id.'
+        :param role_id: User's role id.'
         :param profile_picture: Path to the user's profile picture.
         :raises ValueError: If no email is provided.
         :return: The created User instance.

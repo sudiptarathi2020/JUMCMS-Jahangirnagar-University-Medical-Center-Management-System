@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>appointments.controllers &#8212; JUMCMS 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=c058f7c8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for appointments.controllers</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">DoctorAppointment</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">users.models</span> <span class="kn">import</span> <span class="n">Patient</span><span class="p">,</span> <span class="n">Doctor</span><span class="p">,</span> <span class="n">LabTechnician</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">appointments.forms</span> <span class="kn">import</span> <span class="n">DoctorAppointmentCreationForm</span><span class="p">,</span> <span class="n">RescheduleAppointmentForm</span>
+<span class="kn">from</span> <span class="nn">appointments.models</span> <span class="kn">import</span> <span class="n">TestAppointment</span>
+
+
+<span class="c1"># Doctor part start</span>
+
+
+<div class="viewcode-block" id="get_doctor_appointments">
+<a class="viewcode-back" href="../../appointments.html#appointments.controllers.get_doctor_appointments">[docs]</a>
+<span class="k">def</span> <span class="nf">get_doctor_appointments</span><span class="p">(</span><span class="n">doctor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves all scheduled appointments for a specific doctor.</span>
+
+<span class="sd">    This function queries the DoctorAppointment model to fetch appointments that are</span>
+<span class="sd">    associated with the given doctor and have a status of &quot;scheduled&quot;. It returns a</span>
+<span class="sd">    queryset of these appointments.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        doctor (Doctor): The Doctor instance for whom the appointments are being retrieved.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        QuerySet: A Django QuerySet containing DoctorAppointment objects with status &quot;scheduled&quot;</span>
+<span class="sd">                  for the specified doctor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">appointments</span> <span class="o">=</span> <span class="n">DoctorAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+        <span class="n">doctor</span><span class="o">=</span><span class="n">doctor</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;scheduled&quot;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;appointment_date_time&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">appointments</span></div>
+
+
+
+<div class="viewcode-block" id="delete_doctor_appointment">
+<a class="viewcode-back" href="../../appointments.html#appointments.controllers.delete_doctor_appointment">[docs]</a>
+<span class="k">def</span> <span class="nf">delete_doctor_appointment</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deletes a specific doctor appointment.</span>
+
+<span class="sd">    This function retrieves an appointment by its primary key (pk), deletes it, and updates</span>
+<span class="sd">    the associated doctor&#39;s appointment count. It also sends a success message to the user.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
+<span class="sd">        pk (int): The primary key of the appointment to be deleted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponseRedirect: A redirect to the doctor dashboard after deletion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">appointment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">DoctorAppointment</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+    <span class="n">doctor</span> <span class="o">=</span> <span class="n">appointment</span><span class="o">.</span><span class="n">doctor</span>
+    <span class="n">appointment</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">doctor</span><span class="o">.</span><span class="n">no_of_appointments</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">doctor</span><span class="o">.</span><span class="n">no_of_appointments</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">doctor</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Appointment deleted successfully.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;users:doctor-dashboard&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_patient_information">
+<a class="viewcode-back" href="../../appointments.html#appointments.controllers.get_patient_information">[docs]</a>
+<span class="k">def</span> <span class="nf">get_patient_information</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves and displays information about a patient associated with a specific appointment.</span>
+
+<span class="sd">    This function retrieves the appointment by its primary key (pk) and fetches the related</span>
+<span class="sd">    patient and doctor information. It also calculates the patient&#39;s age and renders a</span>
+<span class="sd">    template with this information.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
+<span class="sd">        pk (int): The primary key of the appointment for which patient information is retrieved.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: A rendered HTML response with patient information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">appointment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">DoctorAppointment</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+    <span class="n">patient</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Patient</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">appointment</span><span class="o">.</span><span class="n">patient</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">doctor</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Doctor</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">appointment</span><span class="o">.</span><span class="n">doctor</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="n">calculate_detailed_age</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">date_of_birth</span><span class="p">,</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;doctor&quot;</span><span class="p">:</span> <span class="n">doctor</span><span class="p">,</span>
+        <span class="s2">&quot;patient&quot;</span><span class="p">:</span> <span class="n">patient</span><span class="p">,</span>
+        <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="n">age</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;doctors/patient_information.htm&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_detailed_age">
+<a class="viewcode-back" href="../../appointments.html#appointments.controllers.calculate_detailed_age">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_detailed_age</span><span class="p">(</span><span class="n">date_of_birth</span><span class="p">,</span> <span class="n">date_today</span><span class="p">):</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">date_today</span>
+
+    <span class="n">years</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="n">date_of_birth</span><span class="o">.</span><span class="n">year</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">date_of_birth</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">date_of_birth</span><span class="o">.</span><span class="n">day</span><span class="p">):</span>
+        <span class="n">years</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="n">months</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">-</span> <span class="n">date_of_birth</span><span class="o">.</span><span class="n">month</span>
+    <span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">&lt;</span> <span class="n">date_of_birth</span><span class="o">.</span><span class="n">day</span><span class="p">:</span>
+        <span class="n">months</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">months</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">months</span> <span class="o">+=</span> <span class="mi">12</span>
+
+    <span class="n">days</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">-</span> <span class="n">date_of_birth</span><span class="o">.</span><span class="n">day</span>
+    <span class="k">if</span> <span class="n">days</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">previous_month</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">days</span> <span class="o">+=</span> <span class="n">previous_month</span><span class="o">.</span><span class="n">day</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">years</span><span class="si">}</span><span class="s2"> years, </span><span class="si">{</span><span class="n">months</span><span class="si">}</span><span class="s2"> months, </span><span class="si">{</span><span class="n">days</span><span class="si">}</span><span class="s2"> days&quot;</span></div>
+
+
+
+<span class="c1"># Doctor part end</span>
+
+
+<div class="viewcode-block" id="test_appointments_list">
+<a class="viewcode-back" href="../../appointments.html#appointments.controllers.test_appointments_list">[docs]</a>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s2">&quot;users:users-login&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_appointments_list</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Displays a list of test appointments for the logged-in lab technician.</span>
+
+<span class="sd">    Retrieves the test appointments associated with the logged lab technician when</span>
+<span class="sd">    the request is a POST. If the lab technician does not exist, an error message is</span>
+<span class="sd">    displayed, and the user is redirected to the login page.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    request : HttpRequest</span>
+<span class="sd">        The HTTP request object from the logged-in user.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    HttpResponse</span>
+<span class="sd">        If appointments are retrieved, renders the &#39;lab_technician_dashboard_list.htm&#39;</span>
+<span class="sd">        template with the appointments and lab technician context.</span>
+<span class="sd">        If the request method is not POST, renders &#39;lab_technician_dashboard.htm&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lab_technician</span> <span class="o">=</span> <span class="n">LabTechnician</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">LabTechnician</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You do not have permission to view test appointments.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;users:users-login&quot;</span><span class="p">)</span>
+
+        <span class="n">appointments</span> <span class="o">=</span> <span class="n">TestAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">lab_technician</span><span class="o">=</span><span class="n">lab_technician</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+            <span class="n">request</span><span class="p">,</span>
+            <span class="s2">&quot;lab_technician/lab_technician_dashboard_list.htm&quot;</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;appointments&quot;</span><span class="p">:</span> <span class="n">appointments</span><span class="p">,</span> <span class="s2">&quot;lab_technician&quot;</span><span class="p">:</span> <span class="n">lab_technician</span><span class="p">},</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;lab_technician/lab_technician_dashboard.htm&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="labt_dashboard">
+<a class="viewcode-back" href="../../appointments.html#appointments.controllers.labt_dashboard">[docs]</a>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s2">&quot;users:users-login&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">labt_dashboard</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">lab_technician</span> <span class="o">=</span> <span class="n">LabTechnician</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">LabTechnician</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You do not have permission to view test appointments.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;users:users-login&quot;</span><span class="p">)</span>
+
+    <span class="n">appointments</span> <span class="o">=</span> <span class="n">TestAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">lab_technician</span><span class="o">=</span><span class="n">lab_technician</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s2">&quot;lab_technician/lab_technician_dashboard_list.htm&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;appointments&quot;</span><span class="p">:</span> <span class="n">appointments</span><span class="p">,</span> <span class="s2">&quot;lab_technician&quot;</span><span class="p">:</span> <span class="n">lab_technician</span><span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="reschedule_test_appointment">
+<a class="viewcode-back" href="../../appointments.html#appointments.controllers.reschedule_test_appointment">[docs]</a>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s2">&quot;users:users-login&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">reschedule_test_appointment</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">appointment_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reschedules a specific test appointment for the lab technician.</span>
+
+<span class="sd">    Attempts to retrieve the appointment by its ID. If the lab technician does not exist,</span>
+<span class="sd">    an error message is displayed, and the user is redirected to a failure page. If the</span>
+<span class="sd">    request is a POST and the form is valid, the rescheduled appointment is saved.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    request : HttpRequest</span>
+<span class="sd">        The HTTP request object from the logged-in user.</span>
+<span class="sd">    appointment_id : int</span>
+<span class="sd">        The ID of the appointment to be rescheduled.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    HttpResponse</span>
+<span class="sd">        If the form is successfully saved, renders &#39;lab_technician_dashboard.htm&#39;.</span>
+<span class="sd">        Otherwise, renders &#39;reschedule_test_appointment.html&#39; with the form, appointment,</span>
+<span class="sd">        and lab technician context.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">lab_technician</span> <span class="o">=</span> <span class="n">LabTechnician</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">appointment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">TestAppointment</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">appointment_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">form</span> <span class="o">=</span> <span class="n">RescheduleAppointmentForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">appointment</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+                <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+                    <span class="n">request</span><span class="p">,</span>
+                    <span class="s2">&quot;lab_technician/lab_technician_dashboard.htm&quot;</span><span class="p">,</span>
+                    <span class="p">{</span><span class="s2">&quot;lab_technician&quot;</span><span class="p">:</span> <span class="n">lab_technician</span><span class="p">},</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">form</span> <span class="o">=</span> <span class="n">RescheduleAppointmentForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">appointment</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">LabTechnician</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You do not have permission to view test appointments.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;appointments:test_appointments_fail&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s2">&quot;lab_technician/reschedule_test_appointment.html&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+            <span class="s2">&quot;appointment&quot;</span><span class="p">:</span> <span class="n">appointment</span><span class="p">,</span>
+            <span class="s2">&quot;lab_technician&quot;</span><span class="p">:</span> <span class="n">lab_technician</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># Patient Part Start (Fatima)</span>
+
+
+<div class="viewcode-block" id="create_doctor_appointment">
+<a class="viewcode-back" href="../../appointments.html#appointments.controllers.create_doctor_appointment">[docs]</a>
+<span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">create_doctor_appointment</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles the creation of a new doctor appointment for a registered patient.</span>
+
+<span class="sd">    This view allows a logged-in patient to create a doctor appointment. The view first</span>
+<span class="sd">    verifies that the user is registered as a patient, ensuring only patients can make</span>
+<span class="sd">    appointments. If the request is a POST, it processes the form data to create an</span>
+<span class="sd">    appointment.</span>
+
+<span class="sd">    If the form data is valid:</span>
+<span class="sd">        - It associates the appointment with the current patient.</span>
+<span class="sd">        - It checks if the patient has any previous appointments with the selected doctor.</span>
+<span class="sd">          If not, it increments the doctor&#39;s `no_of_patients` by one.</span>
+<span class="sd">        - It increments the doctor’s `no_of_appointments` by one, regardless of whether the</span>
+<span class="sd">          patient is new to this doctor.</span>
+<span class="sd">        - The appointment is saved to the database and a success message is displayed.</span>
+<span class="sd">        - The user is redirected to the list of their appointments.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The request object containing metadata about the request.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse:</span>
+<span class="sd">            - If the request is POST and form submission is successful, redirects to the</span>
+<span class="sd">              &quot;doctor-appointment-list-for-patient&quot; view.</span>
+<span class="sd">            - If the request is GET or form submission fails, renders the appointment</span>
+<span class="sd">              creation form with any validation errors displayed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Ensure the user is a registered patient</span>
+        <span class="n">patient</span> <span class="o">=</span> <span class="n">Patient</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Patient</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="c1"># Redirect if the user is not a registered patient</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a registered patient to make an appointment.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;users:users-login&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">DoctorAppointmentCreationForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">appointment</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">appointment</span><span class="o">.</span><span class="n">patient</span> <span class="o">=</span> <span class="n">patient</span>
+            <span class="n">appointment</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+            <span class="c1"># Retrieve the selected doctor and check for existing appointments with the patient</span>
+            <span class="n">doctor</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;doctor&quot;</span><span class="p">]</span>
+            <span class="n">has_existing_appointments</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">DoctorAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">doctor</span><span class="o">=</span><span class="n">doctor</span><span class="p">,</span> <span class="n">patient</span><span class="o">=</span><span class="n">patient</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Update doctor&#39;s patient and appointment counts</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">has_existing_appointments</span><span class="p">:</span>
+                <span class="n">doctor</span><span class="o">.</span><span class="n">no_of_patients</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">doctor</span><span class="o">.</span><span class="n">no_of_appointments</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">doctor</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Doctor appointment created successfully.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;appointments:doctor-appointment-list-for-patient&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">DoctorAppointmentCreationForm</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;patients/make_doctor_appointment.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="get_doctor_appointment_list_for_patient">
+<a class="viewcode-back" href="../../appointments.html#appointments.controllers.get_doctor_appointment_list_for_patient">[docs]</a>
+<span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">get_doctor_appointment_list_for_patient</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Displays a list of all doctor appointments for the logged-in patient.</span>
+
+<span class="sd">    This view retrieves and displays all doctor appointments for the currently logged-in</span>
+<span class="sd">    patient. If the user is not registered as a patient, an empty appointment list will</span>
+<span class="sd">    be shown. The appointments are rendered in a template, providing the patient with an</span>
+<span class="sd">    organized view of their scheduled or completed appointments.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The request object containing metadata about the request.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: A rendered template that displays the list of appointments for</span>
+<span class="sd">                      the logged-in patient.</span>
+<span class="sd">                      - If the user is a registered patient, their appointments are</span>
+<span class="sd">                        shown.</span>
+<span class="sd">                      - If the user is not registered as a patient, an empty list is shown.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Retrieve appointments for the logged-in patient</span>
+        <span class="n">patient</span> <span class="o">=</span> <span class="n">Patient</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">appointments</span> <span class="o">=</span> <span class="n">DoctorAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">patient</span><span class="o">=</span><span class="n">patient</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Patient</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="c1"># Show an empty list if the user is not a registered patient</span>
+        <span class="n">appointments</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s2">&quot;patients/doctor_appointment_list.html&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;patient&quot;</span><span class="p">:</span> <span class="n">patient</span><span class="p">,</span> <span class="s2">&quot;appointments&quot;</span><span class="p">:</span> <span class="n">appointments</span><span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># Patient Part End (Fatima)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">JUMCMS</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">jumcms</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Team JUMCMS.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.0.2</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

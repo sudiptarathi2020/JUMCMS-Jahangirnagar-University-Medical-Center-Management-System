@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>medicines.tests.test_controllers &#8212; JUMCMS 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=c058f7c8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for medicines.tests.test_controllers</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">date</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+
+<span class="kn">from</span> <span class="nn">appointments.models</span> <span class="kn">import</span> <span class="n">DoctorAppointment</span>
+<span class="kn">from</span> <span class="nn">medical_tests.models</span> <span class="kn">import</span> <span class="n">Test</span><span class="p">,</span> <span class="n">PrescribedTest</span>
+<span class="kn">from</span> <span class="nn">medicines.constants</span> <span class="kn">import</span> <span class="n">MEDICINE_FREQUENCY_CHOICES</span>
+<span class="kn">from</span> <span class="nn">medicines.models</span> <span class="kn">import</span> <span class="n">Medicine</span><span class="p">,</span> <span class="n">Prescription</span><span class="p">,</span> <span class="n">PrescribedMedicine</span>
+<span class="kn">from</span> <span class="nn">users.models</span> <span class="kn">import</span> <span class="n">Patient</span><span class="p">,</span> <span class="n">Doctor</span><span class="p">,</span> <span class="n">User</span>
+
+
+<div class="viewcode-block" id="StorekeeperControllerTest">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.StorekeeperControllerTest">[docs]</a>
+<span class="k">class</span> <span class="nc">StorekeeperControllerTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    StroreKeeperControllerTest</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="StorekeeperControllerTest.setUp">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.StorekeeperControllerTest.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setup</span>
+<span class="sd">        :return: Object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">Prescription</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">PrescribedMedicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">DoctorAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">Doctor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">Patient</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storekeeper_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;storekeeper@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Storekeeper&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;Storekeeper&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;A+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;1980-01-01&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Male&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8801712345678&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span> <span class="o">=</span> <span class="s2">&quot;aaaaaa&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;asdf1234@&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doctor_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctor@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Dr. Sudipta&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;Doctor&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;A+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;1980-01-01&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Male&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8801712345678&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span> <span class="o">=</span> <span class="s2">&quot;bbbbbb&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;asdf1234@&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patient_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;patient@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;Student&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;B+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;1990-05-10&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Male&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8801987654321&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span> <span class="o">=</span> <span class="s2">&quot;cccccc&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;asdf1234@&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create doctor and patient instances</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doctor</span> <span class="o">=</span> <span class="n">Doctor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">doctor_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patient</span> <span class="o">=</span> <span class="n">Patient</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">patient_user</span><span class="p">)</span>
+
+        <span class="c1"># Create appointment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appointment</span> <span class="o">=</span> <span class="n">DoctorAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">doctor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">doctor</span><span class="p">,</span>
+            <span class="n">patient</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">patient</span><span class="p">,</span>
+            <span class="n">appointment_date_time</span><span class="o">=</span><span class="s2">&quot;2024-12-15T10:00:00Z&quot;</span><span class="p">,</span>
+            <span class="n">status</span><span class="o">=</span><span class="s2">&quot;scheduled&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create medicine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">medicine</span> <span class="o">=</span> <span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Paracetamol&quot;</span><span class="p">,</span>
+            <span class="n">generic_name</span><span class="o">=</span><span class="s2">&quot;Acetaminophen&quot;</span><span class="p">,</span>
+            <span class="n">manufacturer</span><span class="o">=</span><span class="s2">&quot;ABC Pharma&quot;</span><span class="p">,</span>
+            <span class="n">dosage_form</span><span class="o">=</span><span class="s2">&quot;Tablet&quot;</span><span class="p">,</span>
+            <span class="n">strength</span><span class="o">=</span><span class="s2">&quot;500mg&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Pain reliever&quot;</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">10.00</span><span class="p">,</span>
+            <span class="n">stock_quantity</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">expiry_date</span><span class="o">=</span><span class="s2">&quot;2025-12-31&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create prescription and prescribed medicine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prescription</span> <span class="o">=</span> <span class="n">Prescription</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">doctor_appointment</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="p">,</span>
+            <span class="n">diagnosis</span><span class="o">=</span><span class="s2">&quot;Headache&quot;</span><span class="p">,</span>
+            <span class="n">next_checkup</span><span class="o">=</span><span class="s2">&quot;2024-12-22&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prescribed_medicine</span> <span class="o">=</span> <span class="n">PrescribedMedicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">prescription</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prescription</span><span class="p">,</span>
+            <span class="n">medicine</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">medicine</span><span class="p">,</span>
+            <span class="n">dosage_frequency</span><span class="o">=</span><span class="n">MEDICINE_FREQUENCY_CHOICES</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">duration</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">instructions</span><span class="o">=</span><span class="s2">&quot;Take after meal&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create a client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="StorekeeperControllerTest.test_all_prescriptions_controllers">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.StorekeeperControllerTest.test_all_prescriptions_controllers">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_all_prescriptions_controllers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        All Prescriptions</span>
+<span class="sd">        :return: Boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">force_login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storekeeper_user</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:all_prescriptions&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;storekeeper/prescription_list.html&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;prescriptions&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StorekeeperControllerTest.test_search_prescriptions_view_get">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.StorekeeperControllerTest.test_search_prescriptions_view_get">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_search_prescriptions_view_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        test_search_prescriptions_view_get</span>
+<span class="sd">        :return: Boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">force_login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storekeeper_user</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:search-prescriptions&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;storekeeper/prescription_search.html&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StorekeeperControllerTest.test_search_prescriptions_view_post">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.StorekeeperControllerTest.test_search_prescriptions_view_post">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_search_prescriptions_view_post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test search_prescriptions_view_post</span>
+<span class="sd">        :return:  Boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">force_login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storekeeper_user</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:search-prescriptions&quot;</span><span class="p">),</span> <span class="p">{</span><span class="s2">&quot;patient_name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;storekeeper/prescription_list.html&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;prescriptions&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;prescriptions&quot;</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StorekeeperControllerTest.test_prescription_details_view">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.StorekeeperControllerTest.test_prescription_details_view">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_prescription_details_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        test_prescription_details_view</span>
+<span class="sd">        :return: Boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">force_login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storekeeper_user</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:prescription-details&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">prescription</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span>
+            <span class="n">response</span><span class="p">,</span> <span class="s2">&quot;storekeeper/prescribed_medicine_details.html&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;prescription&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;medicines_info&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StorekeeperControllerTest.test_dispense_medicines_view_success">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.StorekeeperControllerTest.test_dispense_medicines_view_success">[docs]</a>
+    <span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;medicines.controllers.generate_pdf&quot;</span><span class="p">)</span>  <span class="c1"># Mock the generate_pdf function</span>
+    <span class="k">def</span> <span class="nf">test_dispense_medicines_view_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_generate_pdf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test dispense_medicines_view_success</span>
+<span class="sd">        :param mock_generate_pdf:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mock_generate_pdf</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">()</span>  <span class="c1"># Mock the return value</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">force_login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storekeeper_user</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:dispense-medicines&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">prescription</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Assert that the medicine stock quantity is updated</span>
+        <span class="n">updated_medicine</span> <span class="o">=</span> <span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">medicine</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">updated_medicine</span><span class="o">.</span><span class="n">stock_quantity</span><span class="p">,</span> <span class="mi">95</span><span class="p">)</span>
+
+        <span class="c1"># Assert that the response is a redirect (since generate_pdf is mocked)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StorekeeperControllerTest.test_dispense_medicines_view_not_enough_stock">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.StorekeeperControllerTest.test_dispense_medicines_view_not_enough_stock">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_dispense_medicines_view_not_enough_stock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        test dispense medicines view_not_enough_stock</span>
+<span class="sd">        :return: Boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">force_login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storekeeper_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">medicine</span><span class="o">.</span><span class="n">stock_quantity</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">medicine</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:dispense-medicines&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">prescription</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:search-prescriptions&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="StorekeeperControllerTest.test_add_medicine_controller">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.StorekeeperControllerTest.test_add_medicine_controller">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_add_medicine_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test add_medicine_controller</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">force_login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storekeeper_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:add-medicine&quot;</span><span class="p">),</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Capa&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;generic_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Maracetamol&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;manufacturer&quot;</span><span class="p">:</span> <span class="s2">&quot;Square&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;dosage_form&quot;</span><span class="p">:</span> <span class="s2">&quot;Tablet&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;strength&quot;</span><span class="p">:</span> <span class="s2">&quot;200mg&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Used for fever&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="mf">10.00</span><span class="p">,</span>
+                <span class="s2">&quot;stock_quantity&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+                <span class="s2">&quot;expiry_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-12-31&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">follow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:storekeeper_dashboard&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Paracetamol&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">generic_name</span><span class="p">,</span> <span class="s2">&quot;Acetaminophen&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">manufacturer</span><span class="p">,</span> <span class="s2">&quot;ABC Pharma&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">dosage_form</span><span class="p">,</span> <span class="s2">&quot;Tablet&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">strength</span><span class="p">,</span> <span class="s2">&quot;500mg&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="s2">&quot;Pain reliever&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">price</span><span class="p">,</span> <span class="mf">10.00</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">stock_quantity</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">expiry_date</span><span class="p">),</span> <span class="s2">&quot;2025-12-31&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># Doctor part start</span>
+<div class="viewcode-block" id="GetInformationForPrescriptionTests">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.GetInformationForPrescriptionTests">[docs]</a>
+<span class="k">class</span> <span class="nc">GetInformationForPrescriptionTests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GetInformationForPrescriptionTests.setUp">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.GetInformationForPrescriptionTests.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doctor_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Doctor User&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;Doctor&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;A+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;1990-01-01&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Male&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8801234567890&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span> <span class="o">=</span> <span class="s2">&quot;dddddd&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patient_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;patientuser@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Patient User&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;Patient&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;A+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;1990-01-01&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Female&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8801234567890&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span> <span class="o">=</span> <span class="s2">&quot;eeeeee&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doctor</span> <span class="o">=</span> <span class="n">Doctor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">doctor_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patient</span> <span class="o">=</span> <span class="n">Patient</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">patient_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appointment</span> <span class="o">=</span> <span class="n">DoctorAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">patient</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">patient</span><span class="p">,</span>
+            <span class="n">doctor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">doctor</span><span class="p">,</span>
+            <span class="n">appointment_date_time</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">status</span><span class="o">=</span><span class="s2">&quot;scheduled&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;Routine checkup&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">medicine</span> <span class="o">=</span> <span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Paracetamol&quot;</span><span class="p">,</span>
+            <span class="n">generic_name</span><span class="o">=</span><span class="s2">&quot;Acetaminophen&quot;</span><span class="p">,</span>
+            <span class="n">manufacturer</span><span class="o">=</span><span class="s2">&quot;Pharma Co.&quot;</span><span class="p">,</span>
+            <span class="n">dosage_form</span><span class="o">=</span><span class="s2">&quot;Tablet&quot;</span><span class="p">,</span>
+            <span class="n">strength</span><span class="o">=</span><span class="s2">&quot;500mg&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Used for relieving pain and fever.&quot;</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">20.50</span><span class="p">,</span>
+            <span class="n">stock_quantity</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">expiry_date</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test</span> <span class="o">=</span> <span class="n">Test</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CBC&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Blood test&quot;</span><span class="p">,</span>
+            <span class="n">department</span><span class="o">=</span><span class="s2">&quot;Hematology&quot;</span><span class="p">,</span>
+            <span class="n">is_available</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GetInformationForPrescriptionTests.test_valid_appointment">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.GetInformationForPrescriptionTests.test_valid_appointment">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_valid_appointment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span>
+            <span class="s2">&quot;medicines:get-information-for-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;appointment&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;doctor&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;patient&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GetInformationForPrescriptionTests.test_appointment_not_found">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.GetInformationForPrescriptionTests.test_appointment_not_found">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_appointment_not_found</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:get-information-for-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="mi">999</span><span class="p">])</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GetInformationForPrescriptionTests.test_user_not_logged_in">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.GetInformationForPrescriptionTests.test_user_not_logged_in">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_user_not_logged_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span>
+            <span class="s2">&quot;medicines:get-information-for-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/accounts/login/?next=</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GetInformationForPrescriptionTests.test_context_data">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.GetInformationForPrescriptionTests.test_context_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span>
+                <span class="s2">&quot;medicines:get-information-for-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;appointment&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;doctor&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">doctor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;patient&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">patient</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">medicine</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;medicines&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;tests&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertListEqual</span><span class="p">(</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;frequencies&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">choice</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">MEDICINE_FREQUENCY_CHOICES</span><span class="p">],</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GetInformationForPrescriptionTests.test_correct_template_used">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.GetInformationForPrescriptionTests.test_correct_template_used">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_correct_template_used</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span>
+                <span class="s2">&quot;medicines:get-information-for-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;doctors/prescribe_patient.htm&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GetInformationForPrescriptionTests.test_no_medicines_or_tests">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.GetInformationForPrescriptionTests.test_no_medicines_or_tests">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_no_medicines_or_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+        <span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">Test</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span>
+            <span class="s2">&quot;medicines:get-information-for-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;medicines&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;tests&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;medicines&quot;</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;tests&quot;</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SavePrescriptionTests">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.SavePrescriptionTests">[docs]</a>
+<span class="k">class</span> <span class="nc">SavePrescriptionTests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SavePrescriptionTests.setUp">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.SavePrescriptionTests.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doctor_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Doctor User&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;Doctor&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;A+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;1990-01-01&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Male&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8801234567890&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span> <span class="o">=</span> <span class="s2">&quot;ffffff&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patient_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;patientuser@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Patient User&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;Patient&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;A+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;1990-01-01&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Female&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8801234567890&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span> <span class="o">=</span> <span class="s2">&quot;gggggg&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doctor</span> <span class="o">=</span> <span class="n">Doctor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">doctor_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patient</span> <span class="o">=</span> <span class="n">Patient</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">patient_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appointment</span> <span class="o">=</span> <span class="n">DoctorAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">patient</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">patient</span><span class="p">,</span>
+            <span class="n">doctor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">doctor</span><span class="p">,</span>
+            <span class="n">appointment_date_time</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">status</span><span class="o">=</span><span class="s2">&quot;scheduled&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;Routine checkup&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">medicine</span> <span class="o">=</span> <span class="n">Medicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Paracetamol&quot;</span><span class="p">,</span>
+            <span class="n">generic_name</span><span class="o">=</span><span class="s2">&quot;Acetaminophen&quot;</span><span class="p">,</span>
+            <span class="n">manufacturer</span><span class="o">=</span><span class="s2">&quot;Pharma Co.&quot;</span><span class="p">,</span>
+            <span class="n">dosage_form</span><span class="o">=</span><span class="s2">&quot;Tablet&quot;</span><span class="p">,</span>
+            <span class="n">strength</span><span class="o">=</span><span class="s2">&quot;500mg&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Used for relieving pain and fever.&quot;</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">20.50</span><span class="p">,</span>
+            <span class="n">stock_quantity</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">expiry_date</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test</span> <span class="o">=</span> <span class="n">Test</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CBC&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Blood test&quot;</span><span class="p">,</span>
+            <span class="n">department</span><span class="o">=</span><span class="s2">&quot;Hematology&quot;</span><span class="p">,</span>
+            <span class="n">is_available</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doctor</span><span class="o">.</span><span class="n">no_of_appointments</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doctor</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SavePrescriptionTests.test_user_is_not_doctor">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.SavePrescriptionTests.test_user_is_not_doctor">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_user_is_not_doctor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;patientuser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:save-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span> <span class="p">{}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">403</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;You are not authorized to view this page.&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SavePrescriptionTests.test_invalid_appointment_id">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.SavePrescriptionTests.test_invalid_appointment_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_invalid_appointment_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:save-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="mi">9999</span><span class="p">]),</span> <span class="p">{}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:doctor-dashboard&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
+            <span class="s2">&quot;Invalid appointment&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">messages</span><span class="o">.</span><span class="n">get_messages</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="p">)],</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SavePrescriptionTests.test_successful_prescription_creation">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.SavePrescriptionTests.test_successful_prescription_creation">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_successful_prescription_creation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:save-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;complains&quot;</span><span class="p">:</span> <span class="s2">&quot;Headache&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="s2">&quot;Migraine&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;vital_signs&quot;</span><span class="p">:</span> <span class="s2">&quot;Normal&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;referral&quot;</span><span class="p">:</span> <span class="s2">&quot;Neurologist&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;next_checkup&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;tests&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">&quot;medicines&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">medicine</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">&quot;durations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+                <span class="s2">&quot;instructions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Take after meals&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;frequencies&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Morning + Noon&quot;</span><span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:doctor-dashboard&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
+            <span class="s2">&quot;Prescription for Patient User saved successfully.&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">messages</span><span class="o">.</span><span class="n">get_messages</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="p">)],</span>
+        <span class="p">)</span>
+
+        <span class="n">prescription</span> <span class="o">=</span> <span class="n">Prescription</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">prescription</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">prescription</span><span class="o">.</span><span class="n">complains</span><span class="p">,</span> <span class="s2">&quot;Headache&quot;</span><span class="p">)</span>
+
+        <span class="n">prescribed_medicine</span> <span class="o">=</span> <span class="n">PrescribedMedicine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">prescribed_medicine</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">prescribed_medicine</span><span class="o">.</span><span class="n">medicine</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Paracetamol&quot;</span><span class="p">)</span>
+
+        <span class="n">prescribed_test</span> <span class="o">=</span> <span class="n">PrescribedTest</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">prescribed_test</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">prescribed_test</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;CBC&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SavePrescriptionTests.test_invalid_medicine_id">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.SavePrescriptionTests.test_invalid_medicine_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_invalid_medicine_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:save-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;complains&quot;</span><span class="p">:</span> <span class="s2">&quot;Headache&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="s2">&quot;Migraine&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;vital_signs&quot;</span><span class="p">:</span> <span class="s2">&quot;Normal&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;referral&quot;</span><span class="p">:</span> <span class="s2">&quot;Neurologist&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;next_checkup&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;tests&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">&quot;medicines&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">9999</span><span class="p">],</span>
+                <span class="s2">&quot;durations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+                <span class="s2">&quot;instructions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Take after meals&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;frequencies&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Morning + Noon&quot;</span><span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span>
+            <span class="n">response</span><span class="p">,</span>
+            <span class="n">reverse</span><span class="p">(</span>
+                <span class="s2">&quot;medicines:get-information-for-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
+            <span class="s2">&quot;An error occurred: No Medicine matches the given query.&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">messages</span><span class="o">.</span><span class="n">get_messages</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="p">)],</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SavePrescriptionTests.test_handle_appointment_status_and_doctor_count">
+<a class="viewcode-back" href="../../../medicines.tests.html#medicines.tests.test_controllers.SavePrescriptionTests.test_handle_appointment_status_and_doctor_count">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_handle_appointment_status_and_doctor_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;medicines:save-prescription&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;complains&quot;</span><span class="p">:</span> <span class="s2">&quot;Headache&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="s2">&quot;Migraine&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;vital_signs&quot;</span><span class="p">:</span> <span class="s2">&quot;Normal&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;referral&quot;</span><span class="p">:</span> <span class="s2">&quot;Neurologist&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;next_checkup&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;tests&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">&quot;medicines&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">medicine</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">&quot;durations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+                <span class="s2">&quot;instructions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Take after meals&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;frequencies&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Morning + Noon&quot;</span><span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doctor_user</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="s2">&quot;completed&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">doctor</span><span class="o">.</span><span class="n">no_of_appointments</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">appointment</span><span class="o">.</span><span class="n">doctor</span><span class="o">.</span><span class="n">no_of_prescriptions</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># Doctor part end</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">JUMCMS</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">jumcms</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Team JUMCMS.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.0.2</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>users.tests.test_controllers &#8212; JUMCMS 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=c058f7c8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for users.tests.test_controllers</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">appointments.models</span> <span class="kn">import</span> <span class="n">DoctorAppointment</span>
+<span class="kn">from</span> <span class="nn">users.models</span> <span class="kn">import</span> <span class="n">Doctor</span><span class="p">,</span> <span class="n">Patient</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+
+<span class="n">User</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="UserControllersTest">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.UserControllersTest">[docs]</a>
+<span class="k">class</span> <span class="nc">UserControllersTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="UserControllersTest.setUp">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.UserControllersTest.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;testuser@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test User&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;Patient&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;A+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;2000-01-01&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Male&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8801234567890&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span><span class="o">=</span><span class="s2">&quot;asdfgh&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;testpassword123&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_approved</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="UserControllersTest.test_home_view">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.UserControllersTest.test_home_view">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_home_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;home&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;users/home.htm&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UserControllersTest.test_register_view_valid">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.UserControllersTest.test_register_view_valid">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_register_view_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:users-register&quot;</span><span class="p">),</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;newuser@example.com&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;New User&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;Doctor&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;blood_group&quot;</span><span class="p">:</span> <span class="s2">&quot;B+&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;date_of_birth&quot;</span><span class="p">:</span> <span class="s2">&quot;1995-05-05&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;Female&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;phone_number&quot;</span><span class="p">:</span> <span class="s2">&quot;+8801987654321&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;role_id&quot;</span><span class="p">:</span> <span class="s2">&quot;asdfghhg&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;password1&quot;</span><span class="p">:</span> <span class="s2">&quot;newpassword123&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;password2&quot;</span><span class="p">:</span> <span class="s2">&quot;newpassword123&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;newuser@example.com&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;users/unapproved.htm&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
+            <span class="s2">&quot;Registration successful! Please wait until your account is approved!!&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">messages</span><span class="o">.</span><span class="n">get_messages</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="p">)],</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UserControllersTest.test_register_view_invalid">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.UserControllersTest.test_register_view_invalid">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_register_view_invalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:users-register&quot;</span><span class="p">),</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;New User&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;Doctor&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;blood_group&quot;</span><span class="p">:</span> <span class="s2">&quot;B+&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;date_of_birth&quot;</span><span class="p">:</span> <span class="s2">&quot;1995-05-05&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;Female&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;phone_number&quot;</span><span class="p">:</span> <span class="s2">&quot;+8801987654321&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;password1&quot;</span><span class="p">:</span> <span class="s2">&quot;newpassword123&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;password2&quot;</span><span class="p">:</span> <span class="s2">&quot;newpassword123&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;users/register.html&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UserControllersTest.test_log_in_view_valid">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.UserControllersTest.test_log_in_view_valid">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_log_in_view_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:users-login&quot;</span><span class="p">),</span>
+            <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;testuser@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;testpassword123&quot;</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>  <span class="c1"># Should redirect</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;home&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UserControllersTest.test_log_in_view_invalid">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.UserControllersTest.test_log_in_view_invalid">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_log_in_view_invalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:users-login&quot;</span><span class="p">),</span>
+            <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;testuser@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;wrongpassword&quot;</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;users/login.htm&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
+            <span class="s2">&quot;Invalid email or password&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">messages</span><span class="o">.</span><span class="n">get_messages</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="p">)],</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UserControllersTest.test_log_out_view">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.UserControllersTest.test_log_out_view">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_log_out_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testuser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;testpassword123&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:users-logout&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;home&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># Doctor part start</span>
+<div class="viewcode-block" id="DoctorDashboardControllerTests">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.DoctorDashboardControllerTests">[docs]</a>
+<span class="k">class</span> <span class="nc">DoctorDashboardControllerTests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DoctorDashboardControllerTests.setUp">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.DoctorDashboardControllerTests.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Doctor User&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;doctor&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;B+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;1985-05-05&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Female&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8800987654321&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span><span class="o">=</span><span class="s2">&quot;12345A&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user2</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;patientuser@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Patient User&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;patient&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;B+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;1985-05-05&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Female&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8800987654321&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span><span class="o">=</span><span class="s2">&quot;12345B&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doctor</span> <span class="o">=</span> <span class="n">Doctor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patient</span> <span class="o">=</span> <span class="n">Patient</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appointment_today</span> <span class="o">=</span> <span class="n">DoctorAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">patient</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">patient</span><span class="p">,</span>
+            <span class="n">doctor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">doctor</span><span class="p">,</span>
+            <span class="n">appointment_date_time</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appointment_future</span> <span class="o">=</span> <span class="n">DoctorAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">patient</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">patient</span><span class="p">,</span>
+            <span class="n">doctor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">doctor</span><span class="p">,</span>
+            <span class="n">appointment_date_time</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">timezone</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appointment_past</span> <span class="o">=</span> <span class="n">DoctorAppointment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">patient</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">patient</span><span class="p">,</span>
+            <span class="n">doctor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">doctor</span><span class="p">,</span>
+            <span class="n">appointment_date_time</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timezone</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DoctorDashboardControllerTests.test_doctor_dashboard_access_logged_in">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.DoctorDashboardControllerTests.test_doctor_dashboard_access_logged_in">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_doctor_dashboard_access_logged_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:doctor-dashboard&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;doctors/doctor_dashboard.htm&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;doctor&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;doctor&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">doctor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;appointments_today&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;appointments_today&quot;</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DoctorDashboardControllerTests.test_doctor_dashboard_access_for_non_doctor_user">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.DoctorDashboardControllerTests.test_doctor_dashboard_access_for_non_doctor_user">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_doctor_dashboard_access_for_non_doctor_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;nondoctoruser@example.com&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Non doctor&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;doctor&quot;</span><span class="p">,</span>
+            <span class="n">blood_group</span><span class="o">=</span><span class="s2">&quot;B+&quot;</span><span class="p">,</span>
+            <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;1985-05-05&quot;</span><span class="p">,</span>
+            <span class="n">gender</span><span class="o">=</span><span class="s2">&quot;Female&quot;</span><span class="p">,</span>
+            <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+8800987654321&quot;</span><span class="p">,</span>
+            <span class="n">role_id</span><span class="o">=</span><span class="s2">&quot;12345C&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;nondoctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:doctor-dashboard&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DoctorDashboardControllerTests.test_doctor_dashboard_context_data">
+<a class="viewcode-back" href="../../../users.tests.html#users.tests.test_controllers.DoctorDashboardControllerTests.test_doctor_dashboard_context_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_doctor_dashboard_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;doctoruser@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;users:doctor-dashboard&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="n">appointments_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;appointments_data&quot;</span><span class="p">]</span>
+        <span class="n">expected_appointments_data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">appointments_data</span><span class="p">,</span> <span class="n">expected_appointments_data</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># Doctor part end</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">JUMCMS</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">jumcms</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Team JUMCMS.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.0.2</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
