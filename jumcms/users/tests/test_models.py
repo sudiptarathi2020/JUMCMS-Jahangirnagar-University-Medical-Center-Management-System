@@ -14,6 +14,7 @@ class UserModelTests(TestCase):
             date_of_birth=timezone.now().date(),
             gender=GENDER_CHOICES[0][0],
             phone_number="+8801234567890",
+            role_id="asdf12",
             password="password123",
         )
 
@@ -48,6 +49,7 @@ class DoctorModelTests(TestCase):
             date_of_birth=timezone.now().date(),
             gender=GENDER_CHOICES[0][0],
             phone_number="+8801234567890",
+            role_id = "asdf123",
             password="password123",
         )
         self.doctor = Doctor.objects.create(
@@ -77,6 +79,7 @@ class PatientModelTests(TestCase):
             date_of_birth=timezone.now().date(),
             gender=GENDER_CHOICES[0][0],
             phone_number="+8801234567890",
+            role_id = "asdf12345",
             password="password123",
         )
         self.patient = Patient.objects.create(user=self.user)
@@ -96,6 +99,7 @@ class StorekeeperModelTests(TestCase):
             date_of_birth=timezone.now().date(),
             gender=GENDER_CHOICES[0][0],
             phone_number="+8801234567890",
+            role_id = "asdf123456A",
             password="password123",
         )
         self.storekeeper = Storekeeper.objects.create(user=self.user)
@@ -115,6 +119,7 @@ class LabTechnicianModelTests(TestCase):
             date_of_birth=timezone.now().date(),
             gender=GENDER_CHOICES[0][0],
             phone_number="+8801234567890",
+            role_id = "asdf123456B",
             password="password123",
         )
         self.lab_technician = LabTechnician.objects.create(user=self.user)

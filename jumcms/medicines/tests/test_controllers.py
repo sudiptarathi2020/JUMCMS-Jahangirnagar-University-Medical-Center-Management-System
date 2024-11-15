@@ -39,6 +39,7 @@ class StorekeeperControllerTest(TestCase):
             date_of_birth="1980-01-01",
             gender="Male",
             phone_number="+8801712345678",
+            role_id = "aaaaaa",
             password="asdf1234@",
         )
         self.doctor_user = User.objects.create_user(
@@ -49,6 +50,7 @@ class StorekeeperControllerTest(TestCase):
             date_of_birth="1980-01-01",
             gender="Male",
             phone_number="+8801712345678",
+            role_id = "bbbbbb",
             password="asdf1234@",
         )
         self.patient_user = User.objects.create_user(
@@ -59,6 +61,7 @@ class StorekeeperControllerTest(TestCase):
             date_of_birth="1990-05-10",
             gender="Male",
             phone_number="+8801987654321",
+            role_id = "cccccc",
             password="asdf1234@",
         )
 
@@ -239,6 +242,7 @@ class GetInformationForPrescriptionTests(TestCase):
             date_of_birth="1990-01-01",
             gender="Male",
             phone_number="+8801234567890",
+            role_id = "dddddd",
             password="password123",
         )
         self.patient_user = User.objects.create_user(
@@ -249,6 +253,7 @@ class GetInformationForPrescriptionTests(TestCase):
             date_of_birth="1990-01-01",
             gender="Female",
             phone_number="+8801234567890",
+            role_id = "eeeeee",
             password="password123",
         )
         self.doctor = Doctor.objects.create(user=self.doctor_user)
@@ -355,6 +360,7 @@ class SavePrescriptionTests(TestCase):
             date_of_birth="1990-01-01",
             gender="Male",
             phone_number="+8801234567890",
+            role_id = "ffffff",
             password="password123",
         )
         self.patient_user = User.objects.create_user(
@@ -365,6 +371,7 @@ class SavePrescriptionTests(TestCase):
             date_of_birth="1990-01-01",
             gender="Female",
             phone_number="+8801234567890",
+            role_id = "gggggg",
             password="password123",
         )
         self.doctor = Doctor.objects.create(user=self.doctor_user)

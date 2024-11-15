@@ -21,6 +21,7 @@ class DoctorAppointmentControllersTest(TestCase):
             date_of_birth="1998-11-02",
             gender="Male",
             phone_number="+8801234567890",
+            role_id = "aaaaaa",
             password="password123",
         )
         self.doctor = Doctor.objects.create(user=self.user, no_of_appointments=0)
@@ -95,6 +96,7 @@ class CreateDoctorAppointmentTestCase(TestCase):
             date_of_birth="1980-01-01",
             gender="Male",
             phone_number="+8801712345678",
+            role_id = "bbbbbb",
             password="asdf1234@",
         )
 
@@ -107,6 +109,7 @@ class CreateDoctorAppointmentTestCase(TestCase):
             date_of_birth="1990-05-10",
             gender="Male",
             phone_number="+8801987654321",
+            role_id = "cccccc",
             password="asdf1234@",
         )
         self.patient_user.is_approved = True
@@ -121,6 +124,7 @@ class CreateDoctorAppointmentTestCase(TestCase):
             date_of_birth="1975-08-15",
             gender="Male",
             phone_number="+8801812345678",
+            role_id = "gggggg",
             password="asdf1234@",
         )
         self.doctor_user.is_approved = True
@@ -188,6 +192,7 @@ class TestAppointmentsViews(TestCase):
             date_of_birth="1980-01-01",
             gender="Male",
             phone_number="+8801712345678",
+            role_id = "hhhhhh",
             password="asdf1234@",
         )
         self.lab_technician_user.is_approved = True
@@ -204,6 +209,7 @@ class TestAppointmentsViews(TestCase):
             date_of_birth="1990-05-10",
             gender="Male",
             phone_number="+8801987654321",
+            role_id = "kkkkk",
             password="asdf1234@",
         )
         self.patient_user.is_approved = True
@@ -218,6 +224,7 @@ class TestAppointmentsViews(TestCase):
             date_of_birth="1975-08-15",
             gender="Male",
             phone_number="+8801812345678",
+            role_id = "mmmmmm",
             password="asdf1234@",
         )
         self.doctor_user.is_approved = True
