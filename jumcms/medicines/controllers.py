@@ -27,6 +27,8 @@ def all_prescriptions(request):
     :param request:
     :return: list of all prescriptions
     """
+    if request.user.role != "Storekeeper":
+        return HttpResponseForbidden("You are not authorized to view this page.")
     prescriptions = Prescription.objects.all()
     context = {
         "prescriptions": prescriptions,
@@ -41,6 +43,8 @@ def search_prescriptions(request):
     :param request:
     :return: list of all prescriptions
     """
+    if request.user.role != "Storekeeper":
+        return HttpResponseForbidden("You are not authorized to view this page.")
     if request.method == "POST":
         patient_name = request.POST.get("patient_name")
         prescriptions = Prescription.objects.filter(
@@ -62,6 +66,8 @@ def prescription_details(request, prescription_id):
     :param: prescription_id
     :return: html
     """
+    if request.user.role != "Storekeeper":
+        return HttpResponseForbidden("You are not authorized to view this page.")
     prescription = get_object_or_404(Prescription, id=prescription_id)
     prescribed_medicines = PrescribedMedicine.objects.filter(prescription=prescription)
 
@@ -190,6 +196,8 @@ def dispense_medicines(request, prescription_id):
     :param: request, int
     :return: html
     """
+    if request.user.role != "Storekeeper":
+        return HttpResponseForbidden("You are not authorized to view this page.")
     if request.method == "POST":
         prescription = get_object_or_404(Prescription, id=prescription_id)
         prescribed_medicines = PrescribedMedicine.objects.filter(
@@ -239,6 +247,8 @@ def dispense_medicines(request, prescription_id):
 
 @login_required
 def add_medicine(request):
+    if request.user.role != "Storekeeper":
+        return HttpResponseForbidden("You are not authorized to view this page.")
     user = request.user
     if request.method == "POST":
         form = MedicineForm(request.POST)
