@@ -180,6 +180,7 @@ class User(AbstractBaseUser):
         "date_of_birth",
         "gender",
         "phone_number",
+        "role_id",
     ]
 
     def __str__(self):
