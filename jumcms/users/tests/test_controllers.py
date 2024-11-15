@@ -20,6 +20,7 @@ class UserControllersTest(TestCase):
             date_of_birth="2000-01-01",
             gender="Male",
             phone_number="+8801234567890",
+            role_id="asdfgh",
             password="testpassword123",
         )
         self.user.is_approved = True
@@ -41,6 +42,7 @@ class UserControllersTest(TestCase):
                 "date_of_birth": "1995-05-05",
                 "gender": "Female",
                 "phone_number": "+8801987654321",
+                "role_id": "asdfghhg",
                 "password1": "newpassword123",
                 "password2": "newpassword123",
             },
@@ -112,6 +114,7 @@ class DoctorDashboardControllerTests(TestCase):
             date_of_birth="1985-05-05",
             gender="Female",
             phone_number="+8800987654321",
+            role_id="12345A",
             password="password123",
         )
         self.user2 = User.objects.create_user(
@@ -122,6 +125,7 @@ class DoctorDashboardControllerTests(TestCase):
             date_of_birth="1985-05-05",
             gender="Female",
             phone_number="+8800987654321",
+            role_id="12345B",
             password="password123",
         )
         self.doctor = Doctor.objects.create(user=self.user)
@@ -163,6 +167,7 @@ class DoctorDashboardControllerTests(TestCase):
             date_of_birth="1985-05-05",
             gender="Female",
             phone_number="+8800987654321",
+            role_id="12345C",
             password="password123",
         )
         self.client.login(email="nondoctoruser@example.com", password="password123")

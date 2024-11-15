@@ -66,9 +66,17 @@
 
                 {% if form.phone_number.errors %}
                 <div class="error-message">{{ form.phone_number.errors }}</div>
-                {% endif %} 
+                {% endif %}
             </div>
+            <div class="form-group">
 
+                <label class="custom-label" for="id_role_id">Role Id:</label>
+                {{ form.role_id }}
+
+                {% if form.role_id.errors %}
+                    <div class="error-message">{{ form.role_id.errors }}</div>
+                {% endif %}
+            </div>
             <div class="form-group">
                 <label class="custom-label" for="id_password1">Password:</label>
                 {{ form.password1 }} 

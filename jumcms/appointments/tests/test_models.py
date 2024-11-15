@@ -16,6 +16,7 @@ class DoctorAppointmentModelTest(TestCase):
             date_of_birth="1990-01-01",
             gender="Male",
             phone_number="+8801234567890",
+            role_id = "aaaaaa",
             password="password123",
         )
         self.doctor_user = User.objects.create_user(
@@ -26,6 +27,7 @@ class DoctorAppointmentModelTest(TestCase):
             date_of_birth="1985-05-05",
             gender="Female",
             phone_number="+8800987654321",
+            role_id = "bbbbb",
             password="password123",
         )
         self.patient_user = User.objects.create_user(
@@ -36,6 +38,7 @@ class DoctorAppointmentModelTest(TestCase):
             date_of_birth="1992-02-02",
             gender="Male",
             phone_number="+8800147852364",
+            role_id = "ccccc",
             password="password123",
         )
 

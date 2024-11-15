@@ -18,6 +18,7 @@ class BlogFormTests(TestCase):
             date_of_birth='1990-01-01',
             gender='Male',
             phone_number='+8801712345678',
+            role_id="aaaaaa",
         )
         self.client.login(username='admin@example.com', password='asdf1234@')  # Log in the user
 

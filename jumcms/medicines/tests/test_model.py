@@ -73,6 +73,7 @@ class PrescriptionModelTest(TestCase):
             date_of_birth="1980-01-01",
             gender="Male",
             phone_number="+8801712345678",
+            role_id = "asdf1234",
             password="asdf1234@",
         )
         self.doctor = Doctor.objects.create(user=self.doctor_user)
@@ -84,6 +85,7 @@ class PrescriptionModelTest(TestCase):
             date_of_birth="1990-05-10",
             gender="Male",
             phone_number="+8801987654321",
+            role_id= "asdf124456A",
             password="asdf1234@",
         )
         self.patient = Patient.objects.create(user=self.patient_user)
@@ -140,6 +142,7 @@ class PrescribedMedicineModelTest(TestCase):
             date_of_birth="1980-01-01",
             gender="Male",
             phone_number="+8801712345678",
+            role_id = "hghghkh",
             password="asdf1234@",
         )
         self.doctor = Doctor.objects.create(user=self.doctor_user)
@@ -151,6 +154,7 @@ class PrescribedMedicineModelTest(TestCase):
             date_of_birth="1990-05-10",
             gender="Male",
             phone_number="+8801987654321",
+            role_id = "hhhgkkkk",
             password="asdf1234@",
         )
         self.patient = Patient.objects.create(user=self.patient_user)

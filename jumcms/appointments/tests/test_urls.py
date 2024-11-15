@@ -42,6 +42,7 @@ class DoctorAppointmentsURLsTest(TestCase):
             date_of_birth="1990-01-01",
             gender="Male",
             phone_number="+8801234567890",
+            role_id = "aaaaaa",
             password="password123",
         )
         self.doctor = Doctor.objects.create(user=self.user, no_of_appointments=0)

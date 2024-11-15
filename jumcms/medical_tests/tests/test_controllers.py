@@ -20,6 +20,7 @@ class LabTechnicianControllersTest(TestCase):
             date_of_birth="1980-01-01",
             gender="Male",
             phone_number="+8801712345678",
+            role_id = "aaaaa",
             password="asdf1234@",
         )
         self.patient_user = User.objects.create_user(
@@ -30,6 +31,7 @@ class LabTechnicianControllersTest(TestCase):
             date_of_birth="1990-05-10",
             gender="Male",
             phone_number="+8801987654321",
+            role_id = "bbbbb",
             password="asdf1234@",
         )
 
@@ -41,6 +43,7 @@ class LabTechnicianControllersTest(TestCase):
             date_of_birth="2000-04-04",
             gender="Male",
             phone_number="+8801711111111",
+            role_id = "cccccc",
             password="asdf1234@",
         )
         self.lab_technician = LabTechnician.objects.create(
@@ -193,6 +196,7 @@ class TestReportViewTests(TestCase):
             date_of_birth="1990-05-10",
             gender="Male",
             phone_number="+8801987654321",
+            role_id = "ffffff",
             password="asdf1234@",
         )
         self.patient_user.set_password = "asdf1234@"
@@ -208,6 +212,7 @@ class TestReportViewTests(TestCase):
             date_of_birth="1999-05-10",
             gender="Male",
             phone_number="+8801711111111",
+            role_id = "hhhhhh",
             password="asdf1234@",
         )
         self.doctor = Doctor.objects.create(user=self.doctor_user)

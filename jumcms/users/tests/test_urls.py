@@ -32,6 +32,7 @@ class DoctorDashboardURLsTest(TestCase):
             date_of_birth="1985-05-05",
             gender="Female",
             phone_number="+8800987654321",
+            role_id = "asdf123",
             password="password123",
         )
         self.doctor = Doctor.objects.create(user=self.user, no_of_appointments=5)
@@ -51,6 +52,7 @@ class DoctorDashboardURLsTest(TestCase):
             date_of_birth="1985-05-05",
             gender="Female",
             phone_number="+8800987654321",
+            role_id="adsf1234B",
             password="password123",
         )
         self.client.login(email="non_doctor@example.com", password="password123")

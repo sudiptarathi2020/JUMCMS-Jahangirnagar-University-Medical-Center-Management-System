@@ -15,6 +15,7 @@ class DoctorAppointmentCreationFormTest(TestCase):
             date_of_birth="1975-08-15",
             gender="Male",
             phone_number="+8801812345678",
+            role_id = "aaaaaa",
             password="asdf1234@",
         )
         self.doctor_user.is_approved = True

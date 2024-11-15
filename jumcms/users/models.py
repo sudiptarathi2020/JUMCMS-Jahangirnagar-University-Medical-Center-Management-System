@@ -19,6 +19,7 @@ class UserManager(BaseUserManager):
         date_of_birth,
         gender,
         phone_number,
+        role_id,
         password=None,
         profile_picture="profile_pictures/default_user.png",
     ):
@@ -35,12 +36,15 @@ class UserManager(BaseUserManager):
         :param gender: Gender of the user.
         :param phone_number: User's phone number.
         :param password: User's password.
+        :param role_id: User's roll id.'
         :param profile_picture: Path to the user's profile picture.
         :raises ValueError: If no email is provided.
         :return: The created User instance.
         """
         if not email:
             raise ValueError("Users must have an email address")
+        if not role_id:
+            raise ValueError("Users must have a unique roll id ")
         user = self.model(
             email=self.normalize_email(email),
             name=name,
@@ -49,6 +53,7 @@ class UserManager(BaseUserManager):
             date_of_birth=date_of_birth,
             gender=gender,
             phone_number=phone_number,
+            role_id=role_id,
             profile_picture=profile_picture,
         )
         user.set_password(password)
@@ -64,6 +69,7 @@ class UserManager(BaseUserManager):
         date_of_birth,
         gender,
         phone_number,
+        role_id,
         password=None,
         profile_picture="profile_pictures/default_user.png",
     ):
@@ -78,6 +84,7 @@ class UserManager(BaseUserManager):
         :param date_of_birth: Date of birth of the user.
         :param gender: Gender of the user.
         :param phone_number: User's phone number.
+        :param role_id: Users' Unique Role Id.
         :param password: User's password.
         :param profile_picture: Path to the user's profile picture.
         :return: The created superuser instance.
@@ -90,6 +97,7 @@ class UserManager(BaseUserManager):
             date_of_birth=date_of_birth,
             gender=gender,
             phone_number=phone_number,
+            role_id=role_id,
             password=password,
             profile_picture=profile_picture,
         )
@@ -125,6 +133,7 @@ class User(AbstractBaseUser):
         choices=BLOOD_GROUP_CHOICES,
         help_text="Blood group of the user.",
     )
+
     date_of_birth = models.DateField(help_text="Date of birth of the user.")
     gender = models.CharField(
         max_length=200, choices=GENDER_CHOICES, help_text="Gender of the user."
@@ -133,6 +142,12 @@ class User(AbstractBaseUser):
         max_length=15,
         validators=[phone_number_validator],
         help_text="Phone number of the user, in the format '+880XXXXXXXXXX'.",
+    )
+    role_id = models.CharField(
+        verbose_name="Role ID",
+        max_length=20,
+        unique=True,
+        help_text="Roll ID for the user.",
     )
     profile_picture = models.ImageField(
         upload_to="profile_pictures/",
@@ -165,6 +180,7 @@ class User(AbstractBaseUser):
         "date_of_birth",
         "gender",
         "phone_number",
+        "role_id",
     ]
 
     def __str__(self):

@@ -26,12 +26,12 @@ class FundraisingRequestTestCase(TestCase):
         self.adminuser = User.objects.create_superuser(
             email='superuser@example.com', name='super', role='Admin',
             blood_group='A+', date_of_birth='1980-01-01', gender='Male',
-            phone_number='+8801712345678', password='asdf1234@'
+            phone_number='+8801712345678',role_id="aaaaaa", password='asdf1234@'
         )
         self.patient_user = User.objects.create_user(
             email='patient@example.com', name='John Doe', role='Student',
             blood_group='B+', date_of_birth='1990-05-10', gender='Male',
-            phone_number='+8801987654321', password='asdf1234@'
+            phone_number='+8801987654321',role_id = "bbbbbb", password='asdf1234@'
         )
         self.patient = Patient.objects.create(user=self.patient_user)
         self.attachment = SimpleUploadedFile("test_attachment.txt", b"Sample content for testing.")

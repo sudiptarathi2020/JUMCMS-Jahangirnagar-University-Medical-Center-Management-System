@@ -19,6 +19,7 @@ class BlogListViewTests(TestCase):
             date_of_birth="2000-01-01",
             gender="Male",
             phone_number="+8801234567890",
+            role_id = "aaaaa",
             password="testpassword123",
         )
         self.author_user.is_approved = True
@@ -120,6 +121,7 @@ class BlogControllersTests(TestCase):
             date_of_birth="1990-01-01",
             gender="Male",
             phone_number="+8801712345678",
+            role_id = "bbbbbb",
         )
         self.client.login(
             username="admin@example.com", password="asdf1234@"
