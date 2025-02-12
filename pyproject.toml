@@ -4,8 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["sudiptarathi2020 <rathisudipta99@gmail.com>"]
 license = "MIT"
-readme = "README.md"
-packages = [{include = "jumcms_jahangirnagar_university_medical_center_management_system"}]
+readme = "README.rst"
 
 [tool.poetry.dependencies]
 python = "^3.11"
