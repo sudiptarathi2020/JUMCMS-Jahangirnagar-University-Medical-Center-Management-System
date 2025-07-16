@@ -6,6 +6,9 @@ authors = ["sudiptarathi2020 <rathisudipta99@gmail.com>"]
 license = "MIT"
 readme = "README.rst"
 
+[[tool.poetry.packages]]
+include = "backend"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 asgiref = "^3.8.1"
