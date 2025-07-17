@@ -1,3 +1,7 @@
+import os
+
+from core.jumcms.settings import BASE_DIR
+
 SECRET_KEY = NotImplemented
 DEBUG = False
 
