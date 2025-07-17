@@ -4,19 +4,19 @@ install:
 
 .PHONY: migrate
 migrate:
-	poetry run python backend/manage.py migrate
+	poetry run python -m core.manage migrate
 
 .PHONY: migrations
 migrations:
-	poetry run python backend/manage.py makemigrations
+	poetry run python -m core.manage makemigrations
 
 .PHONY: run-server
 run-server:
-	poetry run python backend/manage.py runserver
+	poetry run python -m core.manage runserver
 
 .PHONY: superuser
 superuser:
-	poetry run python backend/manage.py createsuperuser
+	poetry run python -m core.manage createsuperuser
 
 .PHONY: update
 update: install migrate;
