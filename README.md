@@ -11,4 +11,3 @@ Here are some screenshots of the project:
 - ![](screenshots/sprintoutput06.png)
 - ![](screenshots/sprintoutput07.png)
 - ![](screenshots/sprintoutput08.png)
-- ![](screenshots/sprintoutput09.png)
