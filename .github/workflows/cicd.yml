@@ -43,6 +43,6 @@ jobs:
           python jumcms/manage.py makemigrations
           python jumcms/manage.py migrate
 
-      - name: Run tests
+      - name: Run test
         run: |
           python jumcms/manage.py test ambulance.tests appointments.tests blogs.tests certifications.tests medical_tests.tests medicines.tests users.tests
